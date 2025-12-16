@@ -1,0 +1,1 @@
+Real-Time secure platform for tracking investments, simulating portfolios, and analyzing returns. Features a clean interface and interactive dashboards, showcasing full-stack development and data handling capabilities.
