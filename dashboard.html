@@ -35,18 +35,25 @@
         .plan-header{display:flex;justify-content:space-between;margin-bottom:10px}
         .plan-info h4{color:#0f172a;font-size:14px;margin-bottom:4px;font-weight:600}
         .plan-status{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#dcfce7;color:#059669}
-        .btn{width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer}
-        .btn:hover{opacity:.9}
+        .btn{width:100%;padding:12px;background:#10b981;color:white;border:none;border-radius:0;font-size:14px;font-weight:600;cursor:pointer}
+        .btn:hover{background:#059669}
         .btn-sm{padding:10px;font-size:13px;font-weight:600;margin-top:10px}
-        .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.7)}
-        .modal-content{background:white;margin:10% auto;padding:30px;border-radius:20px;max-width:450px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-        .modal-title{font-size:20px;font-weight:700;color:#0f172a}
-        .close-btn{background:none;border:none;font-size:28px;color:#64748b;cursor:pointer}
-        .input-group{margin:20px 0}
-        .input-label{font-size:13px;color:#64748b;margin-bottom:8px;font-weight:600;display:block}
-        .input-field{width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px}
-        .warning{background:#fef3c7;color:#92400e;padding:12px;border-radius:8px;font-size:13px;margin:16px 0}
+        .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.5)}
+        .modal-content{background:white;margin:10% auto;padding:24px;border-radius:0;max-width:400px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #e2e8f0}
+        .modal-title{font-size:16px;font-weight:600;color:#0f172a}
+        .close-btn{background:none;border:none;font-size:24px;color:#64748b;cursor:pointer;padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center}
+        .account-info{background:#f8fafc;padding:16px;border-radius:0;margin-bottom:16px;border:1px solid #e2e8f0}
+        .info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
+        .info-row:not(:last-child){border-bottom:1px solid #e2e8f0}
+        .info-label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px}
+        .info-value{font-size:14px;color:#0f172a;font-weight:600}
+        .copy-btn{background:none;border:1px solid #e2e8f0;color:#64748b;padding:4px 8px;border-radius:0;cursor:pointer;font-size:10px;margin-left:8px}
+        .copy-btn:hover{background:#f8fafc}
+        .input-group{margin:16px 0}
+        .input-label{font-size:11px;color:#64748b;margin-bottom:6px;font-weight:600;display:block;text-transform:uppercase;letter-spacing:0.5px}
+        .input-field{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:0;font-size:14px}
+        .input-field:focus{outline:none;border-color:#10b981}
         .spinner{display:inline-block;width:12px;height:12px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
     </style>
@@ -97,45 +104,40 @@
     <div id="fundModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Fund Your Account</h2>
-                <button class="close-btn" onclick="closeModal()">&times;</button>
+                <h2 class="modal-title">Fund Account</h2>
+                <button class="close-btn" onclick="closeModal()">×</button>
             </div>
             
-            <div style="background:linear-gradient(135deg,#10b981,#059669);color:white;padding:20px;border-radius:12px;margin-bottom:20px">
-                <div style="text-align:center;margin-bottom:16px">
-                    <i class="fas fa-university" style="font-size:32px;margin-bottom:8px"></i>
-                    <div style="font-size:13px;opacity:0.9;text-transform:uppercase;letter-spacing:1px">Transfer to</div>
-                </div>
-                <div style="background:rgba(255,255,255,0.15);padding:16px;border-radius:8px;margin-bottom:12px">
-                    <div style="font-size:11px;opacity:0.9;margin-bottom:4px">Bank Name</div>
-                    <div style="font-size:18px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
-                        <span>Monie Point</span>
-                        <button onclick="copyText('Monie Point')" style="background:rgba(255,255,255,0.2);border:none;color:white;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px"><i class="fas fa-copy"></i> Copy</button>
+            <div class="account-info">
+                <div class="info-row">
+                    <div>
+                        <div class="info-label">Bank</div>
+                        <div class="info-value">Monie Point</div>
                     </div>
+                    <button class="copy-btn" onclick="copyText('Monie Point')">Copy</button>
                 </div>
-                <div style="background:rgba(255,255,255,0.15);padding:16px;border-radius:8px;margin-bottom:12px">
-                    <div style="font-size:11px;opacity:0.9;margin-bottom:4px">Account Number</div>
-                    <div style="font-size:24px;font-weight:700;letter-spacing:2px;display:flex;justify-content:space-between;align-items:center">
-                        <span>9014749939</span>
-                        <button onclick="copyText('9014749939')" style="background:rgba(255,255,255,0.2);border:none;color:white;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px"><i class="fas fa-copy"></i> Copy</button>
+                <div class="info-row">
+                    <div>
+                        <div class="info-label">Account Number</div>
+                        <div class="info-value">9014749939</div>
                     </div>
+                    <button class="copy-btn" onclick="copyText('9014749939')">Copy</button>
                 </div>
-                <div style="background:rgba(255,255,255,0.15);padding:16px;border-radius:8px">
-                    <div style="font-size:11px;opacity:0.9;margin-bottom:4px">Account Name</div>
-                    <div style="font-size:16px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
-                        <span>Jerry Chidera Boi</span>
-                        <button onclick="copyText('Jerry Chidera Boi')" style="background:rgba(255,255,255,0.2);border:none;color:white;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px"><i class="fas fa-copy"></i> Copy</button>
+                <div class="info-row">
+                    <div>
+                        <div class="info-label">Account Name</div>
+                        <div class="info-value">Jerry Chidera Boi</div>
                     </div>
+                    <button class="copy-btn" onclick="copyText('Jerry Chidera Boi')">Copy</button>
                 </div>
             </div>
 
             <div class="input-group">
                 <label class="input-label">Amount Sent (₦)</label>
-                <input type="number" id="amountSent" class="input-field" placeholder="Enter amount you transferred" min="1" step="0.01">
+                <input type="number" id="amountSent" class="input-field" placeholder="Enter amount" min="1" step="0.01">
             </div>
-            
-            <div class="warning"><strong>⚠️ Important:</strong> After making the transfer, enter the amount below and click "Confirm Payment" to notify us.</div>
-            <button class="btn" onclick="submitFunding()"><i class="fas fa-check-circle"></i> Confirm Payment</button>
+
+            <button class="btn" onclick="submitFunding()">Confirm Payment</button>
         </div>
     </div>
 
@@ -286,4 +288,4 @@
         });
     </script>
 </body>
-    </html>
+                        </html>
