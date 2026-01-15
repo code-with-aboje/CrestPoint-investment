@@ -73,19 +73,9 @@
                 <div class="stat-trend" id="investedCount"><span class="spinner"></span></div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Available</div>
-                <div class="stat-value" id="available"><span class="spinner"></span></div>
-                <div class="stat-trend">Ready to invest</div>
-            </div>
-            <div class="stat-card">
                 <div class="stat-label">Total Claimed</div>
                 <div class="stat-value" id="totalClaimed"><span class="spinner"></span></div>
                 <div class="stat-trend">Total earnings</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Total ROI</div>
-                <div class="stat-value" id="totalROI"><span class="spinner"></span></div>
-                <div class="stat-trend">Return on Investment</div>
             </div>
         </div>
 
@@ -93,7 +83,7 @@
             <div class="section-title"><i class="fas fa-hand-holding-usd"></i> Pending Claims</div>
             <div class="pending-amount">
                 <div class="pending-label">Total Claimable</div>
-                <div class="pending-value" id="totalPending">$0.00</div>
+                <div class="pending-value" id="totalPending">₦0.00</div>
             </div>
             <button class="btn" onclick="claimAll()">Claim All Earnings</button>
         </div>
@@ -110,27 +100,42 @@
                 <h2 class="modal-title">Fund Your Account</h2>
                 <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
-            <div class="input-group">
-                <label class="input-label">Select Payment Method</label>
-                <select id="paymentMethod" class="input-field">
-                    <option value="">Choose payment method...</option>
-                    <option value="Revolut">Revolut</option>
-                    <option value="PayPal">PayPal</option>
-                    <option value="Cash App">Cash App</option>
-                    <option value="Venmo">Venmo</option>
-                    <option value="Chime">Chime</option>
-                    <option value="IBAN">IBAN</option>
-                    <option value="Western Union">Western Union</option>
-                    <option value="MoneyGram">MoneyGram</option>
-                    <option value="Bank Transfer">Bank Transfer</option>
-                </select>
+            
+            <div style="background:linear-gradient(135deg,#10b981,#059669);color:white;padding:20px;border-radius:12px;margin-bottom:20px">
+                <div style="text-align:center;margin-bottom:16px">
+                    <i class="fas fa-university" style="font-size:32px;margin-bottom:8px"></i>
+                    <div style="font-size:13px;opacity:0.9;text-transform:uppercase;letter-spacing:1px">Transfer to</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.15);padding:16px;border-radius:8px;margin-bottom:12px">
+                    <div style="font-size:11px;opacity:0.9;margin-bottom:4px">Bank Name</div>
+                    <div style="font-size:18px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+                        <span>Monie Point</span>
+                        <button onclick="copyText('Monie Point')" style="background:rgba(255,255,255,0.2);border:none;color:white;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                </div>
+                <div style="background:rgba(255,255,255,0.15);padding:16px;border-radius:8px;margin-bottom:12px">
+                    <div style="font-size:11px;opacity:0.9;margin-bottom:4px">Account Number</div>
+                    <div style="font-size:24px;font-weight:700;letter-spacing:2px;display:flex;justify-content:space-between;align-items:center">
+                        <span>9014749939</span>
+                        <button onclick="copyText('9014749939')" style="background:rgba(255,255,255,0.2);border:none;color:white;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                </div>
+                <div style="background:rgba(255,255,255,0.15);padding:16px;border-radius:8px">
+                    <div style="font-size:11px;opacity:0.9;margin-bottom:4px">Account Name</div>
+                    <div style="font-size:16px;font-weight:700;display:flex;justify-content:space-between;align-items:center">
+                        <span>Jerry Chidera Boi</span>
+                        <button onclick="copyText('Jerry Chidera Boi')" style="background:rgba(255,255,255,0.2);border:none;color:white;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:11px"><i class="fas fa-copy"></i> Copy</button>
+                    </div>
+                </div>
             </div>
+
             <div class="input-group">
-                <label class="input-label">Amount to Fund (USD)</label>
-                <input type="number" id="amountSent" class="input-field" placeholder="Enter amount in USD" min="1" step="0.01">
+                <label class="input-label">Amount Sent (₦)</label>
+                <input type="number" id="amountSent" class="input-field" placeholder="Enter amount you transferred" min="1" step="0.01">
             </div>
-            <div class="warning"><strong>ℹ️ Next Step:</strong> After clicking continue, you'll be redirected to WhatsApp to complete your funding request.</div>
-            <button class="btn" onclick="submitFunding()">Continue to WhatsApp</button>
+            
+            <div class="warning"><strong>⚠️ Important:</strong> After making the transfer, enter the amount below and click "Confirm Payment" to notify us.</div>
+            <button class="btn" onclick="submitFunding()"><i class="fas fa-check-circle"></i> Confirm Payment</button>
         </div>
     </div>
 
@@ -142,13 +147,26 @@
         let user,plans={};
 
         window.openModal=()=>document.getElementById('fundModal').style.display='block';
-        window.closeModal=()=>{document.getElementById('fundModal').style.display='none';document.getElementById('amountSent').value='';document.getElementById('paymentMethod').value=''};
+        window.closeModal=()=>{document.getElementById('fundModal').style.display='none';document.getElementById('amountSent').value=''};
+
+        window.copyText=async(text)=>{
+            try{
+                await navigator.clipboard.writeText(text);
+                alert('✅ Copied: '+text);
+            }catch(e){
+                const input=document.createElement('input');
+                input.value=text;
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+                alert('✅ Copied: '+text);
+            }
+        };
 
         window.submitFunding=async()=>{
-            if(!user)return;
-            const method=document.getElementById('paymentMethod').value;
+            if(!user)return alert('Please log in first');
             const amt=parseFloat(document.getElementById('amountSent').value);
-            if(!method)return alert('Please select a payment method');
             if(!amt||amt<=0)return alert('Please enter a valid amount');
             try{
                 await push(ref(database,'fundingRequests'),{
@@ -156,24 +174,27 @@
                     userEmail:user.email,
                     userName:user.displayName||user.email,
                     amount:amt,
-                    paymentMethod:method,
+                    paymentMethod:'Monie Point',
+                    accountNumber:'9014749939',
+                    accountName:'Jerry Chidera Boi',
                     status:'pending',
                     createdAt:new Date().toISOString(),
                     timestamp:Date.now()
                 });
-                const msg=`Hello! I would like to fund my investment account.\n\n*Account Details:*\nEmail: ${user.email}\n\n*Funding Request:*\nPayment Method: ${method}\nAmount: $${amt.toFixed(2)} USD\n\nPlease provide payment instructions. Thank you!`;
+                const msg=`Hello! I have transferred funds to my investment account.\n\n*Account Details:*\nEmail: ${user.email}\n\n*Transfer Details:*\nBank: Monie Point\nAccount Number: 9014749939\nAccount Name: Jerry Chidera Boi\nAmount Transferred: ₦${amt.toFixed(2)}\n\nPlease confirm and credit my account. Thank you!`;
                 window.open(`https://wa.me/447940228929?text=${encodeURIComponent(msg)}`,'_blank');
                 closeModal();
-                alert('✅ Request saved! Opening WhatsApp...');
+                alert('✅ Payment confirmation sent! We will credit your account once verified.');
             }catch(e){alert('Failed to submit. Please try again.')}
         };
 
         const calcPending=p=>{
             const now=Date.now();
-            if(now>=p.endDate)return Math.max(0,p.totalReturns-(p.claimedAmount||0));
+            if(now>=p.maturityDate)return Math.max(0,p.dailyIncome-(p.totalClaimed||0));
             const elapsed=now-p.startDate;
-            const earned=(p.totalReturns*elapsed)/(p.endDate-p.startDate);
-            return Math.max(0,earned-(p.claimedAmount||0));
+            const daysPassed=elapsed/86400000;
+            const earned=p.dailyIncome*daysPassed;
+            return Math.max(0,earned-(p.totalClaimed||0));
         };
 
         window.claimEarnings=async id=>{
@@ -181,20 +202,18 @@
             const p=plans[id];
             if(!p)return;
             const amt=calcPending(p);
-            if(amt<.01)return;
+            if(amt<1)return;
             try{
                 const snap=await get(ref(database,`users/${user.uid}`));
                 const d=snap.val();
-                const claimed=(p.claimedAmount||0)+amt;
+                const claimed=(p.totalClaimed||0)+amt;
                 await update(ref(database,`users/${user.uid}`),{
-                    available:(d.available||0)+amt,
-                    totalBalance:(d.totalBalance||0)+amt,
+                    balance:(d.balance||0)+amt,
                     totalClaimed:(d.totalClaimed||0)+amt,
-                    [`activePlans/${id}/claimedAmount`]:claimed,
-                    [`activePlans/${id}/lastClaim`]:Date.now(),
-                    updatedAt:new Date().toISOString()
+                    [`investments/${id}/totalClaimed`]:claimed,
+                    [`investments/${id}/lastClaim`]:Date.now()
                 });
-                alert(`✅ Successfully claimed $${amt.toFixed(2)}!`);
+                alert(`✅ Successfully claimed ₦${amt.toFixed(2)}!`);
             }catch(e){alert('Failed to claim. Try again.')}
         };
 
@@ -203,53 +222,58 @@
             let total=0;
             const updates={};
             Object.entries(plans).forEach(([id,p])=>{
-                if(!p.isActive)return;
+                if(p.status!=='active')return;
                 const pending=calcPending(p);
-                if(pending>=.01){
+                if(pending>=1){
                     total+=pending;
-                    const claimed=(p.claimedAmount||0)+pending;
-                    updates[`activePlans/${id}/claimedAmount`]=claimed;
-                    updates[`activePlans/${id}/lastClaim`]=Date.now();
+                    const claimed=(p.totalClaimed||0)+pending;
+                    updates[`investments/${id}/totalClaimed`]=claimed;
+                    updates[`investments/${id}/lastClaim`]=Date.now();
                 }
             });
-            if(total<.01)return alert('No earnings to claim yet');
+            if(total<1)return alert('No earnings to claim yet');
             try{
                 const snap=await get(ref(database,`users/${user.uid}`));
                 const d=snap.val();
                 await update(ref(database,`users/${user.uid}`),{
                     ...updates,
-                    available:(d.available||0)+total,
-                    totalBalance:(d.totalBalance||0)+total,
-                    totalClaimed:(d.totalClaimed||0)+total,
-                    updatedAt:new Date().toISOString()
+                    balance:(d.balance||0)+total,
+                    totalClaimed:(d.totalClaimed||0)+total
                 });
-                alert(`✅ Successfully claimed $${total.toFixed(2)}!`);
+                alert(`✅ Successfully claimed ₦${total.toFixed(2)}!`);
             }catch(e){alert('Failed to claim. Try again.')}
         };
 
         const updateUI=d=>{
             document.getElementById('userName').textContent=d.fullName||d.email?.split('@')[0]||'Investor';
-            document.getElementById('totalBalance').textContent=`$${(d.totalBalance||0).toFixed(2)}`;
-            document.getElementById('balanceChange').textContent=`$${(d.available||0).toFixed(2)} Available`;
-            document.getElementById('invested').textContent=`$${(d.invested||0).toFixed(2)}`;
-            document.getElementById('available').textContent=`$${(d.available||0).toFixed(2)}`;
-            document.getElementById('totalClaimed').textContent=`$${(d.totalClaimed||0).toFixed(2)}`;
-            const roi=d.invested>0?((d.totalClaimed||0)/d.invested*100):0;
-            document.getElementById('totalROI').textContent=`${roi.toFixed(2)}%`;
+            document.getElementById('totalBalance').textContent=`₦${(d.balance||0).toLocaleString('en-NG',{minimumFractionDigits:2})}`;
             
-            plans=d.activePlans||{};
+            const investments=d.investments||{};
+            let totalInvested=0;
+            Object.values(investments).forEach(inv=>{
+                if(inv.status==='active')totalInvested+=inv.amount;
+            });
+            
+            document.getElementById('balanceChange').textContent=`₦${(d.balance||0).toLocaleString('en-NG',{minimumFractionDigits:2})} Available`;
+            document.getElementById('invested').textContent=`₦${totalInvested.toLocaleString('en-NG',{minimumFractionDigits:2})}`;
+            document.getElementById('totalClaimed').textContent=`₦${(d.totalClaimed||0).toLocaleString('en-NG',{minimumFractionDigits:2})}`;
+            
+            const activeCount=Object.values(investments).filter(i=>i.status==='active').length;
+            document.getElementById('investedCount').textContent=`${activeCount} active plan${activeCount!==1?'s':''}`;
+            
+            plans=investments;
             const arr=Object.entries(plans).map(([id,p])=>({id,...p}));
             let totalPending=0;
             
             if(arr.length>0){
                 document.getElementById('plansList').innerHTML=arr.map(p=>{
                     const pending=calcPending(p);
-                    if(p.isActive)totalPending+=pending;
-                    return`<div class="plan-item"><div class="plan-header"><div class="plan-info"><h4>${p.type} Plan</h4><span class="plan-status">${p.isActive?'● Active':'✓ Completed'}</span></div><div>$${p.amount.toFixed(2)}</div></div>${p.isActive?`<button class="btn btn-sm"${pending<.01?' disabled':''} onclick="claimEarnings('${p.id}')">${pending>=.01?`💰 Claim $${pending.toFixed(2)}`:'Nothing to Claim Yet'}</button>`:''}</div>`;
+                    if(p.status==='active')totalPending+=pending;
+                    return`<div class="plan-item"><div class="plan-header"><div class="plan-info"><h4>${p.planName}</h4><span class="plan-status">${p.status==='active'?'● Active':'✓ Completed'}</span></div><div>₦${p.amount.toLocaleString('en-NG',{minimumFractionDigits:2})}</div></div>${p.status==='active'?`<button class="btn btn-sm"${pending<1?' disabled':''} onclick="claimEarnings('${p.id}')">${pending>=1?`💰 Claim ₦${pending.toFixed(2)}`:'Nothing to Claim Yet'}</button>`:''}</div>`;
                 }).join('');
-                if(totalPending>=.01){
+                if(totalPending>=1){
                     document.getElementById('pendingSection').style.display='block';
-                    document.getElementById('totalPending').textContent=`$${totalPending.toFixed(2)}`;
+                    document.getElementById('totalPending').textContent=`₦${totalPending.toFixed(2)}`;
                 }
             }
         };
