@@ -21,8 +21,6 @@
         .balance-amount{font-size:36px;font-weight:700}
         .info-note{background:#dbeafe;border:2px solid #3b82f6;color:#1e40af;padding:14px;border-radius:12px;margin-bottom:24px;font-size:13px;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px}
         .info-note i{font-size:18px}
-        .claim-info{background:#fef3c7;border:2px solid #f59e0b;color:#92400e;padding:14px;border-radius:12px;margin-bottom:24px;font-size:13px;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px}
-        .claim-info i{font-size:18px}
         .plans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
         .plan-card{background:white;border-radius:20px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,.08);transition:all .3s;position:relative;border:2px solid transparent}
         .plan-card:hover{transform:translateY(-6px);box-shadow:0 12px 32px rgba(0,0,0,.15);border-color:#10b981}
@@ -36,16 +34,12 @@
         .price-label{color:#64748b;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:8px}
         .price-amount{font-size:36px;color:#0f172a;font-weight:700}
         .price-amount span{font-size:18px;color:#10b981}
-        .min-investment{color:#64748b;font-size:11px;margin-top:6px}
         .plan-interest{background:linear-gradient(135deg,#10b981,#059669);color:white;padding:12px;border-radius:12px;text-align:center;margin:16px 0;font-size:14px;font-weight:700;box-shadow:0 2px 8px rgba(16,185,129,.25)}
         .plan-interest .percentage{font-size:24px;display:block;margin-bottom:4px}
         .daily-income{background:#f0fdf4;border:2px solid #10b981;color:#059669;padding:10px;border-radius:10px;text-align:center;margin:12px 0;font-size:13px;font-weight:600}
-        .plan-duration{background:#e0f2fe;border:2px solid #0284c7;color:#075985;padding:10px;border-radius:10px;text-align:center;margin:12px 0;font-size:13px;font-weight:600}
         .plan-features{list-style:none;margin:16px 0}
         .plan-features li{padding:8px 0;color:#475569;display:flex;align-items:center;font-size:13px}
         .plan-features li i{color:#10b981;font-size:14px;margin-right:10px;flex-shrink:0}
-        .claim-method{background:#fef3c7;border-left:4px solid #f59e0b;padding:12px;border-radius:8px;margin:16px 0;font-size:12px;color:#92400e}
-        .claim-method strong{display:block;margin-bottom:4px;font-size:13px}
         .purchase-btn{width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s;text-transform:uppercase;box-shadow:0 2px 8px rgba(16,185,129,.25)}
         .purchase-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,185,129,.4)}
         .purchase-btn:disabled{opacity:.6;cursor:not-allowed;background:#94a3b8}
@@ -53,11 +47,6 @@
         .modal.active{display:block}
         .modal-content{background:white;border-radius:12px;padding:24px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);margin:60px auto;position:relative}
         .modal h3{font-size:18px;color:#0f172a;margin-bottom:16px;text-align:center;font-weight:700}
-        .form-group{margin-bottom:16px}
-        .form-label{display:block;color:#0f172a;font-size:13px;font-weight:600;margin-bottom:8px}
-        .form-input,.form-select{width:100%;padding:10px;border:2px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif}
-        .form-input:focus,.form-select:focus{outline:none;border-color:#10b981}
-        .form-input{color:#0f172a}
         .confirm-amount{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #10b981;border-radius:8px;padding:16px;text-align:center;margin-bottom:16px}
         .confirm-label{color:#059669;font-size:12px;font-weight:600;margin-bottom:6px}
         .confirm-value{color:#10b981;font-size:32px;font-weight:700}
@@ -69,7 +58,6 @@
         .modal-btn{flex:1;padding:12px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .3s}
         .modal-btn.cancel{background:#f1f5f9;color:#475569}
         .modal-btn.confirm{background:linear-gradient(135deg,#10b981,#059669);color:white}
-        .modal-btn.confirm:hover:not(:disabled){transform:translateY(-2px)}
         .modal-btn:disabled{opacity:.6;cursor:not-allowed}
         .error{background:#fee2e2;border:1px solid #dc2626;color:#dc2626;padding:10px;border-radius:8px;font-size:12px;margin-top:10px;display:none}
         .error.show{display:block}
@@ -91,12 +79,7 @@
 
         <div class="info-note">
             <i class="fas fa-lightbulb"></i>
-            <div><strong>Smart Investing:</strong> Plans mature at the end of their duration. Weekly ends in 7 days, Monthly in 30 days, Yearly in 365 days.</div>
-        </div>
-
-        <div class="claim-info">
-            <i class="fas fa-hand-holding-usd"></i>
-            <div><strong>How Claims Work:</strong> Earnings accumulate over time. Claim them anytime from your dashboard! When the plan matures, claim all earnings and reinvest.</div>
+            <div><strong>Note:</strong> All investments are in Naira (₦). Returns are calculated daily and accumulate until you claim them.</div>
         </div>
 
         <div class="balance-display">
@@ -112,45 +95,17 @@
     <div class="modal" id="modal">
         <div class="modal-content">
             <h3 id="modalTitle">Confirm Investment</h3>
-            
-            <div id="customPlanForm" style="display:none">
-                <div class="form-group">
-                    <label class="form-label">Investment Amount (Min $100)</label>
-                    <input type="number" id="customAmount" class="form-input" placeholder="Enter amount" min="100" step="1">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Select Plan Duration</label>
-                    <select id="customPlanType" class="form-select">
-                        <option value="">Choose a plan...</option>
-                        <option value="Weekly">Weekly (7 days)</option>
-                        <option value="Monthly-10.5">Monthly Standard (30 days)</option>
-                        <option value="Monthly-11.5">Monthly Premium (30 days)</option>
-                        <option value="Yearly">Yearly (365 days)</option>
-                    </select>
-                </div>
-                <div id="customSummary" class="summary" style="display:none">
-                    <div class="summary-row"><span>Daily Income:</span><strong id="customDaily">-</strong></div>
-                    <div class="summary-row"><span>Total Returns:</span><strong id="customReturns">-</strong></div>
-                    <div class="summary-row"><span>Duration:</span><strong id="customDuration">-</strong></div>
-                </div>
+            <div class="confirm-amount">
+                <div class="confirm-label">Investment Amount</div>
+                <div class="confirm-value" id="confirmAmount">₦0.00</div>
             </div>
-
-            <div id="regularPlanSummary">
-                <div class="confirm-amount">
-                    <div class="confirm-label">Investment Amount</div>
-                    <div class="confirm-value" id="confirmAmount">$0.00</div>
-                </div>
-
-                <div class="summary">
-                    <div class="summary-row"><span>Plan:</span><strong id="sPlan">-</strong></div>
-                    <div class="summary-row"><span>Daily:</span><strong id="sDaily">-</strong></div>
-                    <div class="summary-row"><span>Returns:</span><strong id="sReturns">-</strong></div>
-                    <div class="summary-row"><span>Duration:</span><strong id="sDuration">-</strong></div>
-                </div>
+            <div class="summary">
+                <div class="summary-row"><span>Plan:</span><strong id="sPlan">-</strong></div>
+                <div class="summary-row"><span>Daily Income:</span><strong id="sDaily">-</strong></div>
+                <div class="summary-row"><span>Total Returns:</span><strong id="sReturns">-</strong></div>
+                <div class="summary-row"><span>Duration:</span><strong id="sDuration">-</strong></div>
             </div>
-
             <div class="error" id="error"></div>
-
             <div class="modal-actions">
                 <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
                 <button class="modal-btn confirm" id="confirmBtn" onclick="confirmPurchase()">Invest Now</button>
@@ -158,262 +113,147 @@
         </div>
     </div>
 
+    <script>
+        // ========== EDIT PLAN PRICES HERE ==========
+        // cost = what user pays, income = what they earn daily
+        const PLANS = {
+            starter: { cost: 3000, income: 1000, duration: '24hrs' },
+            bronze: { cost: 6000, income: 2000, duration: '24hrs' },
+            silver: { cost: 10000, income: 3500, duration: '24hrs' },
+            gold: { cost: 15000, income: 5500, duration: '24hrs' },
+            platinum: { cost: 25000, income: 8000, duration: '24hrs' }
+        };
+        // ===========================================
+    </script>
+
     <script type="module">
-        import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-        import{getDatabase,ref,get,update}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+        import{onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+        import{ref,get,update}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
         import{auth,database}from"./lib/firebase.js";
 
         const plans=[
-            {name:'Weekly',icon:'calendar-week',period:'Short Term',min:100,returns:20,daily:14.30,badge:'Popular',featured:true,duration:7,durationInMs:7*24*60*60*1000},
-            {name:'Monthly-10.5',display:'Monthly Standard',icon:'calendar-alt',period:'Medium Term',min:500,returns:10.5,daily:1.75,duration:30,durationInMs:30*24*60*60*1000},
-            {name:'Monthly-11.5',display:'Monthly Premium',icon:'calendar-check',period:'Medium Term',min:500,returns:11.5,daily:1.92,badge:'Most Popular',featured:true,duration:30,durationInMs:30*24*60*60*1000},
-            {name:'Yearly',icon:'calendar',period:'Long Term',min:500,returns:130,daily:1.78,duration:365,badge:'Best Value',durationInMs:365*24*60*60*1000}
+            {id:'starter',name:'Starter Plan',icon:'seedling',badge:'Beginner'},
+            {id:'bronze',name:'Bronze Plan',icon:'medal',featured:true,badge:'Popular'},
+            {id:'silver',name:'Silver Plan',icon:'award'},
+            {id:'gold',name:'Gold Plan',icon:'crown',featured:true,badge:'Best Value'},
+            {id:'platinum',name:'Platinum Plan',icon:'gem',badge:'Elite'}
         ];
 
-        let user,balance=0,selectedPlan=null,isCustom=false;
+        let user,balance=0,selectedPlan=null;
+
+        onAuthStateChanged(auth,async u=>{
+            if(!u)return window.location.href='/login';
+            user=u;
+            const snap=await get(ref(database,'users/'+u.uid));
+            if(snap.exists()){
+                balance=snap.val().balance||0;
+                document.getElementById('userBalance').textContent='₦'+balance.toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
+            }
+        });
 
         const grid=document.getElementById('plansGrid');
-        
-        // Add custom plan first
-        grid.innerHTML=`
-            <div class="plan-card featured">
-                <span class="featured-badge">Custom</span>
-                <div class="plan-header">
-                    <div class="plan-icon"><i class="fas fa-star"></i></div>
-                    <div class="plan-name">Create Your Plan</div>
-                    <div class="plan-period">Flexible Option</div>
-                </div>
-                <div class="plan-price">
-                    <div class="price-label">Choose Your Amount</div>
-                    <div class="price-amount">$100<span>+</span></div>
-                    <div class="min-investment">Minimum $100, no maximum limit</div>
-                </div>
-                <div class="plan-interest">
-                    <span class="percentage">Custom</span>
-                    Based on Duration
-                </div>
-                <ul class="plan-features">
-                    <li><i class="fas fa-check-circle"></i>Set your own investment amount</li>
-                    <li><i class="fas fa-check-circle"></i>Choose plan duration</li>
-                    <li><i class="fas fa-check-circle"></i>Real-time earnings calculation</li>
-                    <li><i class="fas fa-check-circle"></i>See returns before investing</li>
-                    <li><i class="fas fa-check-circle"></i>Flexible investment strategy</li>
-                    <li><i class="fas fa-check-circle"></i>24/7 Priority support</li>
-                </ul>
-                <button class="purchase-btn" onclick="openCustomModal()">
-                    <i class="fas fa-plus"></i> Create Plan
-                </button>
-            </div>
-        `;
-
-        // Add regular plans
         plans.forEach(p=>{
-            const dailyOn500=(500*p.returns/100)/p.duration;
-            const durationText=`${p.duration} day${p.duration>1?'s':''}`;
-            
+            const cfg=window.PLANS[p.id];
+            const daily=cfg.income;
+            const roi=((cfg.income/cfg.cost)*100).toFixed(0);
+
             grid.innerHTML+=`
                 <div class="plan-card ${p.featured?'featured':''}">
                     ${p.badge?`<span class="featured-badge">${p.badge}</span>`:''}
                     <div class="plan-header">
                         <div class="plan-icon"><i class="fas fa-${p.icon}"></i></div>
-                        <div class="plan-name">${p.display||p.name}</div>
-                        <div class="plan-period">${p.period}</div>
+                        <div class="plan-name">${p.name}</div>
+                        <div class="plan-period">${cfg.duration} Investment</div>
                     </div>
                     <div class="plan-price">
-                        <div class="price-label">Minimum Investment</div>
-                        <div class="price-amount">$${p.min}<span>+</span></div>
-                        <div class="min-investment">Start with $${p.min} or more</div>
+                        <div class="price-label">Investment Amount</div>
+                        <div class="price-amount">₦${cfg.cost.toLocaleString()}</div>
                     </div>
                     <div class="plan-interest">
-                        <span class="percentage">${p.returns}%</span>
-                        Total Returns
+                        <span class="percentage">${roi}%</span>
+                        Daily ROI
                     </div>
                     <div class="daily-income">
-                        <i class="fas fa-coins"></i>$${dailyOn500.toFixed(2)}/day on $500 investment
-                    </div>
-                    <div class="plan-duration">
-                        <i class="fas fa-clock"></i>${durationText} investment period
-                    </div>
-                    <div class="claim-method">
-                        <strong><i class="fas fa-hand-holding-usd"></i> Manual Claim System</strong>
-                        Earnings accumulate daily. Visit your dashboard to claim anytime! Plan completes when duration ends.
+                        <i class="fas fa-coins"></i> Daily Income: ₦${daily.toLocaleString()}
                     </div>
                     <ul class="plan-features">
-                        <li><i class="fas fa-check-circle"></i>${durationText} to maturity</li>
+                        <li><i class="fas fa-check-circle"></i>Investment: ₦${cfg.cost.toLocaleString()}</li>
+                        <li><i class="fas fa-check-circle"></i>Daily Earnings: ₦${cfg.income.toLocaleString()}</li>
+                        <li><i class="fas fa-check-circle"></i>Duration: ${cfg.duration}</li>
                         <li><i class="fas fa-check-circle"></i>Claim earnings anytime</li>
-                        <li><i class="fas fa-check-circle"></i>Real-time earnings tracking</li>
                         <li><i class="fas fa-check-circle"></i>Auto-completes at maturity</li>
-                        <li><i class="fas fa-check-circle"></i>Reinvest after completion</li>
-                        <li><i class="fas fa-check-circle"></i>24/7 Priority support</li>
+                        <li><i class="fas fa-check-circle"></i>24/7 Support</li>
                     </ul>
-                    <button class="purchase-btn" onclick="openModal('${p.name}')">
-                        <i class="fas fa-rocket"></i> Start Investing
+                    <button class="purchase-btn" onclick="openModal('${p.id}')">
+                        <i class="fas fa-rocket"></i> Invest Now
                     </button>
                 </div>
             `;
         });
 
-        window.openCustomModal=()=>{
-            isCustom=true;
-            selectedPlan=null;
-            document.getElementById('customPlanForm').style.display='block';
-            document.getElementById('regularPlanSummary').style.display='none';
-            document.getElementById('customSummary').style.display='none';
-            document.getElementById('modalTitle').textContent='Create Your Custom Plan';
-            document.getElementById('modal').classList.add('active');
-            document.getElementById('error').classList.remove('show');
-            document.getElementById('customAmount').value='';
-            document.getElementById('customPlanType').value='';
-            
-            document.getElementById('customAmount').addEventListener('input',updateCustomCalc);
-            document.getElementById('customPlanType').addEventListener('change',updateCustomCalc);
-        };
+        window.openModal=id=>{
+            selectedPlan=plans.find(p=>p.id===id);
+            const cfg=window.PLANS[id];
 
-        const updateCustomCalc=()=>{
-            const amt=parseFloat(document.getElementById('customAmount').value)||0;
-            const planType=document.getElementById('customPlanType').value;
-
-            if(amt<100||!planType){
-                document.getElementById('customSummary').style.display='none';
-                return;
-            }
-
-            const plan=plans.find(p=>p.name===planType);
-            if(!plan)return;
-
-            const totalReturns=amt*(plan.returns/100);
-            const dailyIncome=totalReturns/plan.duration;
-            const durationText=`${plan.duration} day${plan.duration>1?'s':''}`;
-
-            document.getElementById('customDaily').textContent=`$${dailyIncome.toFixed(2)}/day`;
-            document.getElementById('customReturns').textContent=`$${totalReturns.toFixed(2)} (${plan.returns}%)`;
-            document.getElementById('customDuration').textContent=durationText;
-            document.getElementById('customSummary').style.display='block';
-        };
-
-        window.openModal=name=>{
-            isCustom=false;
-            selectedPlan=plans.find(p=>p.name===name);
-            const displayName=selectedPlan.display||selectedPlan.name;
-            const dailyIncome=(500*selectedPlan.returns/100)/selectedPlan.duration;
-            const totalReturns=500*selectedPlan.returns/100;
-            const durationText=`${selectedPlan.duration} day${selectedPlan.duration>1?'s':''}`;
-            
-            document.getElementById('customPlanForm').style.display='none';
-            document.getElementById('regularPlanSummary').style.display='block';
-            document.getElementById('modalTitle').textContent=`Confirm ${displayName}`;
-            document.getElementById('confirmAmount').textContent='$500.00';
-            document.getElementById('sPlan').textContent=displayName;
-            document.getElementById('sDaily').textContent=`$${dailyIncome.toFixed(2)}/day`;
-            document.getElementById('sReturns').textContent=`$${totalReturns.toFixed(2)} (${selectedPlan.returns}% ROI)`;
-            document.getElementById('sDuration').textContent=durationText;
+            document.getElementById('modalTitle').textContent=`Confirm ${selectedPlan.name}`;
+            document.getElementById('confirmAmount').textContent='₦'+cfg.cost.toLocaleString();
+            document.getElementById('sPlan').textContent=selectedPlan.name;
+            document.getElementById('sDaily').textContent='₦'+cfg.income.toLocaleString();
+            document.getElementById('sReturns').textContent='₦'+cfg.income.toLocaleString()+'/day';
+            document.getElementById('sDuration').textContent=cfg.duration;
             document.getElementById('modal').classList.add('active');
             document.getElementById('error').classList.remove('show');
         };
 
-        window.closeModal=()=>{
-            document.getElementById('modal').classList.remove('active');
-            selectedPlan=null;
-            isCustom=false;
-        };
+        window.closeModal=()=>document.getElementById('modal').classList.remove('active');
 
         window.confirmPurchase=async()=>{
-            if(!user)return;
+            const cfg=window.PLANS[selectedPlan.id];
+            const btn=document.getElementById('confirmBtn');
+            const err=document.getElementById('error');
 
-            let amt,planName,plan;
-
-            if(isCustom){
-                amt=parseFloat(document.getElementById('customAmount').value)||0;
-                planName=document.getElementById('customPlanType').value;
-                plan=plans.find(p=>p.name===planName);
-
-                if(amt<100){
-                    showError('Minimum investment is $100');
-                    return;
-                }
-                if(!plan){
-                    showError('Please select a plan duration');
-                    return;
-                }
-            }else{
-                if(!selectedPlan)return;
-                amt=selectedPlan.min;
-                plan=selectedPlan;
-                planName=selectedPlan.name;
-            }
-
-            if(balance<amt){
-                showError('Insufficient balance. Please fund your account first.');
+            if(balance<cfg.cost){
+                err.textContent='Insufficient balance. Please fund your account.';
+                err.classList.add('show');
                 return;
             }
 
-            const btn=document.getElementById('confirmBtn');
             btn.disabled=true;
             btn.innerHTML='<span class="spinner"></span> Processing...';
 
             try{
-                const snap=await get(ref(database,`users/${user.uid}`));
-                const data=snap.val();
-
                 const now=Date.now();
-                const endDate=now+plan.durationInMs;
-                const totalReturns=amt*(plan.returns/100);
-                const dailyIncome=totalReturns/plan.duration;
-
-                const planId=`plan_${Date.now()}`;
-                const newPlan={
-                    id:planId,
-                    type:planName,
-                    amount:amt,
-                    returnRate:plan.returns,
-                    dailyIncome:dailyIncome,
-                    totalReturns:totalReturns,
+                const newBalance=balance-cfg.cost;
+                const investmentData={
+                    planId:selectedPlan.id,
+                    planName:selectedPlan.name,
+                    amount:cfg.cost,
+                    dailyIncome:cfg.income,
+                    duration:cfg.duration,
                     startDate:now,
-                    endDate:endDate,
-                    duration:plan.duration,
-                    durationInMs:plan.durationInMs,
-                    isActive:true,
-                    claimedAmount:0,
-                    lastClaim:now,
-                    createdAt:new Date().toISOString()
+                    maturityDate:now+86400000,
+                    status:'active',
+                    totalClaimed:0,
+                    lastClaimDate:null
                 };
 
-                await update(ref(database,`users/${user.uid}`),{
-                    available:(data.available||0)-amt,
-                    invested:(data.invested||0)+amt,
-                    totalBalance:(data.totalBalance||0)-amt,
-                    [`activePlans/${planId}`]:newPlan,
-                    updatedAt:new Date().toISOString()
+                await update(ref(database,'users/'+user.uid),{
+                    balance:newBalance,
+                    [`investments/${now}`]:investmentData
                 });
 
-                const planDisplay=isCustom?`Custom ${plan.display||plan.name}`:(plan.display||plan.name);
-                alert(`✅ Successfully invested $${amt.toFixed(2)} in ${planDisplay}!\n\n💰 Go to your dashboard to track and claim earnings.\n\n⏰ Plan matures in ${plan.duration} day${plan.duration>1?'s':''}.`);
-                location.href='/dashboard.html';
-            }catch(err){
-                console.error(err);
-                showError('Purchase failed. Please try again.');
+                balance=newBalance;
+                alert('Investment successful! Check your dashboard.');
+                closeModal();
+                document.getElementById('userBalance').textContent='₦'+balance.toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
+            }catch(e){
+                err.textContent='Error: '+e.message;
+                err.classList.add('show');
+            }finally{
                 btn.disabled=false;
-                btn.textContent='Confirm Investment';
+                btn.innerHTML='Invest Now';
             }
         };
-
-        const showError=msg=>{
-            const e=document.getElementById('error');
-            e.innerHTML=`<i class="fas fa-exclamation-circle"></i> ${msg}`;
-            e.classList.add('show');
-        };
-
-        onAuthStateChanged(auth,async u=>{
-            if(u){
-                user=u;
-                const snap=await get(ref(database,`users/${u.uid}`));
-                if(snap.exists()){
-                    const data=snap.val();
-                    balance=data.available||0;
-                    document.getElementById('userBalance').textContent=`$${balance.toFixed(2)}`;
-                }
-            }else location.href='/login.html';
-        });
     </script>
 </body>
-</html>
+    </html>
