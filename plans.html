@@ -53,17 +53,6 @@
         .summary-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
         .summary-row span{color:#64748b}
         .summary-row strong{color:#0f172a;font-weight:600}
-        .payment-info{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #10b981;border-radius:12px;padding:16px;margin-bottom:16px}
-        .payment-header{display:flex;align-items:center;gap:8px;font-weight:700;color:#059669;margin-bottom:12px;font-size:15px}
-        .payment-header i{font-size:18px}
-        .payment-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #10b98133;font-size:13px}
-        .payment-row:last-of-type{border-bottom:none}
-        .payment-row span{color:#059669;font-weight:500}
-        .payment-row strong{color:#047857;font-size:14px}
-        .copy-btn{background:#10b981;color:#fff;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;font-size:11px;margin-left:8px;transition:all .3s}
-        .copy-btn:hover{background:#059669;transform:scale(1.05)}
-        .payment-note{background:#dcfce7;color:#166534;padding:10px;border-radius:8px;font-size:12px;margin-top:12px;display:flex;align-items:center;gap:8px}
-        .payment-note i{font-size:14px}
         .modal-actions{display:flex;gap:10px;margin-top:16px}
         .modal-btn{flex:1;padding:12px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .3s}
         .modal-btn.cancel{background:#f1f5f9;color:#475569}
@@ -117,31 +106,6 @@
                 <div class="confirm-label">Investment Amount</div>
                 <div class="confirm-value" id="amt"></div>
             </div>
-            
-            <div class="payment-info">
-                <div class="payment-header">
-                    <i class="fas fa-money-bill-wave"></i>
-                    <span>Payment Details</span>
-                </div>
-                <div class="payment-row">
-                    <span>Bank:</span>
-                    <strong>Moniepoint</strong>
-                </div>
-                <div class="payment-row">
-                    <span>Account Number:</span>
-                    <strong id="accNum">9014749939</strong>
-                    <button class="copy-btn" onclick="copyAccount()"><i class="fas fa-copy"></i></button>
-                </div>
-                <div class="payment-row">
-                    <span>Account Name:</span>
-                    <strong>Jerry Chidera Boi</strong>
-                </div>
-                <div class="payment-note">
-                    <i class="fas fa-info-circle"></i>
-                    Make payment to this account then click "I've Paid" below
-                </div>
-            </div>
-
             <div class="summary">
                 <div class="summary-row"><span>Plan:</span><strong id="sp"></strong></div>
                 <div class="summary-row"><span>Daily Income:</span><strong id="sd"></strong></div>
@@ -150,15 +114,19 @@
             <div class="error" id="err"></div>
             <div class="modal-actions">
                 <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
-                <button class="modal-btn confirm" id="btn">I've Paid</button>
+                <button class="modal-btn confirm" id="btn">Invest Now</button>
             </div>
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import{onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+        import{ref,get,update,push}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+        import{auth,database}from"./lib/firebase.js";
+
         const PLANS={starter:{cost:3000,income:1000,dur:'24hrs'},bronze:{cost:6000,income:2000,dur:'24hrs'},silver:{cost:10000,income:3500,dur:'24hrs'},gold:{cost:15000,income:5500,dur:'24hrs'},platinum:{cost:25000,income:8000,dur:'24hrs'}};
         const plans=[{id:'starter',name:'Starter Plan',badge:'Beginner'},{id:'bronze',name:'Bronze Plan',featured:1,badge:'Popular'},{id:'silver',name:'Silver Plan'},{id:'gold',name:'Gold Plan',featured:1,badge:'Best Value'},{id:'platinum',name:'Platinum Plan',badge:'Elite'}];
-        let user,bal=0,sel,auth,db,init=0;
+        let user,bal=0,sel,init=0;
 
         function showErr(m){document.getElementById('errorMsg').textContent=m;document.getElementById('errorBanner').classList.add('show')}
         function showWarn(m){document.getElementById('warningMsg').textContent=m;document.getElementById('warningBanner').classList.add('show')}
@@ -185,7 +153,7 @@
                         <li><i class="fas fa-check-circle"></i>Auto-completes at maturity</li>
                         <li><i class="fas fa-check-circle"></i>24/7 Support</li>
                     </ul>
-                    <button class="purchase-btn" onclick="open('${p.id}')"><i class="fas fa-rocket"></i> Invest Now</button>
+                    <button class="purchase-btn" onclick="openPlan('${p.id}')"><i class="fas fa-rocket"></i> Invest Now</button>
                 `;
                 g.appendChild(card);
             });
@@ -193,22 +161,33 @@
 
         async function initApp(){
             try{
-                const{onAuthStateChanged}=await import("https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js");
-                const{ref,get}=await import("https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js");
-                const fb=await import("./lib/firebase.js");
-                auth=fb.auth;db=fb.database;init=1;
-
+                init=1;
                 onAuthStateChanged(auth,async u=>{
-                    if(!u){showWarn('Not logged in. Log in to invest.');document.getElementById('balance').textContent='₦0.00';user=null;bal=0;return}
-                    hideWarn();user=u;
-                    const s=await get(ref(db,'users/'+u.uid));
-                    if(s.exists()){bal=s.val().balance||0;document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2})}
-                    else{document.getElementById('balance').textContent='₦0.00';bal=0}
+                    if(!u){
+                        showWarn('Not logged in. Log in to invest.');
+                        document.getElementById('balance').textContent='₦0.00';
+                        user=null;
+                        bal=0;
+                        return;
+                    }
+                    hideWarn();
+                    user=u;
+                    const s=await get(ref(database,'users/'+u.uid));
+                    if(s.exists()){
+                        bal=s.val().balance||0;
+                        document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2});
+                    }else{
+                        document.getElementById('balance').textContent='₦0.00';
+                        bal=0;
+                    }
                 });
-            }catch(e){showErr('Firebase error: '+e.message);document.getElementById('balance').textContent='₦0.00'}
+            }catch(e){
+                showErr('Firebase error: '+e.message);
+                document.getElementById('balance').textContent='₦0.00';
+            }
         }
 
-        window.open=id=>{
+        window.openPlan=id=>{
             sel=plans.find(p=>p.id===id);
             const c=PLANS[id];
             document.getElementById('modalTitle').textContent=`Confirm ${sel.name}`;
@@ -222,35 +201,43 @@
 
         window.closeModal=()=>document.getElementById('modal').classList.remove('active');
 
-        window.copyAccount=()=>{
-            const acc='9014749939';
-            navigator.clipboard.writeText(acc).then(()=>{
-                const btn=event.target.closest('.copy-btn');
-                const orig=btn.innerHTML;
-                btn.innerHTML='<i class="fas fa-check"></i>';
-                btn.style.background='#059669';
-                setTimeout(()=>{btn.innerHTML=orig;btn.style.background='#10b981'},2000);
-            });
-        };
-
         document.getElementById('btn').onclick=async()=>{
             const c=PLANS[sel.id],btn=document.getElementById('btn'),err=document.getElementById('err');
             if(!user){err.textContent='Please log in.';err.classList.add('show');return}
             if(!init){err.textContent='Firebase not ready.';err.classList.add('show');return}
-            if(bal<c.cost){err.textContent=`Need ₦${c.cost.toLocaleString()}, have ₦${bal.toLocaleString()}`;err.classList.add('show');return}
+            if(bal<c.cost){err.textContent='Insufficient funds. Fund wallet.';err.classList.add('show');return}
             btn.disabled=1;btn.innerHTML='<span class="spinner"></span> Processing...';
             try{
-                const{ref,update}=await import("https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js");
                 const now=Date.now();
-                await update(ref(db,'users/'+user.uid),{balance:bal-c.cost,[`investments/${now}`]:{planId:sel.id,planName:sel.name,amount:c.cost,dailyIncome:c.income,duration:c.dur,startDate:now,maturityDate:now+86400000,status:'active',totalClaimed:0}});
+                const invKey=push(ref(database,`users/${user.uid}/investments`)).key;
+                await update(ref(database,'users/'+user.uid),{
+                    balance:bal-c.cost,
+                    [`investments/${invKey}`]:{
+                        planId:sel.id,
+                        planName:sel.name,
+                        amount:c.cost,
+                        dailyIncome:c.income,
+                        duration:c.dur,
+                        startDate:now,
+                        maturityDate:now+86400000,
+                        status:'active',
+                        totalClaimed:0
+                    }
+                });
                 bal-=c.cost;
                 document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2});
                 alert('✓ Investment successful!');
                 closeModal();
-            }catch(e){err.textContent='Error: '+e.message;err.classList.add('show')}finally{btn.disabled=0;btn.innerHTML='I\'ve Paid'}
+            }catch(e){
+                err.textContent='Error: '+e.message;
+                err.classList.add('show');
+            }finally{
+                btn.disabled=0;
+                btn.innerHTML='Invest Now';
+            }
         };
 
         document.addEventListener('DOMContentLoaded',()=>{render();initApp()});
     </script>
 </body>
-    </html>
+                    </html>
