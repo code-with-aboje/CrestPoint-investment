@@ -127,10 +127,6 @@
     </script>
 
     <script type="module">
-        import{onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-        import{ref,get,update}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
-        import{auth,database}from"./lib/firebase.js";
-
         const plans=[
             {id:'starter',name:'Starter Plan',icon:'seedling',badge:'Beginner'},
             {id:'bronze',name:'Bronze Plan',icon:'medal',featured:true,badge:'Popular'},
@@ -139,17 +135,33 @@
             {id:'platinum',name:'Platinum Plan',icon:'gem',badge:'Elite'}
         ];
 
-        let user,balance=0,selectedPlan=null;
+        let user,balance=0,selectedPlan=null,auth,database;
 
-        onAuthStateChanged(auth,async u=>{
-            if(!u)return window.location.href='/login';
-            user=u;
-            const snap=await get(ref(database,'users/'+u.uid));
-            if(snap.exists()){
-                balance=snap.val().balance||0;
-                document.getElementById('userBalance').textContent='₦'+balance.toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
+        // Initialize and load user data
+        async function initApp(){
+            try{
+                const{onAuthStateChanged}=await import("https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js");
+                const{ref,get,update}=await import("https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js");
+                const firebase=await import("./lib/firebase.js");
+                auth=firebase.auth;
+                database=firebase.database;
+
+                onAuthStateChanged(auth,async u=>{
+                    if(!u)return window.location.href='/login';
+                    user=u;
+                    const snap=await get(ref(database,'users/'+u.uid));
+                    if(snap.exists()){
+                        balance=snap.val().balance||0;
+                        document.getElementById('userBalance').textContent='₦'+balance.toLocaleString('en-NG',{minimumFractionDigits:2,maximumFractionDigits:2});
+                    }
+                });
+            }catch(e){
+                console.warn('Firebase not loaded, showing demo:',e);
+                document.getElementById('userBalance').textContent='₦0.00';
             }
-        });
+        }
+
+        initApp();
 
         const grid=document.getElementById('plansGrid');
         plans.forEach(p=>{
@@ -212,6 +224,12 @@
             const btn=document.getElementById('confirmBtn');
             const err=document.getElementById('error');
 
+            if(!user){
+                err.textContent='Please log in to make an investment.';
+                err.classList.add('show');
+                return;
+            }
+
             if(balance<cfg.cost){
                 err.textContent='Insufficient balance. Please fund your account.';
                 err.classList.add('show');
@@ -222,6 +240,7 @@
             btn.innerHTML='<span class="spinner"></span> Processing...';
 
             try{
+                const{ref,update}=await import("https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js");
                 const now=Date.now();
                 const newBalance=balance-cfg.cost;
                 const investmentData={
