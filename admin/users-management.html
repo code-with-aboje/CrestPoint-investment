@@ -4,355 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --primary: #000;
-            --secondary: #666;
-            --border: #d0d0d0;
-            --hover: #f0fdf4;
-            --accent: #22c55e;
-            --danger: #ff4444;
-            --success: #22c55e;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --search-height: 60px;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #fff;
-            color: var(--primary);
-            font-size: 14px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .header {
-            margin-bottom: 32px;
-            animation: slideDown 0.6s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .header h1 { 
-            font-size: 32px; 
-            margin-bottom: 8px; 
-            font-weight: 700;
-        }
-
-        .header p { 
-            color: var(--secondary); 
-            font-size: 15px;
-        }
-
-        .search-bar {
-            margin-bottom: 32px;
-            display: flex;
-            gap: 12px;
-            animation: slideUp 0.6s ease 0.1s both;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .search-wrapper {
-            position: relative;
-            flex: 1;
-            max-width: 400px;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--secondary);
-            width: 16px;
-            height: 16px;
-        }
-
-        .search-box {
-            width: 100%;
-            padding: 10px 14px 10px 40px;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            font-size: 14px;
-            background: #fff;
-            transition: all 0.2s ease;
-        }
-
-        .search-box:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
-        }
-
-        .btn {
-            padding: 10px 16px;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            background: #fff;
-            color: var(--primary);
-        }
-
-        .btn:hover { 
-            background: var(--hover);
-            border-color: var(--accent);
-        }
-
-        .btn-primary { 
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .btn-primary:hover { 
-            background: #16a34a;
-            border-color: #16a34a;
-        }
-
-        .btn-danger {
-            background: var(--danger);
-            color: white;
-            border-color: var(--danger);
-        }
-
-        .btn-danger:hover {
-            background: #cc0000;
-            border-color: #cc0000;
-        }
-
-        .btn-small {
-            border: 2px solid var(--border);
-        }
-
-        .btn-small.btn-primary {
-            border-color: var(--accent);
-        }
-
-        .btn-small.btn-primary:hover {
-            border-color: #16a34a;
-        }
-
-        .users-table {
-            width: 100%;
-            border-collapse: collapse;
-            animation: slideUp 0.6s ease 0.2s both;
-        }
-
-        .users-table thead {
-            border-bottom: 2px solid var(--border);
-        }
-
-        .users-table th {
-            text-align: left;
-            padding: 14px;
-            font-weight: 600;
-            color: var(--secondary);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .users-table tbody tr {
-            border-bottom: 2px solid var(--border);
-            transition: background 0.2s ease;
-        }
-
-        .users-table tbody tr:hover {
-            background: var(--hover);
-        }
-
-        .users-table td {
-            padding: 16px 14px;
-            font-size: 14px;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .user-email {
-            color: var(--secondary);
-            font-size: 13px;
-        }
-
-        .balance {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 12px;
-            border-radius: 4px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            animation: fadeIn 0.2s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 32px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from { transform: translate(-50%, -60%); opacity: 0; }
-            to { transform: translate(-50%, -50%); opacity: 1; }
-        }
-
-        .modal-header {
-            margin-bottom: 24px;
-        }
-
-        .modal-header h2 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .modal-header p {
-            color: var(--secondary);
-            font-size: 13px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 13px;
-            color: var(--primary);
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: 'Inter', sans-serif;
-            transition: border 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .modal-actions .btn {
-            flex: 1;
-            padding: 10px 16px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--secondary);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--secondary);
-        }
-
-        .empty-state-icon {
-            font-size: 32px;
-            margin-bottom: 12px;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .status-active {
-            background: rgba(0, 112, 243, 0.1);
-            color: var(--accent);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container { padding: 20px 16px; }
-            .header h1 { font-size: 24px; }
-            .search-bar { flex-direction: column; }
-            .search-wrapper { max-width: none; }
-            .users-table { font-size: 12px; }
-            .users-table th, .users-table td { padding: 12px 8px; }
-            .actions { flex-direction: column; }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Inter',sans-serif;background:#fff;color:#000;font-size:14px;padding:40px 20px}
+        .container{max-width:1400px;margin:0 auto}
+        h1{font-size:32px;margin-bottom:8px;font-weight:700}
+        .subtitle{color:#666;font-size:15px;margin-bottom:32px}
+        .search-bar{display:flex;gap:12px;margin-bottom:32px}
+        .search-wrapper{position:relative;flex:1;max-width:400px}
+        .search-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#666;width:16px;height:16px}
+        .search-box{width:100%;padding:10px 14px 10px 40px;border:2px solid #d0d0d0;border-radius:6px;font-size:14px}
+        .search-box:focus{outline:none;border-color:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.1)}
+        .btn{padding:10px 16px;border:2px solid #d0d0d0;border-radius:6px;cursor:pointer;font-size:14px;font-weight:500;background:#fff;color:#000;transition:all .2s}
+        .btn:hover{background:#f0fdf4;border-color:#22c55e}
+        .btn-primary{background:#22c55e;color:#fff;border-color:#22c55e}
+        .btn-primary:hover{background:#16a34a;border-color:#16a34a}
+        .btn-small{padding:6px 12px;font-size:12px;border-radius:4px}
+        table{width:100%;border-collapse:collapse}
+        th{text-align:left;padding:14px;font-weight:600;color:#666;font-size:12px;text-transform:uppercase;border-bottom:2px solid #d0d0d0}
+        td{padding:16px 14px;font-size:14px;border-bottom:2px solid #d0d0d0}
+        tr:hover{background:#f0fdf4}
+        .user-name{font-weight:600}
+        .user-email{color:#666;font-size:13px}
+        .balance{font-weight:600}
+        .actions{display:flex;gap:8px}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000}
+        .modal-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:32px;border-radius:8px;width:90%;max-width:400px;box-shadow:0 20px 25px -5px rgba(0,0,0,.1)}
+        .modal-header h2{font-size:20px;font-weight:600;margin-bottom:4px}
+        .modal-header p{color:#666;font-size:13px;margin-bottom:24px}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;margin-bottom:8px;font-weight:500;font-size:13px}
+        .form-group input,.form-group textarea{width:100%;padding:10px 12px;border:2px solid #d0d0d0;border-radius:6px;font-size:14px;font-family:'Inter',sans-serif}
+        .form-group input:focus,.form-group textarea:focus{outline:none;border-color:#22c55e}
+        .form-group textarea{resize:vertical;min-height:80px}
+        .modal-actions{display:flex;gap:12px;margin-top:24px}
+        .modal-actions .btn{flex:1}
+        .loading,.empty-state{text-align:center;padding:40px 20px;color:#666}
+        @media(max-width:768px){
+            body{padding:20px 16px}
+            h1{font-size:24px}
+            .search-bar{flex-direction:column}
+            .search-wrapper{max-width:none}
+            table{font-size:12px}
+            th,td{padding:12px 8px}
+            .actions{flex-direction:column}
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Users</h1>
-            <p>Manage and credit user accounts</p>
-        </div>
+        <h1>Users</h1>
+        <p class="subtitle">Manage and credit user accounts</p>
 
         <div class="search-bar">
             <div class="search-wrapper">
@@ -364,14 +67,14 @@
             <button class="btn" onclick="refreshUsers()">Refresh</button>
         </div>
 
-        <div style="overflow-x: auto;">
-            <table class="users-table">
+        <div style="overflow-x:auto">
+            <table>
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Available</th>
-                        <th>Total Balance</th>
+                        <th>Balance</th>
+                        <th>Total Claimed</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -382,7 +85,6 @@
         </div>
     </div>
 
-    <!-- Credit Modal -->
     <div id="creditModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -394,7 +96,7 @@
                 <input type="text" id="creditUserName" readonly>
             </div>
             <div class="form-group">
-                <label>Amount (USD)</label>
+                <label>Amount (₦)</label>
                 <input type="number" id="creditAmount" placeholder="0.00" min="0" step="0.01">
             </div>
             <div class="form-group">
@@ -409,54 +111,54 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, onValue, update, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-        import firebaseConfig from './firebaseConfig.js';
+        import{initializeApp}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import{getDatabase,ref,onValue,update,get}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import{getAuth,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import firebaseConfig from'./firebaseConfig.js';
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const auth = getAuth(app);
+        const app=initializeApp(firebaseConfig);
+        const db=getDatabase(app);
+        const auth=getAuth(app);
 
-        let users = {};
-        let creditUid = null;
+        let users={};
+        let creditUid=null;
 
-        const $ = id => document.getElementById(id);
-        const formatCurrency = a => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(a);
+        const $=id=>document.getElementById(id);
+        const formatCurrency=a=>`₦${a.toLocaleString('en-NG',{minimumFractionDigits:2})}`;
 
-        const filterUsers = term => {
-            if (!term) return users;
+        const filterUsers=term=>{
+            if(!term)return users;
             return Object.fromEntries(
-                Object.entries(users).filter(([_, u]) => 
-                    (u.fullName || '').toLowerCase().includes(term.toLowerCase()) ||
-                    (u.email || '').toLowerCase().includes(term.toLowerCase())
+                Object.entries(users).filter(([_,u])=>
+                    (u.fullName||'').toLowerCase().includes(term.toLowerCase())||
+                    (u.email||'').toLowerCase().includes(term.toLowerCase())
                 )
             );
         };
 
-        const renderUsers = (userList = users) => {
-            const tbody = $('usersBody');
+        const renderUsers=(userList=users)=>{
+            const tbody=$('usersBody');
             
-            if (!Object.keys(userList).length) {
-                tbody.innerHTML = '<tr><td colspan="5" class="empty-state"><div class="empty-state-icon">👤</div>No users found</td></tr>';
+            if(!Object.keys(userList).length){
+                tbody.innerHTML='<tr><td colspan="5" class="empty-state">No users found</td></tr>';
                 return;
             }
 
-            tbody.innerHTML = Object.entries(userList).map(([uid, u]) => {
-                const fullName = u.fullName || 'Unknown';
-                const email = u.email || 'No email';
-                const available = u.available || 0;
-                const totalBalance = u.totalBalance || 0;
+            tbody.innerHTML=Object.entries(userList).map(([uid,u])=>{
+                const fullName=u.fullName||'Unknown';
+                const email=u.email||'No email';
+                const balance=u.balance||0;
+                const totalClaimed=u.totalClaimed||0;
                 
-                return `
+                return`
                     <tr>
                         <td><div class="user-name">${fullName}</div></td>
                         <td><div class="user-email">${email}</div></td>
-                        <td><div class="balance">${formatCurrency(available)}</div></td>
-                        <td><div class="balance">${formatCurrency(totalBalance)}</div></td>
+                        <td><div class="balance">${formatCurrency(balance)}</div></td>
+                        <td><div class="balance">${formatCurrency(totalClaimed)}</div></td>
                         <td>
                             <div class="actions">
-                                <button class="btn btn-small btn-primary" onclick="openCreditModal('${uid}', '${fullName}')">
+                                <button class="btn btn-small btn-primary" onclick="openCreditModal('${uid}','${fullName}')">
                                     Credit
                                 </button>
                             </div>
@@ -466,88 +168,83 @@
             }).join('');
         };
 
-        window.openCreditModal = (uid, name) => {
-            creditUid = uid;
-            $('creditUserName').value = name;
-            $('creditAmount').value = '';
-            $('creditReason').value = '';
-            $('creditModal').style.display = 'flex';
+        window.openCreditModal=(uid,name)=>{
+            creditUid=uid;
+            $('creditUserName').value=name;
+            $('creditAmount').value='';
+            $('creditReason').value='';
+            $('creditModal').style.display='flex';
         };
 
-        window.closeModal = () => {
-            $('creditModal').style.display = 'none';
-            creditUid = null;
+        window.closeModal=()=>{
+            $('creditModal').style.display='none';
+            creditUid=null;
         };
 
-        window.processCreditUser = async () => {
-            if (!creditUid) return;
+        window.processCreditUser=async()=>{
+            if(!creditUid)return;
             
-            const amount = parseFloat($('creditAmount').value);
-            const description = $('creditReason').value.trim();
+            const amount=parseFloat($('creditAmount').value);
+            const description=$('creditReason').value.trim();
             
-            if (!amount || amount <= 0) {
+            if(!amount||amount<=0){
                 alert('Please enter a valid amount');
                 return;
             }
 
-            try {
-                const userRef = ref(db, `users/${creditUid}`);
-                const snapshot = await get(userRef);
+            try{
+                const userRef=ref(db,`users/${creditUid}`);
+                const snapshot=await get(userRef);
                 
-                if (snapshot.exists()) {
-                    const userData = snapshot.val();
-                    const currentAvailable = userData.available || 0;
-                    const currentTotal = userData.totalBalance || 0;
-                    const newAvailable = currentAvailable + amount;
-                    const newTotal = currentTotal + amount;
+                if(snapshot.exists()){
+                    const userData=snapshot.val();
+                    const currentBalance=userData.balance||0;
+                    const newBalance=currentBalance+amount;
                     
-                    const updates = {
-                        'available': newAvailable,
-                        'totalBalance': newTotal
+                    const updates={
+                        'balance':newBalance
                     };
 
-                    const transactionData = {
-                        type: 'credit',
-                        amount: amount,
-                        description: description || 'Account credit',
-                        timestamp: new Date().toISOString(),
-                        previousBalance: currentAvailable,
-                        newBalance: newAvailable
+                    const transactionData={
+                        type:'credit',
+                        amount:amount,
+                        description:description||'Account credit',
+                        timestamp:new Date().toISOString(),
+                        previousBalance:currentBalance,
+                        newBalance:newBalance
                     };
 
-                    updates[`transactions/${Date.now()}`] = transactionData;
+                    updates[`transactions/${Date.now()}`]=transactionData;
                     
-                    await update(userRef, updates);
+                    await update(userRef,updates);
                     
-                    alert(`Successfully credited $${amount.toFixed(2)}`);
+                    alert(`Successfully credited ₦${amount.toFixed(2)}`);
                     window.closeModal();
-                } else {
+                }else{
                     alert('User not found');
                 }
-            } catch (error) {
-                console.error('Credit error:', error);
+            }catch(error){
+                console.error('Credit error:',error);
                 alert('Failed to credit user account');
             }
         };
 
-        window.refreshUsers = () => {
-            renderUsers();
-        };
+        window.refreshUsers=()=>renderUsers();
 
-        $('searchBox').oninput = e => renderUsers(filterUsers(e.target.value));
+        $('searchBox').oninput=e=>renderUsers(filterUsers(e.target.value));
         
-        onValue(ref(db, 'users'), snapshot => {
-            users = snapshot.val() || {};
+        onValue(ref(db,'users'),snapshot=>{
+            users=snapshot.val()||{};
             renderUsers();
         });
 
-        onAuthStateChanged(auth, user => {
-            if (!user) {
-                $('usersBody').innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 40px;">Please sign in to access user management</td></tr>';
+        onAuthStateChanged(auth,user=>{
+            if(!user){
+                $('usersBody').innerHTML='<tr><td colspan="5" style="text-align:center;color:#ff4444;padding:40px">Please sign in to access user management</td></tr>';
             }
         });
 
-        $('creditModal').onclick = e => e.target === $('creditModal') && window.closeModal();
+        $('creditModal').onclick=e=>e.target===$('creditModal')&&window.closeModal();
     </script>
 </body>
-                </html>
+</html>
