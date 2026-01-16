@@ -206,7 +206,7 @@
         let connected = false;
 
         const format = (num, currency = false) => {
-            const opts = currency ? { style: 'currency', currency: 'USD', maximumFractionDigits: 0 } : {};
+            const opts = currency ? { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 } : {};
             return new Intl.NumberFormat('en-US', opts).format(num);
         };
 
