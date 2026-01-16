@@ -56,19 +56,19 @@
         .input-field:focus{outline:none;border-color:#10b981}
         .spinner{display:inline-block;width:12px;height:12px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
-        .ref-card{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-radius:16px;padding:20px;margin-bottom:20px;box-shadow:0 4px 16px rgba(139,92,246,.2)}
-        .ref-title{color:white;font-size:16px;font-weight:600;margin-bottom:12px}
-        .ref-code-box{background:rgba(255,255,255,.2);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-        .ref-code{color:white;font-size:18px;font-weight:700;letter-spacing:1px}
-        .ref-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-        .ref-stat{background:rgba(255,255,255,.15);border-radius:8px;padding:10px;text-align:center}
-        .ref-stat-label{color:rgba(255,255,255,.85);font-size:11px;margin-bottom:4px}
-        .ref-stat-value{color:white;font-size:20px;font-weight:700}
-        .ref-link{background:white;color:#8b5cf6;padding:10px;border-radius:8px;text-align:center;font-size:13px;font-weight:600;margin-top:12px;cursor:pointer}
-        .ref-list{margin-top:12px}
-        .ref-item{background:rgba(255,255,255,.15);border-radius:8px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
-        .ref-item-name{color:white;font-size:13px;font-weight:500}
-        .ref-item-date{color:rgba(255,255,255,.7);font-size:11px}
+        .ref-card{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-radius:12px;padding:16px;margin-bottom:20px;box-shadow:0 4px 16px rgba(139,92,246,.2)}
+        .ref-title{color:white;font-size:14px;font-weight:600;margin-bottom:10px}
+        .ref-code-box{background:rgba(255,255,255,.2);border-radius:6px;padding:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+        .ref-code{color:white;font-size:16px;font-weight:700;letter-spacing:1px}
+        .ref-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+        .ref-stat{background:rgba(255,255,255,.15);border-radius:6px;padding:8px;text-align:center}
+        .ref-stat-label{color:rgba(255,255,255,.85);font-size:10px;margin-bottom:3px}
+        .ref-stat-value{color:white;font-size:18px;font-weight:700}
+        .ref-link{background:white;color:#8b5cf6;padding:8px;border-radius:6px;text-align:center;font-size:12px;font-weight:600;margin-top:10px;cursor:pointer}
+        .ref-list{margin-top:10px}
+        .ref-item{background:rgba(255,255,255,.15);border-radius:6px;padding:8px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+        .ref-item-name{color:white;font-size:12px;font-weight:500}
+        .ref-item-date{color:rgba(255,255,255,.7);font-size:10px}
     </style>
 </head>
 <body>
@@ -86,7 +86,7 @@
             </div>
         </div>
 
-        <div class="ref-card" id="refCard" style="display:none">
+        <div class="ref-card" id="refCard">
             <div class="ref-title"><i class="fas fa-users"></i> Referral Program</div>
             <div class="ref-code-box">
                 <div>
@@ -239,7 +239,9 @@
             }catch(e){alert('Failed to claim. Try again.')}
         };
 
-        const updateUI=d=>{
+        const generateCode=()=>Math.random().toString(36).substring(2,8).toUpperCase();
+
+        const updateUI=async d=>{
             userData=d;
             document.getElementById('userName').textContent=d.fullName||d.email?.split('@')[0]||'Investor';
             document.getElementById('totalBalance').textContent=`₦${(d.balance||0).toLocaleString('en-NG',{minimumFractionDigits:2})}`;
@@ -255,16 +257,25 @@
             const activeCount=Object.values(investments).filter(i=>i.status==='active').length;
             document.getElementById('investedCount').textContent=`${activeCount} active plan${activeCount!==1?'s':''}`;
             
-            if(d.referralCode){
-                document.getElementById('refCard').style.display='block';
-                document.getElementById('refCode').textContent=d.referralCode;
-                document.getElementById('refCount').textContent=(d.referrals||[]).length;
-                document.getElementById('refEarnings').textContent=`₦${(d.totalReferralEarnings||0).toLocaleString('en-NG')}`;
-                
-                const refList=document.getElementById('refList');
-                if((d.referrals||[]).length>0){
-                    refList.innerHTML=(d.referrals||[]).slice(0,5).map(r=>`<div class="ref-item"><div><div class="ref-item-name">${r.name}</div><div class="ref-item-date">${new Date(r.joinedAt).toLocaleDateString()}</div></div><div style="color:white;font-weight:600">₦100</div></div>`).join('');
-                }
+            // Generate referral code if user doesn't have one
+            if(!d.referralCode&&user){
+                const newCode=generateCode();
+                try{
+                    await update(ref(database,`users/${user.uid}`),{referralCode:newCode});
+                    await update(ref(database,`referralCodes/${newCode}`),{userId:user.uid,createdAt:new Date().toISOString()});
+                    d.referralCode=newCode;
+                }catch(e){console.error('Failed to generate referral code:',e)}
+            }
+            
+            // Always show referral card
+            document.getElementById('refCard').style.display='block';
+            document.getElementById('refCode').textContent=d.referralCode||'LOADING...';
+            document.getElementById('refCount').textContent=(d.referrals||[]).length;
+            document.getElementById('refEarnings').textContent=`₦${(d.totalReferralEarnings||0).toLocaleString('en-NG')}`;
+            
+            const refList=document.getElementById('refList');
+            if((d.referrals||[]).length>0){
+                refList.innerHTML=(d.referrals||[]).slice(0,5).map(r=>`<div class="ref-item"><div><div class="ref-item-name">${r.name}</div><div class="ref-item-date">${new Date(r.joinedAt).toLocaleDateString()}</div></div><div style="color:white;font-weight:600;font-size:13px">₦40</div></div>`).join('');
             }
             
             plans=investments;
@@ -290,4 +301,4 @@
         });
     </script>
 </body>
-            </html>
+</html>
