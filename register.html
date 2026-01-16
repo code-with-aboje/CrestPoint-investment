@@ -196,9 +196,9 @@
                     const refSnap=await get(ref(database,'users/'+referrerId));
                     if(refSnap.exists()){
                         const refData=refSnap.val();
-                        const bonus=100;
+                        const bonus=40;
                         await update(ref(database,'users/'+referrerId),{
-                            referrals:[...(refData.referrals||[]),{userId:user.uid,name:fullName,email,joinedAt:now,earned:0}],
+                            referrals:[...(refData.referrals||[]),{userId:user.uid,name:fullName,email,joinedAt:now,earned:bonus}],
                             balance:(refData.balance||0)+bonus,
                             totalReferralEarnings:(refData.totalReferralEarnings||0)+bonus
                         });
@@ -221,4 +221,4 @@
         });
     </script>
 </body>
-                                </html>
+    </html>
