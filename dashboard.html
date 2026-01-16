@@ -183,7 +183,7 @@
         window.copyRefCode=()=>copyText(userData.referralCode||'');
 
         window.shareRefLink=()=>{
-            const link=`${window.location.origin}/signup.html?ref=${userData.referralCode}`;
+            const link=`${window.location.origin}/register.html?ref=${userData.referralCode}`;
             const msg=`Join Crest Point Investment with my referral code and earn bonus! Use code: ${userData.referralCode}\n\n${link}`;
             if(navigator.share){navigator.share({title:'Join Crest Point',text:msg}).catch(e=>copyText(link))}
             else copyText(link);
