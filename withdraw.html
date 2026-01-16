@@ -79,9 +79,6 @@
         @media(min-width:769px){
             .btn-withdraw.mobile{display:none}
         }
-        @media(max-width:768px){
-            .section.desktop{display:none}
-        }
     </style>
 </head>
 <body>
@@ -94,12 +91,12 @@
         <div class="content-grid">
             <div class="card">
                 <div class="card-title">Available Balance</div>
-                <div class="card-value" id="availableAmount">$0.00</div>
+                <div class="card-value" id="availableAmount">₦0.00</div>
                 <div class="card-meta">Total funds available to withdraw</div>
             </div>
             <div class="card">
                 <div class="card-title">Total Withdrawn</div>
-                <div class="card-value" id="totalWithdrawn">$0.00</div>
+                <div class="card-value" id="totalWithdrawn">₦0.00</div>
                 <div class="card-meta">Lifetime withdrawals</div>
             </div>
         </div>
@@ -154,25 +151,25 @@
                     <label class="form-label">Select Payment Method</label>
                     <select id="method" class="form-select" required>
                         <option value="">Choose payment method...</option>
-                        <option value="Revolut">Revolut</option>
-                        <option value="PayPal">PayPal</option>
-                        <option value="Cash App">Cash App</option>
-                        <option value="Venmo">Venmo</option>
-                        <option value="Chime">Chime</option>
-                        <option value="IBAN">IBAN</option>
-                        <option value="Western Union">Western Union</option>
-                        <option value="MoneyGram">MoneyGram</option>
                         <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="Opay">Opay</option>
+                        <option value="Palmpay">Palmpay</option>
+                        <option value="Kuda Bank">Kuda Bank</option>
+                        <option value="GTBank">GTBank</option>
+                        <option value="First Bank">First Bank</option>
+                        <option value="Access Bank">Access Bank</option>
+                        <option value="Zenith Bank">Zenith Bank</option>
+                        <option value="UBA">UBA</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Withdrawal Amount</label>
-                    <input type="number" class="form-input" id="amount" placeholder="Enter amount" step="0.01" min="10" required>
+                    <label class="form-label">Withdrawal Amount (₦)</label>
+                    <input type="number" class="form-input" id="amount" placeholder="Enter amount" step="0.01" min="1000" required>
                 </div>
 
                 <div class="fee-warning" id="feeWarning">
-                    <strong>Processing Fee:</strong> <span id="feeAmount">$0.00</span> (2.5%)
+                    <strong>Processing Fee:</strong> <span id="feeAmount">₦0.00</span> (2.5%)
                 </div>
 
                 <div class="info-box" style="margin:16px 0">
@@ -199,6 +196,8 @@
         const error=document.getElementById('error');
         const success=document.getElementById('success');
 
+        const formatNaira=a=>`₦${a.toLocaleString('en-NG',{minimumFractionDigits:2})}`;
+
         window.openModal=async()=>{
             modal.classList.add('active');
             document.body.style.overflow='hidden';
@@ -223,7 +222,7 @@
                     const snap=await get(ref(database,`users/${u.uid}`));
                     if(snap.exists()){
                         userData=snap.val();
-                        document.getElementById('availableAmount').textContent=`$${(userData.available||0).toFixed(2)}`;
+                        document.getElementById('availableAmount').textContent=formatNaira(userData.balance||0);
                         loadHistory(u.uid);
                     }
                 }catch(e){console.error(e)}
@@ -232,20 +231,20 @@
 
         async function loadBalance(){
             try{
-                if(!user)return document.getElementById('balance').textContent='$0.00';
+                if(!user)return document.getElementById('balance').textContent='₦0.00';
                 const snap=await get(ref(database,`users/${user.uid}`));
                 if(snap.exists()){
                     userData=snap.val();
-                    document.getElementById('balance').textContent=`$${(userData.available||0).toFixed(2)}`;
-                }else document.getElementById('balance').textContent='$0.00';
-            }catch(e){document.getElementById('balance').textContent='$0.00'}
+                    document.getElementById('balance').textContent=formatNaira(userData.balance||0);
+                }else document.getElementById('balance').textContent='₦0.00';
+            }catch(e){document.getElementById('balance').textContent='₦0.00'}
         }
 
         document.getElementById('amount').addEventListener('input',function(){
             const amt=parseFloat(this.value)||0;
             if(amt>0){
                 const fee=amt*.025;
-                document.getElementById('feeAmount').textContent=`$${fee.toFixed(2)}`;
+                document.getElementById('feeAmount').textContent=formatNaira(fee);
                 document.getElementById('feeWarning').classList.add('show');
             }else document.getElementById('feeWarning').classList.remove('show');
         });
@@ -265,13 +264,13 @@
                 return;
             }
 
-            if(amt<10){
-                error.textContent='Minimum withdrawal amount is $10';
+            if(amt<1000){
+                error.textContent='Minimum withdrawal amount is ₦1,000';
                 error.classList.add('show');
                 return;
             }
 
-            if(!userData||amt>(userData.available||0)){
+            if(!userData||amt>(userData.balance||0)){
                 error.textContent='Insufficient balance';
                 error.classList.add('show');
                 return;
@@ -314,22 +313,20 @@
                 };
 
                 const snap=await get(ref(database,`users/${user.uid}`));
-                const avail=snap.val().available||0;
-                const total=snap.val().totalBalance||0;
+                const balance=snap.val().balance||0;
                 
                 const updates={};
-                updates[`users/${user.uid}/available`]=Math.max(0,avail-amt);
-                updates[`users/${user.uid}/totalBalance`]=Math.max(0,total-amt);
+                updates[`users/${user.uid}/balance`]=Math.max(0,balance-amt);
                 updates[`users/${user.uid}/transactions/${id}`]=transactionData;
                 
                 await update(ref(database),updates);
 
-                userData.available=Math.max(0,avail-amt);
-                document.getElementById('availableAmount').textContent=`$${userData.available.toFixed(2)}`;
+                userData.balance=Math.max(0,balance-amt);
+                document.getElementById('availableAmount').textContent=formatNaira(userData.balance);
 
                 await loadHistory(user.uid);
 
-                const msg=`Hello! I would like to withdraw from my investment account.\n\n*Account Details:*\nEmail: ${user.email}\n\n*Withdrawal Request:*\nPayment Method: ${method}\nAmount: $${amt.toFixed(2)} USD\nProcessing Fee: $${fee.toFixed(2)}\n\nPlease provide payment instructions. Thank you!`;
+                const msg=`Hello! I would like to withdraw from my investment account.\n\n*Account Details:*\nEmail: ${user.email}\n\n*Withdrawal Request:*\nPayment Method: ${method}\nAmount: ${formatNaira(amt)}\nProcessing Fee: ${formatNaira(fee)}\n\nPlease provide payment instructions. Thank you!`;
                 window.open(`https://wa.me/447940228929?text=${encodeURIComponent(msg)}`,'_blank');
                 
                 closeModal();
@@ -357,15 +354,15 @@
                         document.getElementById('historyBody').innerHTML=withdrawals.map(w=>`
                             <tr>
                                 <td>${new Date(w.requestDate).toLocaleDateString()}</td>
-                                <td>$${w.amount.toFixed(2)}</td>
+                                <td>${formatNaira(w.amount)}</td>
                                 <td>${w.method}</td>
                                 <td><span class="status-badge status-${w.status}">${w.status}</span></td>
-                                <td>$${w.fee.toFixed(2)}</td>
+                                <td>${formatNaira(w.fee)}</td>
                             </tr>
                         `).join('');
 
                         const total=withdrawals.filter(w=>w.status==='completed').reduce((sum,w)=>sum+w.amount,0);
-                        document.getElementById('totalWithdrawn').textContent=`$${total.toFixed(2)}`;
+                        document.getElementById('totalWithdrawn').textContent=formatNaira(total);
                     }else{
                         document.getElementById('historyBody').innerHTML=`<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon"><i class="fas fa-inbox"></i></div><p>No withdrawal history yet</p></div></td></tr>`;
                     }
