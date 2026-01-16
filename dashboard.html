@@ -1,413 +1,124 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Inter',sans-serif;background:#fafafa;min-height:100vh;padding:60px 20px 100px}
-        .container{max-width:500px;margin:0 auto;padding-bottom:200px}
-        .dashboard-card{background:linear-gradient(135deg,#10b981,#059669);border-radius:24px;padding:24px;box-shadow:0 8px 32px rgba(16,185,129,.25);position:relative;overflow:hidden;margin-bottom:20px;border:1px solid rgba(255,255,255,.2)}
-        .dashboard-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,transparent 40%,rgba(255,255,255,.25) 50%,transparent 60%,transparent);animation:shine 3s infinite}
-        @keyframes shine{0%{transform:translateX(-100%) translateY(-100%) rotate(45deg)}100%{transform:translateX(100%) translateY(100%) rotate(45deg)}}
-        .card-content{position:relative;z-index:1}
-        .user-name{color:white;font-size:18px;font-weight:600;margin-bottom:8px}
-        .balance-label{color:rgba(255,255,255,.85);font-size:13px;margin-bottom:6px}
-        .balance-amount{color:white;font-size:36px;font-weight:700;margin-bottom:6px}
-        .balance-change{color:rgba(255,255,255,.95);font-size:14px;font-weight:600}
-        .button-row{display:flex;gap:10px;margin-top:16px}
-        .action-button{flex:1;background:white;color:#10b981;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;transition:transform .3s}
-        .action-button:hover{transform:translateY(-2px)}
-        .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
-        .stat-card{background:white;border-radius:16px;padding:16px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-        .stat-label{color:#64748b;font-size:12px;font-weight:500;margin-bottom:6px;text-transform:uppercase}
-        .stat-value{color:#0f172a;font-size:20px;font-weight:700}
-        .stat-trend{color:#10b981;font-size:11px;font-weight:600;margin-top:4px}
-        .section{background:white;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:20px}
-        .section-title{font-size:14px;font-weight:600;color:#0f172a;margin-bottom:16px}
-        .pending-amount{text-align:center;padding:20px;background:#fef3c7;border-radius:12px;margin-bottom:16px}
-        .pending-label{color:#92400e;font-size:12px;font-weight:600;margin-bottom:8px;text-transform:uppercase}
-        .pending-value{color:#f59e0b;font-size:32px;font-weight:700}
-        .plan-item{background:#f8fafc;border-left:4px solid #10b981;border-radius:8px;padding:14px;margin-bottom:12px}
-        .plan-header{display:flex;justify-content:space-between;margin-bottom:10px}
-        .plan-info h4{color:#0f172a;font-size:14px;margin-bottom:4px;font-weight:600}
-        .plan-status{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#dcfce7;color:#059669}
-        .btn{width:100%;padding:12px;background:#10b981;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
-        .btn:hover{background:#059669}
-        .btn:disabled{background:#94a3b8;cursor:not-allowed;opacity:0.6}
-        .btn-sm{padding:10px;font-size:13px;font-weight:600;margin-top:10px}
-        .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.5)}
-        .modal-content{background:white;margin:10% auto;padding:24px;border-radius:16px;max-width:400px;box-shadow:0 4px 16px rgba(0,0,0,.2);max-height:80vh;overflow-y:auto}
-        .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #e2e8f0}
-        .modal-title{font-size:16px;font-weight:600;color:#0f172a}
-        .close-btn{background:none;border:none;font-size:24px;color:#64748b;cursor:pointer;padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center}
-        .account-info{background:#f8fafc;padding:16px;border-radius:8px;margin-bottom:16px;border:1px solid #e2e8f0}
-        .info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
-        .info-row:not(:last-child){border-bottom:1px solid #e2e8f0}
-        .info-label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px}
-        .info-value{font-size:14px;color:#0f172a;font-weight:600}
-        .copy-btn{background:none;border:1px solid #e2e8f0;color:#64748b;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:10px;margin-left:8px}
-        .copy-btn:hover{background:#f8fafc}
-        .input-group{margin:16px 0}
-        .input-label{font-size:11px;color:#64748b;margin-bottom:6px;font-weight:600;display:block;text-transform:uppercase;letter-spacing:0.5px}
-        .input-field{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px}
-        .input-field:focus{outline:none;border-color:#10b981}
-        .file-upload{border:2px dashed #e2e8f0;border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .3s}
-        .file-upload:hover{border-color:#10b981;background:#f0fdf4}
-        .file-upload.has-file{border-color:#10b981;background:#f0fdf4}
-        .file-upload input{display:none}
-        .file-preview{margin-top:10px;max-width:100%;border-radius:8px;overflow:hidden}
-        .file-preview img{max-width:100%;height:auto;display:block}
-        .spinner{display:inline-block;width:12px;height:12px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .ref-card{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-radius:12px;padding:16px;margin-bottom:20px;box-shadow:0 4px 16px rgba(139,92,246,.2)}
-        .ref-title{color:white;font-size:14px;font-weight:600;margin-bottom:10px}
-        .ref-code-box{background:rgba(255,255,255,.2);border-radius:6px;padding:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-        .ref-code{color:white;font-size:16px;font-weight:700;letter-spacing:1px}
-        .ref-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-        .ref-stat{background:rgba(255,255,255,.15);border-radius:6px;padding:8px;text-align:center}
-        .ref-stat-label{color:rgba(255,255,255,.85);font-size:10px;margin-bottom:3px}
-        .ref-stat-value{color:white;font-size:18px;font-weight:700}
-        .ref-link{background:white;color:#8b5cf6;padding:8px;border-radius:6px;text-align:center;font-size:12px;font-weight:600;margin-top:10px;cursor:pointer}
-        .ref-list{margin-top:10px}
-        .ref-item{background:rgba(255,255,255,.15);border-radius:6px;padding:8px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
-        .ref-item-name{color:white;font-size:12px;font-weight:500}
-        .ref-item-date{color:rgba(255,255,255,.7);font-size:10px}
-        .cooldown-timer{color:#f59e0b;font-size:11px;margin-top:6px;font-weight:600}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Investment Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;background:#fafafa;min-height:100vh;padding:60px 20px 100px}.container{max-width:500px;margin:0 auto;padding-bottom:200px}.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:20px}.dash-card{background:linear-gradient(135deg,#10b981,#059669);border-radius:24px;padding:24px;box-shadow:0 8px 32px rgba(16,185,129,.25);position:relative;overflow:hidden;margin-bottom:20px;border:1px solid rgba(255,255,255,.2)}.dash-card::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,transparent 40%,rgba(255,255,255,.25) 50%,transparent 60%,transparent);animation:shine 3s infinite}@keyframes shine{to{transform:translate(100%,100%) rotate(45deg)}}.card-content{position:relative;z-index:1}.txt-w{color:#fff}.txt-s{color:#64748b;font-size:12px;font-weight:500;text-transform:uppercase}.txt-l{font-size:36px;font-weight:700}.txt-m{font-size:18px;font-weight:600}.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btn{width:100%;padding:12px;background:#10b981;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}.btn:hover{background:#059669}.btn:disabled{background:#94a3b8;cursor:not-allowed;opacity:.6}.btn-row{display:flex;gap:10px;margin-top:16px}.btn-w{flex:1;background:#fff;color:#10b981;border:none;border-radius:12px;padding:12px;font-size:14px;font-weight:600;cursor:pointer}.btn-w:hover{transform:translateY(-2px)}.modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.5)}.modal-content{background:#fff;margin:10% auto;padding:24px;border-radius:16px;max-width:400px;box-shadow:0 4px 16px rgba(0,0,0,.2);max-height:80vh;overflow-y:auto}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #e2e8f0}.close-btn{background:none;border:none;font-size:24px;color:#64748b;cursor:pointer}.input-group{margin:16px 0}.input-label{font-size:11px;color:#64748b;margin-bottom:6px;font-weight:600;display:block;text-transform:uppercase}.input-field{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px}.file-upload{border:2px dashed #e2e8f0;border-radius:8px;padding:20px;text-align:center;cursor:pointer;transition:all .3s;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center}.file-upload:hover,.file-upload.has-file{border-color:#10b981;background:#f0fdf4}.file-upload input{display:none}.file-preview{margin-top:10px;border-radius:8px}.upload-success{background:#dcfce7;border:2px solid #10b981;border-radius:8px;padding:16px;text-align:center;margin-top:12px;display:none}.spinner{display:inline-block;width:12px;height:12px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.ref-card{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-radius:12px;padding:16px;margin-bottom:20px;box-shadow:0 4px 16px rgba(139,92,246,.2)}.ref-box{background:rgba(255,255,255,.2);border-radius:6px;padding:10px;display:flex;justify-content:space-between;align-items:center;margin:10px 0}.stat-trend{color:#10b981;font-size:11px;font-weight:600;margin-top:4px}.plan-item{background:#f8fafc;border-left:4px solid #10b981;border-radius:8px;padding:14px;margin-bottom:12px}.plan-header{display:flex;justify-content:space-between;margin-bottom:10px}.plan-status{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#dcfce7;color:#059669}.pending-box{text-align:center;padding:20px;background:#fef3c7;border-radius:12px;margin-bottom:16px}.account-info{background:#f8fafc;padding:16px;border-radius:8px;margin-bottom:16px;border:1px solid #e2e8f0}.info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #e2e8f0}.info-row:last-child{border:0}.copy-btn{background:none;border:1px solid #e2e8f0;color:#64748b;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:10px}.copy-btn:hover{background:#f8fafc}</style>
 </head>
 <body>
-    <div class="container">
-        <div class="dashboard-card">
-            <div class="card-content">
-                <div class="user-name" id="userName"><span class="spinner"></span> Loading...</div>
-                <div class="balance-label">Total Balance</div>
-                <div class="balance-amount" id="totalBalance"><span class="spinner"></span></div>
-                <div class="balance-change" id="balanceChange"><span class="spinner"></span></div>
-                <div class="button-row">
-                    <button class="action-button" onclick="openModal()"><i class="fas fa-wallet"></i> Fund</button>
-                    <button class="action-button" onclick="location.href='/plans.html'"><i class="fas fa-chart-line"></i> Invest</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="ref-card" id="refCard">
-            <div class="ref-title"><i class="fas fa-users"></i> Referral Program</div>
-            <div class="ref-code-box">
-                <div>
-                    <div style="color:rgba(255,255,255,.85);font-size:11px;margin-bottom:4px">YOUR CODE</div>
-                    <div class="ref-code" id="refCode">LOADING...</div>
-                </div>
-                <button class="copy-btn" style="background:white;color:#8b5cf6" onclick="copyRefCode()"><i class="fas fa-copy"></i></button>
-            </div>
-            <div class="ref-link" onclick="shareRefLink()"><i class="fas fa-share-alt"></i> Share Referral Link</div>
-            <div class="ref-stats">
-                <div class="ref-stat">
-                    <div class="ref-stat-label">Total Referrals</div>
-                    <div class="ref-stat-value" id="refCount">0</div>
-                </div>
-                <div class="ref-stat">
-                    <div class="ref-stat-label">Total Earned</div>
-                    <div class="ref-stat-value" id="refEarnings">₦0</div>
-                </div>
-            </div>
-            <div class="ref-list" id="refList"></div>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-label">Invested</div>
-                <div class="stat-value" id="invested"><span class="spinner"></span></div>
-                <div class="stat-trend" id="investedCount"><span class="spinner"></span></div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Total Claimed</div>
-                <div class="stat-value" id="totalClaimed"><span class="spinner"></span></div>
-                <div class="stat-trend">Total earnings</div>
-            </div>
-        </div>
-
-        <div class="section" id="pendingSection" style="display:none">
-            <div class="section-title"><i class="fas fa-hand-holding-usd"></i> Pending Claims</div>
-            <div class="pending-amount">
-                <div class="pending-label">Total Claimable</div>
-                <div class="pending-value" id="totalPending">₦0.00</div>
-            </div>
-            <button class="btn" id="claimAllBtn" onclick="claimAll()">Claim All Earnings</button>
-            <div class="cooldown-timer" id="claimCooldown" style="display:none;text-align:center"></div>
-        </div>
-
-        <div class="section">
-            <div class="section-title"><i class="fas fa-chart-line"></i> Active Investment Plans</div>
-            <div id="plansList"><div style="text-align:center;padding:20px;color:#94a3b8">No active plans</div></div>
-        </div>
-    </div>
-
-    <div id="fundModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Fund Account</h2>
-                <button class="close-btn" onclick="closeModal()">×</button>
-            </div>
-            <div class="account-info">
-                <div class="info-row">
-                    <div><div class="info-label">Bank</div><div class="info-value">Monie Point</div></div>
-                </div>
-                <div class="info-row">
-                    <div><div class="info-label">Account Number</div><div class="info-value">9014749939</div></div>
-                    <button class="copy-btn" onclick="copyText('9014749939')">Copy</button>
-                </div>
-                <div class="info-row">
-                    <div><div class="info-label">Account Name</div><div class="info-value">Jerry Chidera Boi</div></div>
-                </div>
-            </div>
-            <div class="input-group">
-                <label class="input-label">Amount Sent (₦)</label>
-                <input type="number" id="amountSent" class="input-field" placeholder="Enter amount" min="1" step="0.01">
-            </div>
-            <div class="input-group">
-                <label class="input-label">Upload Payment Proof <span style="color:#ef4444">*</span></label>
-                <label for="proofUpload" class="file-upload" id="fileUploadArea">
-                    <i class="fas fa-cloud-upload-alt" style="font-size:32px;color:#10b981;margin-bottom:8px"></i>
-                    <div style="font-size:13px;color:#64748b;font-weight:500">Click to upload transaction screenshot</div>
-                    <div style="font-size:11px;color:#94a3b8;margin-top:4px">JPG, PNG or PDF (Max 5MB)</div>
-                    <input type="file" id="proofUpload" accept="image/*,.pdf" onchange="handleFileSelect(event)">
-                </label>
-                <div id="filePreview" class="file-preview" style="display:none"></div>
-            </div>
-            <button class="btn" id="submitBtn" onclick="submitFunding()" disabled>Confirm Payment</button>
-        </div>
-    </div>
-
-    <script type="module">
-       import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-        import{getDatabase,ref,get,update,push,onValue}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
-        import{getStorage,ref as storageRef,uploadBytes,getDownloadURL}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
-        import{auth,database}from"./lib/firebase.js";
-
-        const storage = getStorage();
-        let user,plans={},userData={},selectedFile=null;
-
-        window.openModal=()=>document.getElementById('fundModal').style.display='block';
-        window.closeModal=()=>{
-            document.getElementById('fundModal').style.display='none';
-            document.getElementById('amountSent').value='';
-            selectedFile=null;
-            document.getElementById('filePreview').style.display='none';
-            document.getElementById('fileUploadArea').classList.remove('has-file');
-            document.getElementById('submitBtn').disabled=true;
-        };
-
-        window.handleFileSelect=e=>{
-            const file=e.target.files[0];
-            if(!file)return;
-            if(file.size>5*1024*1024){alert('File too large. Max 5MB');return}
-            selectedFile=file;
-            const preview=document.getElementById('filePreview');
-            const area=document.getElementById('fileUploadArea');
-            area.classList.add('has-file');
-            if(file.type.startsWith('image/')){
-                const reader=new FileReader();
-                reader.onload=e=>{preview.innerHTML=`<img src="${e.target.result}" alt="Preview">`;preview.style.display='block'};
-                reader.readAsDataURL(file);
-            }else{
-                preview.innerHTML=`<div style="padding:10px;background:#f0fdf4;color:#059669;border-radius:6px;font-size:13px"><i class="fas fa-file-pdf"></i> ${file.name}</div>`;
-                preview.style.display='block';
-            }
-            checkFormValid();
-        };
-
-        const checkFormValid=()=>{
-            const amt=document.getElementById('amountSent').value;
-            document.getElementById('submitBtn').disabled=!(amt&&parseFloat(amt)>0&&selectedFile);
-        };
-
-        document.getElementById('amountSent').addEventListener('input',checkFormValid);
-
-        window.copyText=async(text)=>{
-            try{await navigator.clipboard.writeText(text);alert('✅ Copied: '+text)}
-            catch(e){const input=document.createElement('input');input.value=text;document.body.appendChild(input);input.select();document.execCommand('copy');document.body.removeChild(input);alert('✅ Copied: '+text)}
-        };
-
-        window.copyRefCode=()=>copyText(userData.referralCode||'');
-
-        window.shareRefLink=()=>{
-            const link=`${window.location.origin}/register.html?ref=${userData.referralCode}`;
-            const msg=`Join Crest Point Investment with my referral code and earn bonus! Use code: ${userData.referralCode}\n\n${link}`;
-            if(navigator.share){navigator.share({title:'Join Crest Point',text:msg}).catch(e=>copyText(link))}
-            else copyText(link);
-        };
-
-        window.submitFunding=async()=>{
-            if(!user||!selectedFile)return;
-            const amt=parseFloat(document.getElementById('amountSent').value);
-            if(!amt||amt<=0)return alert('Please enter a valid amount');
-            
-            const btn=document.getElementById('submitBtn');
-            btn.disabled=true;
-            btn.textContent='Uploading...';
-            
-            try{
-                const fileName=`funding_proof_${user.uid}_${Date.now()}_${selectedFile.name}`;
-                const fileRef=storageRef(storage,`funding_proofs/${fileName}`);
-                await uploadBytes(fileRef,selectedFile);
-                const fileURL=await getDownloadURL(fileRef);
-                
-                await push(ref(database,'fundingRequests'),{
-                    userId:user.uid,
-                    userEmail:user.email,
-                    userName:user.displayName||user.email,
-                    amount:amt,
-                    paymentMethod:'Monie Point',
-                    accountNumber:'9014749939',
-                    accountName:'Jerry Chidera Boi',
-                    proofURL:fileURL,
-                    status:'pending',
-                    createdAt:new Date().toISOString(),
-                    timestamp:Date.now()
-                });
-                
-                closeModal();
-                alert('✅ Payment proof uploaded! We will verify and credit your account soon.');
-            }catch(e){
-                console.error(e);
-                alert('Failed to upload. Please try again.');
-                btn.disabled=false;
-                btn.textContent='Confirm Payment';
-            }
-        };
-
-        const calcPending=p=>{
-            const now=Date.now();
-            if(now>=p.maturityDate)return Math.max(0,p.dailyIncome-(p.totalClaimed||0));
-            const elapsed=now-p.startDate,daysPassed=elapsed/86400000,earned=p.dailyIncome*daysPassed;
-            return Math.max(0,earned-(p.totalClaimed||0));
-        };
-
-        const canClaim=p=>{
-            if(!p.lastClaim)return true;
-            const hoursSince=(Date.now()-p.lastClaim)/3600000;
-            return hoursSince>=24;
-        };
-
-        const getTimeUntilClaim=p=>{
-            if(!p.lastClaim)return null;
-            const hoursSince=(Date.now()-p.lastClaim)/3600000;
-            if(hoursSince>=24)return null;
-            const remaining=24-hoursSince;
-            const hrs=Math.floor(remaining);
-            const mins=Math.floor((remaining-hrs)*60);
-            return `${hrs}h ${mins}m`;
-        };
-
-        window.claimEarnings=async id=>{
-            if(!user)return;
-            const p=plans[id];
-            if(!p||!canClaim(p)){alert('You can only claim once every 24 hours');return}
-            const amt=calcPending(p);
-            if(amt<1)return;
-            try{
-                const snap=await get(ref(database,`users/${user.uid}`)),d=snap.val(),claimed=(p.totalClaimed||0)+amt;
-                await update(ref(database,`users/${user.uid}`),{balance:(d.balance||0)+amt,totalClaimed:(d.totalClaimed||0)+amt,[`investments/${id}/totalClaimed`]:claimed,[`investments/${id}/lastClaim`]:Date.now()});
-                alert(`✅ Successfully claimed ₦${amt.toFixed(2)}!`);
-            }catch(e){alert('Failed to claim. Try again.')}
-        };
-
-        window.claimAll=async()=>{
-            if(!user||!plans)return;
-            let total=0;
-            const updates={};
-            const now=Date.now();
-            Object.entries(plans).forEach(([id,p])=>{
-                if(p.status!=='active'||!canClaim(p))return;
-                const pending=calcPending(p);
-                if(pending>=1){total+=pending;const claimed=(p.totalClaimed||0)+pending;updates[`investments/${id}/totalClaimed`]=claimed;updates[`investments/${id}/lastClaim`]=now}
-            });
-            if(total<1)return alert('No earnings to claim or cooldown period active');
-            try{
-                const snap=await get(ref(database,`users/${user.uid}`)),d=snap.val();
-                await update(ref(database,`users/${user.uid}`),{...updates,balance:(d.balance||0)+total,totalClaimed:(d.totalClaimed||0)+total});
-                alert(`✅ Successfully claimed ₦${total.toFixed(2)}!`);
-            }catch(e){alert('Failed to claim. Try again.')}
-        };
-
-        const generateCode=()=>Math.random().toString(36).substring(2,8).toUpperCase();
-
-        const updateUI=async d=>{
-            userData=d;
-            document.getElementById('userName').textContent=d.fullName||d.email?.split('@')[0]||'Investor';
-            document.getElementById('totalBalance').textContent=`₦${(d.balance||0).toLocaleString('en-NG',{minimumFractionDigits:2})}`;
-            
-            const investments=d.investments||{};
-            let totalInvested=0;
-            Object.values(investments).forEach(inv=>{if(inv.status==='active')totalInvested+=inv.amount});
-            
-            document.getElementById('balanceChange').textContent=`₦${(d.balance||0).toLocaleString('en-NG',{minimumFractionDigits:2})} Available`;
-            document.getElementById('invested').textContent=`₦${totalInvested.toLocaleString('en-NG',{minimumFractionDigits:2})}`;
-            document.getElementById('totalClaimed').textContent=`₦${(d.totalClaimed||0).toLocaleString('en-NG',{minimumFractionDigits:2})}`;
-            
-            const activeCount=Object.values(investments).filter(i=>i.status==='active').length;
-            document.getElementById('investedCount').textContent=`${activeCount} active plan${activeCount!==1?'s':''}`;
-            
-            if(!d.referralCode&&user){
-                const newCode=generateCode();
-                try{
-                    await update(ref(database,`users/${user.uid}`),{referralCode:newCode});
-                    await update(ref(database,`referralCodes/${newCode}`),{userId:user.uid,createdAt:new Date().toISOString()});
-                    d.referralCode=newCode;
-                }catch(e){console.error('Failed to generate referral code:',e)}
-            }
-            
-            document.getElementById('refCard').style.display='block';
-            document.getElementById('refCode').textContent=d.referralCode||'LOADING...';
-            document.getElementById('refCount').textContent=(d.referrals||[]).length;
-            document.getElementById('refEarnings').textContent=`₦${(d.totalReferralEarnings||0).toLocaleString('en-NG')}`;
-            
-            const refList=document.getElementById('refList');
-            if((d.referrals||[]).length>0){
-                refList.innerHTML=(d.referrals||[]).slice(0,5).map(r=>`<div class="ref-item"><div><div class="ref-item-name">${r.name}</div><div class="ref-item-date">${new Date(r.joinedAt).toLocaleDateString()}</div></div><div style="color:white;font-weight:600;font-size:13px">₦40</div></div>`).join('');
-            }
-            
-            plans=investments;
-            const arr=Object.entries(plans).map(([id,p])=>({id,...p}));
-            let totalPending=0;
-            let earliestClaim=null;
-            
-            if(arr.length>0){
-                document.getElementById('plansList').innerHTML=arr.map(p=>{
-                    const pending=calcPending(p);
-                    const claimable=canClaim(p);
-                    const timeLeft=getTimeUntilClaim(p);
-                    if(p.status==='active'){
-                        totalPending+=pending;
-                        if(!claimable&&(!earliestClaim||p.lastClaim<earliestClaim))earliestClaim=p.lastClaim;
-                    }
-                    return`<div class="plan-item"><div class="plan-header"><div class="plan-info"><h4>${p.planName}</h4><span class="plan-status">${p.status==='active'?'● Active':'✓ Completed'}</span></div><div>₦${p.amount.toLocaleString('en-NG',{minimumFractionDigits:2})}</div></div>${p.status==='active'?`<button class="btn btn-sm"${!claimable||pending<1?' disabled':''} onclick="claimEarnings('${p.id}')">${!claimable?`⏰ Wait ${timeLeft}`:pending>=1?`💰 Claim ₦${pending.toFixed(2)}`:'Nothing to Claim Yet'}</button>`:''}</div>`;
-                }).join('');
-                
-                if(totalPending>=1||earliestClaim){
-                    document.getElementById('pendingSection').style.display='block';
-                    document.getElementById('totalPending').textContent=`₦${totalPending.toFixed(2)}`;
-                    const allClaimable=!earliestClaim||canClaim({lastClaim:earliestClaim});
-                    document.getElementById('claimAllBtn').disabled=!allClaimable||totalPending<1;
-                    if(!allClaimable){
-                        const remaining=getTimeUntilClaim({lastClaim:earliestClaim});
-                        document.getElementById('claimCooldown').style.display='block';
-                        document.getElementById('claimCooldown').textContent=`⏰ Next claim available in ${remaining}`;
-                    }else{
-                        document.getElementById('claimCooldown').style.display='none';
-                    }
-                }
-            }
-        };
-
-        onAuthStateChanged(auth,u=>{
-            if(u){user=u;onValue(ref(database,`users/${u.uid}`),s=>{if(s.exists())updateUI(s.val())})}
-            else location.href='/login.html';
-        });
-    </script>
+<div class="container">
+<div class="dash-card">
+<div class="card-content">
+<div class="txt-m txt-w" id="userName"><span class="spinner"></span> Loading...</div>
+<div style="color:rgba(255,255,255,.85);font-size:13px;margin:8px 0 6px">Total Balance</div>
+<div class="txt-l txt-w" id="totalBalance"><span class="spinner"></span></div>
+<div class="txt-w" style="font-size:14px;font-weight:600;margin-top:6px" id="balanceChange"><span class="spinner"></span></div>
+<div class="btn-row">
+<button class="btn-w" onclick="openModal()"><i class="fas fa-wallet"></i> Fund</button>
+<button class="btn-w" onclick="location.href='/plans.html'"><i class="fas fa-chart-line"></i> Invest</button>
+</div>
+</div>
+</div>
+<div class="ref-card" id="refCard" style="display:none">
+<div class="txt-m txt-w" style="margin-bottom:10px"><i class="fas fa-users"></i> Referral Program</div>
+<div class="ref-box">
+<div><div style="color:rgba(255,255,255,.85);font-size:11px;margin-bottom:4px">YOUR CODE</div><div class="txt-w" style="font-size:16px;font-weight:700;letter-spacing:1px" id="refCode">LOADING...</div></div>
+<button class="copy-btn" style="background:#fff;color:#8b5cf6" onclick="copyRefCode()"><i class="fas fa-copy"></i></button>
+</div>
+<div style="background:#fff;color:#8b5cf6;padding:8px;border-radius:6px;text-align:center;font-size:12px;font-weight:600;cursor:pointer" onclick="shareRefLink()"><i class="fas fa-share-alt"></i> Share Referral Link</div>
+<div class="grid-2" style="margin-top:10px">
+<div style="background:rgba(255,255,255,.15);border-radius:6px;padding:8px;text-align:center"><div style="color:rgba(255,255,255,.85);font-size:10px;margin-bottom:3px">Total Referrals</div><div class="txt-w txt-m" id="refCount">0</div></div>
+<div style="background:rgba(255,255,255,.15);border-radius:6px;padding:8px;text-align:center"><div style="color:rgba(255,255,255,.85);font-size:10px;margin-bottom:3px">Total Earned</div><div class="txt-w txt-m" id="refEarnings">₦0</div></div>
+</div>
+<div id="refList" style="margin-top:10px"></div>
+</div>
+<div class="grid-2">
+<div class="card">
+<div class="txt-s">Invested</div>
+<div style="color:#0f172a;font-size:20px;font-weight:700;margin:6px 0" id="invested"><span class="spinner"></span></div>
+<div class="stat-trend" id="investedCount"><span class="spinner"></span></div>
+</div>
+<div class="card">
+<div class="txt-s">Total Claimed</div>
+<div style="color:#0f172a;font-size:20px;font-weight:700;margin:6px 0" id="totalClaimed"><span class="spinner"></span></div>
+<div class="stat-trend">Total earnings</div>
+</div>
+</div>
+<div class="card" id="pendingSection" style="display:none">
+<div style="font-size:14px;font-weight:600;color:#0f172a;margin-bottom:16px"><i class="fas fa-hand-holding-usd"></i> Pending Claims</div>
+<div class="pending-box">
+<div style="color:#92400e;font-size:12px;font-weight:600;margin-bottom:8px;text-transform:uppercase">Total Claimable</div>
+<div style="color:#f59e0b;font-size:32px;font-weight:700" id="totalPending">₦0.00</div>
+</div>
+<button class="btn" id="claimAllBtn" onclick="claimAll()">Claim All Earnings</button>
+<div id="claimCooldown" style="display:none;color:#f59e0b;font-size:11px;margin-top:6px;font-weight:600;text-align:center"></div>
+</div>
+<div class="card">
+<div style="font-size:14px;font-weight:600;color:#0f172a;margin-bottom:16px"><i class="fas fa-chart-line"></i> Active Investment Plans</div>
+<div id="plansList"><div style="text-align:center;padding:20px;color:#94a3b8">No active plans</div></div>
+</div>
+</div>
+<div id="fundModal" class="modal">
+<div class="modal-content">
+<div class="modal-header">
+<h2 style="font-size:16px;font-weight:600;color:#0f172a">Fund Account</h2>
+<button class="close-btn" onclick="closeModal()">×</button>
+</div>
+<div class="account-info">
+<div class="info-row"><div><div class="txt-s" style="margin-bottom:6px">Bank</div><div style="font-size:14px;color:#0f172a;font-weight:600">Monie Point</div></div></div>
+<div class="info-row"><div><div class="txt-s" style="margin-bottom:6px">Account Number</div><div style="font-size:14px;color:#0f172a;font-weight:600">9014749939</div></div><button class="copy-btn" onclick="copyText('9014749939')">Copy</button></div>
+<div class="info-row"><div><div class="txt-s" style="margin-bottom:6px">Account Name</div><div style="font-size:14px;color:#0f172a;font-weight:600">Jerry Chidera Boi</div></div></div>
+</div>
+<div class="input-group">
+<label class="input-label">Amount Sent (₦)</label>
+<input type="number" id="amountSent" class="input-field" placeholder="Enter amount" min="1" step="0.01">
+</div>
+<div class="input-group">
+<label class="input-label">Upload Payment Proof <span style="color:#ef4444">*</span></label>
+<label for="proofUpload" class="file-upload" id="fileUploadArea">
+<div style="width:48px;height:48px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:8px">
+<i class="fas fa-cloud-upload-alt" style="font-size:24px;color:#10b981"></i>
+</div>
+<div style="font-size:13px;color:#64748b;font-weight:500">Click to upload screenshot</div>
+<div style="font-size:11px;color:#94a3b8;margin-top:4px">JPG, PNG or PDF (Max 5MB)</div>
+<input type="file" id="proofUpload" accept="image/*,.pdf" onchange="handleFileSelect(event)">
+</label>
+<div id="filePreview" class="file-preview" style="display:none"></div>
+<div id="uploadSuccess" class="upload-success">
+<i class="fas fa-check-circle" style="color:#059669;font-size:24px;margin-bottom:8px"></i>
+<div style="color:#059669;font-size:13px;font-weight:600">Payment proof uploaded successfully! ✓</div>
+<div style="font-size:11px;color:#059669;margin-top:4px">Your request has been submitted for verification</div>
+</div>
+</div>
+<button class="btn" id="submitBtn" onclick="submitFunding()" disabled>Confirm Payment</button>
+</div>
+</div>
+<script type="module">
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import{getDatabase,ref,get,update,push,onValue}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import{getStorage,ref as sRef,uploadBytes,getDownloadURL}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-storage.js";
+import{auth,database}from"./lib/firebase.js";
+const storage=getStorage();let user,plans={},userData={},selectedFile=null;
+window.openModal=()=>document.getElementById('fundModal').style.display='block';
+window.closeModal=()=>{document.getElementById('fundModal').style.display='none';document.getElementById('amountSent').value='';selectedFile=null;document.getElementById('filePreview').style.display='none';document.getElementById('filePreview').innerHTML='';document.getElementById('uploadSuccess').style.display='none';document.getElementById('fileUploadArea').classList.remove('has-file');document.getElementById('fileUploadArea').style.display='flex';document.getElementById('submitBtn').disabled=true;document.getElementById('submitBtn').textContent='Confirm Payment'};
+window.handleFileSelect=e=>{const file=e.target.files[0];if(!file)return;if(file.size>5*1024*1024){alert('File too large. Max 5MB');return}selectedFile=file;const preview=document.getElementById('filePreview'),area=document.getElementById('fileUploadArea');area.classList.add('has-file');const fn=file.name.length>30?file.name.substring(0,27)+'...':file.name;if(file.type.startsWith('image/')){const r=new FileReader();r.onload=e=>{preview.innerHTML=`<div style="background:#f0fdf4;padding:12px;border-radius:8px;border:1px solid #10b981"><img src="${e.target.result}" style="max-height:200px;margin:0 auto;display:block;border-radius:8px"><div style="font-size:11px;color:#059669;margin-top:8px;text-align:center;font-weight:500">📎 ${fn}</div></div>`;preview.style.display='block'};r.readAsDataURL(file)}else{preview.innerHTML=`<div style="padding:12px;background:#f0fdf4;color:#059669;border-radius:8px;font-size:13px;border:1px solid #10b981"><i class="fas fa-file-pdf"></i> ${fn}</div>`;preview.style.display='block'}checkFormValid()};
+const checkFormValid=()=>{const amt=document.getElementById('amountSent').value;document.getElementById('submitBtn').disabled=!(amt&&parseFloat(amt)>0&&selectedFile)};
+document.getElementById('amountSent').addEventListener('input',checkFormValid);
+window.copyText=async t=>{try{await navigator.clipboard.writeText(t);alert('✅ Copied: '+t)}catch{const i=document.createElement('input');i.value=t;document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);alert('✅ Copied: '+t)}};
+window.copyRefCode=()=>copyText(userData.referralCode||'');
+window.shareRefLink=()=>{const link=`${window.location.origin}/register.html?ref=${userData.referralCode}`,msg=`Join Crest Point Investment with my referral code and earn bonus! Use code: ${userData.referralCode}\n\n${link}`;if(navigator.share){navigator.share({title:'Join Crest Point',text:msg}).catch(e=>copyText(link))}else copyText(link)};
+window.submitFunding=async()=>{if(!user||!selectedFile)return;const amt=parseFloat(document.getElementById('amountSent').value);if(!amt||amt<=0)return alert('Please enter a valid amount');const btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Uploading...';try{const fn=`funding_proof_${user.uid}_${Date.now()}_${selectedFile.name}`,fRef=sRef(storage,`funding_proofs/${fn}`);await uploadBytes(fRef,selectedFile);btn.textContent='Processing...';const fURL=await getDownloadURL(fRef);btn.textContent='Saving...';await push(ref(database,'fundingRequests'),{userId:user.uid,userEmail:user.email,userName:user.displayName||user.email,amount:amt,paymentMethod:'Monie Point',accountNumber:'9014749939',accountName:'Jerry Chidera Boi',proofURL:fURL,proofFileName:selectedFile.name,status:'pending',createdAt:new Date().toISOString(),timestamp:Date.now()});document.getElementById('fileUploadArea').style.display='none';document.getElementById('filePreview').style.display='none';document.getElementById('uploadSuccess').style.display='block';btn.style.display='none';setTimeout(()=>{closeModal();alert('✅ Payment submitted successfully! We will verify and credit your account within 24 hours.')},3000)}catch(e){console.error('Upload error:',e);alert('❌ Upload failed: '+e.message+'. Please try again.');btn.disabled=false;btn.textContent='Confirm Payment'}};
+const calcPending=p=>{const now=Date.now();if(now>=p.maturityDate)return Math.max(0,p.dailyIncome-(p.totalClaimed||0));const elapsed=now-p.startDate,daysPassed=elapsed/86400000,earned=p.dailyIncome*daysPassed;return Math.max(0,earned-(p.totalClaimed||0))};
+const canClaim=p=>{if(!p.lastClaim)return true;return(Date.now()-p.lastClaim)/3600000>=24};
+const getTimeUntilClaim=p=>{if(!p.lastClaim)return null;const hoursSince=(Date.now()-p.lastClaim)/3600000;if(hoursSince>=24)return null;const remaining=24-hoursSince,hrs=Math.floor(remaining),mins=Math.floor((remaining-hrs)*60);return`${hrs}h ${mins}m`};
+window.claimEarnings=async id=>{if(!user)return;const p=plans[id];if(!p||!canClaim(p)){alert('You can only claim once every 24 hours');return}const amt=calcPending(p);if(amt<1)return;try{const snap=await get(ref(database,`users/${user.uid}`)),d=snap.val(),claimed=(p.totalClaimed||0)+amt;await update(ref(database,`users/${user.uid}`),{balance:(d.balance||0)+amt,totalClaimed:(d.totalClaimed||0)+amt,[`investments/${id}/totalClaimed`]:claimed,[`investments/${id}/lastClaim`]:Date.now()});alert(`✅ Successfully claimed ₦${amt.toFixed(2)}!`)}catch{alert('Failed to claim. Try again.')}};
+window.claimAll=async()=>{if(!user||!plans)return;let total=0;const updates={},now=Date.now();Object.entries(plans).forEach(([id,p])=>{if(p.status!=='active'||!canClaim(p))return;const pending=calcPending(p);if(pending>=1){total+=pending;const claimed=(p.totalClaimed||0)+pending;updates[`investments/${id}/totalClaimed`]=claimed;updates[`investments/${id}/lastClaim`]=now}});if(total<1)return alert('No earnings to claim or cooldown period active');try{const snap=await get(ref(database,`users/${user.uid}`)),d=snap.val();await update(ref(database,`users/${user.uid}`),{...updates,balance:(d.balance||0)+total,totalClaimed:(d.totalClaimed||0)+total});alert(`✅ Successfully claimed ₦${total.toFixed(2)}!`)}catch{alert('Failed to claim. Try again.')}};
+const generateCode=()=>Math.random().toString(36).substring(2,8).toUpperCase();
+const updateUI=async d=>{userData=d;document.getElementById('userName').textContent=d.fullName||d.email?.split('@')[0]||'Investor';document.getElementById('totalBalance').textContent=`₦${(d.balance||0).toLocaleString('en-NG',{minimumFractionDigits:2})}`;const investments=d.investments||{};let totalInvested=0;Object.values(investments).forEach(inv=>{if(inv.status==='active')totalInvested+=inv.amount});document.getElementById('balanceChange').textContent=`₦${(d.balance||0).toLocaleString('en-NG',{minimumFractionDigits:2})} Available`;document.getElementById('invested').textContent=`₦${totalInvested.toLocaleString('en-NG',{minimumFractionDigits:2})}`;document.getElementById('totalClaimed').textContent=`₦${(d.totalClaimed||0).toLocaleString('en-NG',{minimumFractionDigits:2})}`;const activeCount=Object.values(investments).filter(i=>i.status==='active').length;document.getElementById('investedCount').textContent=`${activeCount} active plan${activeCount!==1?'s':''}`;if(!d.referralCode&&user){const newCode=generateCode();try{await update(ref(database,`users/${user.uid}`),{referralCode:newCode});await update(ref(database,`referralCodes/${newCode}`),{userId:user.uid,createdAt:new Date().toISOString()});d.referralCode=newCode}catch(e){console.error('Failed to generate referral code:',e)}}document.getElementById('refCard').style.display='block';document.getElementById('refCode').textContent=d.referralCode||'LOADING...';document.getElementById('refCount').textContent=(d.referrals||[]).length;document.getElementById('refEarnings').textContent=`₦${(d.totalReferralEarnings||0).toLocaleString('en-NG')}`;const refList=document.getElementById('refList');if((d.referrals||[]).length>0){refList.innerHTML=(d.referrals||[]).slice(0,5).map(r=>`<div style="background:rgba(255,255,255,.15);border-radius:6px;padding:8px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center"><div><div style="color:#fff;font-size:12px;font-weight:500">${r.name}</div><div style="color:rgba(255,255,255,.7);font-size:10px">${new Date(r.joinedAt).toLocaleDateString()}</div></div><div style="color:#fff;font-weight:600;font-size:13px">₦40</div></div>`).join('')}plans=investments;const arr=Object.entries(plans).map(([id,p])=>({id,...p}));let totalPending=0,earliestClaim=null;if(arr.length>0){document.getElementById('plansList').innerHTML=arr.map(p=>{const pending=calcPending(p),claimable=canClaim(p),timeLeft=getTimeUntilClaim(p);if(p.status==='active'){totalPending+=pending;if(!claimable&&(!earliestClaim||p.lastClaim<earliestClaim))earliestClaim=p.lastClaim}return`<div class="plan-item"><div class="plan-header"><div><h4 style="color:#0f172a;font-size:14px;margin-bottom:4px;font-weight:600">${p.planName}</h4><span class="plan-status">${p.status==='active'?'● Active':'✓ Completed'}</span></div><div style="color:#0f172a;font-size:14px;font-weight:600">₦${p.amount.toLocaleString('en-NG',{minimumFractionDigits:2})}</div></div>${p.status==='active'?`<button class="btn" style="padding:10px;font-size:13px;font-weight:600;margin-top:10px"${!claimable||pending<1?' disabled':''} onclick="claimEarnings('${p.id}')">${!claimable?`⏰ Wait ${timeLeft}`:pending>=1?`💰 Claim ₦${pending.toFixed(2)}`:'Nothing to Claim Yet'}</button>`:''}</div>`}).join('');if(totalPending>=1||earliestClaim){document.getElementById('pendingSection').style.display='block';document.getElementById('totalPending').textContent=`₦${totalPending.toFixed(2)}`;const allClaimable=!earliestClaim||canClaim({lastClaim:earliestClaim});document.getElementById('claimAllBtn').disabled=!allClaimable||totalPending<1;if(!allClaimable){const remaining=getTimeUntilClaim({lastClaim:earliestClaim});document.getElementById('claimCooldown').style.display='block';document.getElementById('claimCooldown').textContent=`⏰ Next claim available in ${remaining}`}else{document.getElementById('claimCooldown').style.display='none'}}}};
+onAuthStateChanged(auth,u=>{if(u){user=u;onValue(ref(database,`users/${u.uid}`),s=>{if(s.exists())updateUI(s.val())})}else location.href='/login.html'});
+</script>
 </body>
 </html>
