@@ -35,27 +35,40 @@
         .plan-header{display:flex;justify-content:space-between;margin-bottom:10px}
         .plan-info h4{color:#0f172a;font-size:14px;margin-bottom:4px;font-weight:600}
         .plan-status{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;background:#dcfce7;color:#059669}
-        .btn{width:100%;padding:12px;background:#10b981;color:white;border:none;border-radius:0;font-size:14px;font-weight:600;cursor:pointer}
+        .btn{width:100%;padding:12px;background:#10b981;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
         .btn:hover{background:#059669}
         .btn-sm{padding:10px;font-size:13px;font-weight:600;margin-top:10px}
         .modal{display:none;position:fixed;z-index:1000;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.5)}
-        .modal-content{background:white;margin:10% auto;padding:24px;border-radius:0;max-width:400px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+        .modal-content{background:white;margin:10% auto;padding:24px;border-radius:16px;max-width:400px;box-shadow:0 4px 16px rgba(0,0,0,.2)}
         .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #e2e8f0}
         .modal-title{font-size:16px;font-weight:600;color:#0f172a}
         .close-btn{background:none;border:none;font-size:24px;color:#64748b;cursor:pointer;padding:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center}
-        .account-info{background:#f8fafc;padding:16px;border-radius:0;margin-bottom:16px;border:1px solid #e2e8f0}
+        .account-info{background:#f8fafc;padding:16px;border-radius:8px;margin-bottom:16px;border:1px solid #e2e8f0}
         .info-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0}
         .info-row:not(:last-child){border-bottom:1px solid #e2e8f0}
         .info-label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px}
         .info-value{font-size:14px;color:#0f172a;font-weight:600}
-        .copy-btn{background:none;border:1px solid #e2e8f0;color:#64748b;padding:4px 8px;border-radius:0;cursor:pointer;font-size:10px;margin-left:8px}
+        .copy-btn{background:none;border:1px solid #e2e8f0;color:#64748b;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:10px;margin-left:8px}
         .copy-btn:hover{background:#f8fafc}
         .input-group{margin:16px 0}
         .input-label{font-size:11px;color:#64748b;margin-bottom:6px;font-weight:600;display:block;text-transform:uppercase;letter-spacing:0.5px}
-        .input-field{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:0;font-size:14px}
+        .input-field{width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px;font-size:14px}
         .input-field:focus{outline:none;border-color:#10b981}
         .spinner{display:inline-block;width:12px;height:12px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
+        .ref-card{background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-radius:16px;padding:20px;margin-bottom:20px;box-shadow:0 4px 16px rgba(139,92,246,.2)}
+        .ref-title{color:white;font-size:16px;font-weight:600;margin-bottom:12px}
+        .ref-code-box{background:rgba(255,255,255,.2);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+        .ref-code{color:white;font-size:18px;font-weight:700;letter-spacing:1px}
+        .ref-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+        .ref-stat{background:rgba(255,255,255,.15);border-radius:8px;padding:10px;text-align:center}
+        .ref-stat-label{color:rgba(255,255,255,.85);font-size:11px;margin-bottom:4px}
+        .ref-stat-value{color:white;font-size:20px;font-weight:700}
+        .ref-link{background:white;color:#8b5cf6;padding:10px;border-radius:8px;text-align:center;font-size:13px;font-weight:600;margin-top:12px;cursor:pointer}
+        .ref-list{margin-top:12px}
+        .ref-item{background:rgba(255,255,255,.15);border-radius:8px;padding:10px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+        .ref-item-name{color:white;font-size:13px;font-weight:500}
+        .ref-item-date{color:rgba(255,255,255,.7);font-size:11px}
     </style>
 </head>
 <body>
@@ -71,6 +84,29 @@
                     <button class="action-button" onclick="location.href='/plans.html'"><i class="fas fa-chart-line"></i> Invest</button>
                 </div>
             </div>
+        </div>
+
+        <div class="ref-card" id="refCard" style="display:none">
+            <div class="ref-title"><i class="fas fa-users"></i> Referral Program</div>
+            <div class="ref-code-box">
+                <div>
+                    <div style="color:rgba(255,255,255,.85);font-size:11px;margin-bottom:4px">YOUR CODE</div>
+                    <div class="ref-code" id="refCode">LOADING...</div>
+                </div>
+                <button class="copy-btn" style="background:white;color:#8b5cf6" onclick="copyRefCode()"><i class="fas fa-copy"></i></button>
+            </div>
+            <div class="ref-link" onclick="shareRefLink()"><i class="fas fa-share-alt"></i> Share Referral Link</div>
+            <div class="ref-stats">
+                <div class="ref-stat">
+                    <div class="ref-stat-label">Total Referrals</div>
+                    <div class="ref-stat-value" id="refCount">0</div>
+                </div>
+                <div class="ref-stat">
+                    <div class="ref-stat-label">Total Earned</div>
+                    <div class="ref-stat-value" id="refEarnings">₦0</div>
+                </div>
+            </div>
+            <div class="ref-list" id="refList"></div>
         </div>
 
         <div class="stats-grid">
@@ -107,36 +143,24 @@
                 <h2 class="modal-title">Fund Account</h2>
                 <button class="close-btn" onclick="closeModal()">×</button>
             </div>
-            
             <div class="account-info">
                 <div class="info-row">
-                    <div>
-                        <div class="info-label">Bank</div>
-                        <div class="info-value">Monie Point</div>
-                    </div>
+                    <div><div class="info-label">Bank</div><div class="info-value">Monie Point</div></div>
                     <button class="copy-btn" onclick="copyText('Monie Point')">Copy</button>
                 </div>
                 <div class="info-row">
-                    <div>
-                        <div class="info-label">Account Number</div>
-                        <div class="info-value">9014749939</div>
-                    </div>
+                    <div><div class="info-label">Account Number</div><div class="info-value">9014749939</div></div>
                     <button class="copy-btn" onclick="copyText('9014749939')">Copy</button>
                 </div>
                 <div class="info-row">
-                    <div>
-                        <div class="info-label">Account Name</div>
-                        <div class="info-value">Jerry Chidera Boi</div>
-                    </div>
+                    <div><div class="info-label">Account Name</div><div class="info-value">Jerry Chidera Boi</div></div>
                     <button class="copy-btn" onclick="copyText('Jerry Chidera Boi')">Copy</button>
                 </div>
             </div>
-
             <div class="input-group">
                 <label class="input-label">Amount Sent (₦)</label>
                 <input type="number" id="amountSent" class="input-field" placeholder="Enter amount" min="1" step="0.01">
             </div>
-
             <button class="btn" onclick="submitFunding()">Confirm Payment</button>
         </div>
     </div>
@@ -146,24 +170,23 @@
         import{getDatabase,ref,get,update,push,onValue}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
         import{auth,database}from"./lib/firebase.js";
 
-        let user,plans={};
+        let user,plans={},userData={};
 
         window.openModal=()=>document.getElementById('fundModal').style.display='block';
         window.closeModal=()=>{document.getElementById('fundModal').style.display='none';document.getElementById('amountSent').value=''};
 
         window.copyText=async(text)=>{
-            try{
-                await navigator.clipboard.writeText(text);
-                alert('✅ Copied: '+text);
-            }catch(e){
-                const input=document.createElement('input');
-                input.value=text;
-                document.body.appendChild(input);
-                input.select();
-                document.execCommand('copy');
-                document.body.removeChild(input);
-                alert('✅ Copied: '+text);
-            }
+            try{await navigator.clipboard.writeText(text);alert('✅ Copied: '+text)}
+            catch(e){const input=document.createElement('input');input.value=text;document.body.appendChild(input);input.select();document.execCommand('copy');document.body.removeChild(input);alert('✅ Copied: '+text)}
+        };
+
+        window.copyRefCode=()=>copyText(userData.referralCode||'');
+
+        window.shareRefLink=()=>{
+            const link=`${window.location.origin}/signup.html?ref=${userData.referralCode}`;
+            const msg=`Join Crest Point Investment with my referral code and earn bonus! Use code: ${userData.referralCode}\n\n${link}`;
+            if(navigator.share){navigator.share({title:'Join Crest Point',text:msg}).catch(e=>copyText(link))}
+            else copyText(link);
         };
 
         window.submitFunding=async()=>{
@@ -171,18 +194,7 @@
             const amt=parseFloat(document.getElementById('amountSent').value);
             if(!amt||amt<=0)return alert('Please enter a valid amount');
             try{
-                await push(ref(database,'fundingRequests'),{
-                    userId:user.uid,
-                    userEmail:user.email,
-                    userName:user.displayName||user.email,
-                    amount:amt,
-                    paymentMethod:'Monie Point',
-                    accountNumber:'9014749939',
-                    accountName:'Jerry Chidera Boi',
-                    status:'pending',
-                    createdAt:new Date().toISOString(),
-                    timestamp:Date.now()
-                });
+                await push(ref(database,'fundingRequests'),{userId:user.uid,userEmail:user.email,userName:user.displayName||user.email,amount:amt,paymentMethod:'Monie Point',accountNumber:'9014749939',accountName:'Jerry Chidera Boi',status:'pending',createdAt:new Date().toISOString(),timestamp:Date.now()});
                 const msg=`Hello! I have transferred funds to my investment account.\n\n*Account Details:*\nEmail: ${user.email}\n\n*Transfer Details:*\nBank: Monie Point\nAccount Number: 9014749939\nAccount Name: Jerry Chidera Boi\nAmount Transferred: ₦${amt.toFixed(2)}\n\nPlease confirm and credit my account. Thank you!`;
                 window.open(`https://wa.me/447940228929?text=${encodeURIComponent(msg)}`,'_blank');
                 closeModal();
@@ -193,9 +205,7 @@
         const calcPending=p=>{
             const now=Date.now();
             if(now>=p.maturityDate)return Math.max(0,p.dailyIncome-(p.totalClaimed||0));
-            const elapsed=now-p.startDate;
-            const daysPassed=elapsed/86400000;
-            const earned=p.dailyIncome*daysPassed;
+            const elapsed=now-p.startDate,daysPassed=elapsed/86400000,earned=p.dailyIncome*daysPassed;
             return Math.max(0,earned-(p.totalClaimed||0));
         };
 
@@ -206,15 +216,8 @@
             const amt=calcPending(p);
             if(amt<1)return;
             try{
-                const snap=await get(ref(database,`users/${user.uid}`));
-                const d=snap.val();
-                const claimed=(p.totalClaimed||0)+amt;
-                await update(ref(database,`users/${user.uid}`),{
-                    balance:(d.balance||0)+amt,
-                    totalClaimed:(d.totalClaimed||0)+amt,
-                    [`investments/${id}/totalClaimed`]:claimed,
-                    [`investments/${id}/lastClaim`]:Date.now()
-                });
+                const snap=await get(ref(database,`users/${user.uid}`)),d=snap.val(),claimed=(p.totalClaimed||0)+amt;
+                await update(ref(database,`users/${user.uid}`),{balance:(d.balance||0)+amt,totalClaimed:(d.totalClaimed||0)+amt,[`investments/${id}/totalClaimed`]:claimed,[`investments/${id}/lastClaim`]:Date.now()});
                 alert(`✅ Successfully claimed ₦${amt.toFixed(2)}!`);
             }catch(e){alert('Failed to claim. Try again.')}
         };
@@ -226,35 +229,24 @@
             Object.entries(plans).forEach(([id,p])=>{
                 if(p.status!=='active')return;
                 const pending=calcPending(p);
-                if(pending>=1){
-                    total+=pending;
-                    const claimed=(p.totalClaimed||0)+pending;
-                    updates[`investments/${id}/totalClaimed`]=claimed;
-                    updates[`investments/${id}/lastClaim`]=Date.now();
-                }
+                if(pending>=1){total+=pending;const claimed=(p.totalClaimed||0)+pending;updates[`investments/${id}/totalClaimed`]=claimed;updates[`investments/${id}/lastClaim`]=Date.now()}
             });
             if(total<1)return alert('No earnings to claim yet');
             try{
-                const snap=await get(ref(database,`users/${user.uid}`));
-                const d=snap.val();
-                await update(ref(database,`users/${user.uid}`),{
-                    ...updates,
-                    balance:(d.balance||0)+total,
-                    totalClaimed:(d.totalClaimed||0)+total
-                });
+                const snap=await get(ref(database,`users/${user.uid}`)),d=snap.val();
+                await update(ref(database,`users/${user.uid}`),{...updates,balance:(d.balance||0)+total,totalClaimed:(d.totalClaimed||0)+total});
                 alert(`✅ Successfully claimed ₦${total.toFixed(2)}!`);
             }catch(e){alert('Failed to claim. Try again.')}
         };
 
         const updateUI=d=>{
+            userData=d;
             document.getElementById('userName').textContent=d.fullName||d.email?.split('@')[0]||'Investor';
             document.getElementById('totalBalance').textContent=`₦${(d.balance||0).toLocaleString('en-NG',{minimumFractionDigits:2})}`;
             
             const investments=d.investments||{};
             let totalInvested=0;
-            Object.values(investments).forEach(inv=>{
-                if(inv.status==='active')totalInvested+=inv.amount;
-            });
+            Object.values(investments).forEach(inv=>{if(inv.status==='active')totalInvested+=inv.amount});
             
             document.getElementById('balanceChange').textContent=`₦${(d.balance||0).toLocaleString('en-NG',{minimumFractionDigits:2})} Available`;
             document.getElementById('invested').textContent=`₦${totalInvested.toLocaleString('en-NG',{minimumFractionDigits:2})}`;
@@ -262,6 +254,18 @@
             
             const activeCount=Object.values(investments).filter(i=>i.status==='active').length;
             document.getElementById('investedCount').textContent=`${activeCount} active plan${activeCount!==1?'s':''}`;
+            
+            if(d.referralCode){
+                document.getElementById('refCard').style.display='block';
+                document.getElementById('refCode').textContent=d.referralCode;
+                document.getElementById('refCount').textContent=(d.referrals||[]).length;
+                document.getElementById('refEarnings').textContent=`₦${(d.totalReferralEarnings||0).toLocaleString('en-NG')}`;
+                
+                const refList=document.getElementById('refList');
+                if((d.referrals||[]).length>0){
+                    refList.innerHTML=(d.referrals||[]).slice(0,5).map(r=>`<div class="ref-item"><div><div class="ref-item-name">${r.name}</div><div class="ref-item-date">${new Date(r.joinedAt).toLocaleDateString()}</div></div><div style="color:white;font-weight:600">₦100</div></div>`).join('');
+                }
+            }
             
             plans=investments;
             const arr=Object.entries(plans).map(([id,p])=>({id,...p}));
@@ -281,11 +285,9 @@
         };
 
         onAuthStateChanged(auth,u=>{
-            if(u){
-                user=u;
-                onValue(ref(database,`users/${u.uid}`),s=>{if(s.exists())updateUI(s.val())});
-            }else location.href='/login.html';
+            if(u){user=u;onValue(ref(database,`users/${u.uid}`),s=>{if(s.exists())updateUI(s.val())})}
+            else location.href='/login.html';
         });
     </script>
 </body>
-                        </html>
+            </html>
