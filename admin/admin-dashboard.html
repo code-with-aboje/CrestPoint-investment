@@ -207,7 +207,7 @@
 
         const format = (num, currency = false) => {
             const opts = currency ? { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 } : {};
-            return new Intl.NumberFormat('en-US', opts).format(num);
+            return new Intl.NumberFormat('en-NGN', opts).format(num);
         };
 
         const setStatus = (isOnline) => {
