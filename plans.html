@@ -85,7 +85,7 @@
 
         <div class="banner info-note show">
             <i class="fas fa-lightbulb"></i>
-            <div><strong>Note:</strong> All investments are in Naira (₦). Returns are calculated daily.</div>
+            <div><strong>Note:</strong> All investments are in Naira (₦). Returns are calculated daily. First-time investors get ₦1,000 bonus!</div>
         </div>
 
         <div class="balance-display">
@@ -209,9 +209,17 @@
             btn.disabled=1;btn.innerHTML='<span class="spinner"></span> Processing...';
             try{
                 const now=Date.now();
+                const userRef=ref(database,'users/'+user.uid);
+                const snapshot=await get(userRef);
+                const userData=snapshot.val()||{};
+                
+                // Check if this is first investment
+                const hasInvestments=userData.investments&&Object.keys(userData.investments).length>0;
+                const welcomeBonus=hasInvestments?0:1000;
+                
                 const invKey=push(ref(database,`users/${user.uid}/investments`)).key;
-                await update(ref(database,'users/'+user.uid),{
-                    balance:bal-c.cost,
+                const updates={
+                    balance:bal-c.cost+welcomeBonus,
                     [`investments/${invKey}`]:{
                         planId:sel.id,
                         planName:sel.name,
@@ -223,10 +231,18 @@
                         status:'active',
                         totalClaimed:0
                     }
-                });
-                bal-=c.cost;
+                };
+                
+                if(welcomeBonus>0){
+                    updates.hasReceivedWelcomeBonus=true;
+                }
+                
+                await update(userRef,updates);
+                bal=bal-c.cost+welcomeBonus;
                 document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2});
-                alert('✓ Investment successful!');
+                
+                const msg=welcomeBonus>0?'✓ Investment successful! 🎉\n\n🎁 Welcome Bonus: ₦1,000 added to your balance!':'✓ Investment successful!';
+                alert(msg);
                 closeModal();
             }catch(e){
                 err.textContent='Error: '+e.message;
@@ -240,4 +256,4 @@
         document.addEventListener('DOMContentLoaded',()=>{render();initApp()});
     </script>
 </body>
-                    </html>
+                </html>
