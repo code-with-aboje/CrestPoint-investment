@@ -1,401 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Withdraw - BluStone</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:'Inter',-apple-system,sans-serif;background:#fafafa;padding:20px}
-        .container{max-width:900px;margin:0 auto;padding-bottom:80px}
-        .page-header{margin-bottom:32px}
-        .page-header h1{font-size:28px;color:#0f172a;margin-bottom:8px}
-        .page-header p{color:#64748b;font-size:15px}
-        .content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
-        .card{background:white;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);border:1px solid #e5e7eb}
-        .card-title{font-size:14px;font-weight:600;color:#64748b;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
-        .card-value{font-size:32px;font-weight:700;color:#10b981;margin-bottom:12px}
-        .card-meta{font-size:13px;color:#94a3b8}
-        .section{background:white;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);border:1px solid #e5e7eb;margin-bottom:32px}
-        .section-title{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:24px;display:flex;align-items:center;gap:12px}
-        .section-title i{color:#10b981;font-size:20px}
-        .btn-withdraw{width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s;box-shadow:0 4px 12px rgba(16,185,129,.3)}
-        .btn-withdraw:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(16,185,129,.4)}
-        .btn-withdraw:active{transform:translateY(0)}
-        .btn-withdraw:disabled{opacity:.6;cursor:not-allowed}
-        .history-wrapper{overflow-x:auto;margin:0 -24px;padding:0 24px}
-        .history-table{width:100%;border-collapse:collapse;min-width:500px}
-        .history-table thead{background:#f8fafc;border-bottom:2px solid #e2e8f0}
-        .history-table th{padding:12px;text-align:left;font-weight:600;color:#475569;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
-        .history-table td{padding:14px 12px;border-bottom:1px solid #e5e7eb;font-size:14px;color:#334155}
-        .history-table tbody tr:hover{background:#f8fafc}
-        .status-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;text-transform:capitalize}
-        .status-pending{background:#fef3c7;color:#92400e}
-        .status-completed{background:#d1fae5;color:#065f46}
-        .status-rejected{background:#fee2e2;color:#991b1b}
-        .empty-state{text-align:center;padding:40px 20px;color:#94a3b8}
-        .empty-state-icon{font-size:48px;color:#cbd5e1;margin-bottom:16px}
-        .info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px;margin-bottom:24px;font-size:14px;color:#0c4a6e;display:flex;gap:12px;align-items:flex-start}
-        .info-box i{color:#0284c7;flex-shrink:0;margin-top:2px}
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(0,0,0,.6);z-index:10000;padding:20px;overflow-y:auto}
-        .modal.active{display:flex;align-items:center;justify-content:center;animation:fadeIn .3s}
-        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-        @keyframes scaleIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
-        .modal-content{width:100%;max-width:480px;background:white;border-radius:16px;padding:20px;animation:scaleIn .3s;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:85vh;overflow-y:auto}
-        .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #e5e7eb}
-        .modal-title{font-size:18px;font-weight:700;color:#0f172a}
-        .close-btn{background:none;border:none;font-size:24px;color:#64748b;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:background .3s;line-height:1}
-        .close-btn:hover{background:#f1f5f9}
-        .form-group{margin-bottom:16px}
-        .form-label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px}
-        .form-input,.form-select{width:100%;padding:10px 12px;border:2px solid #e2e8f0;border-radius:8px;font-size:13px;transition:all .3s}
-        .form-input:focus,.form-select:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.1)}
-        .amount-info{background:#f0fdf4;border:1px solid #dcfce7;border-radius:8px;padding:10px;margin-bottom:16px;font-size:13px;color:#166534}
-        .info-row{display:flex;justify-content:space-between;padding:4px 0}
-        .info-label{font-weight:500;font-size:12px}
-        .info-value{font-weight:700;color:#15803d;font-size:13px}
-        .fee-warning{background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px;margin-bottom:16px;font-size:12px;color:#92400e;display:none}
-        .fee-warning.show{display:block}
-        .message{border-radius:8px;padding:10px;margin-bottom:16px;font-size:13px;display:none}
-        .message.show{display:block}
-        .error{background:#fee2e2;border:1px solid #fecaca;color:#991b1b}
-        .success{background:#f0fdf4;border:1px solid:#86efac;color:#166534}
-        .button-group{display:flex;gap:10px;margin-top:20px}
-        .btn{flex:1;padding:11px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .3s}
-        .btn-cancel{background:#f1f5f9;color:#475569}
-        .btn-submit{background:linear-gradient(135deg,#10b981,#059669);color:white;box-shadow:0 4px 12px rgba(16,185,129,.3)}
-        .btn-submit:hover:not(:disabled){transform:translateY(-2px)}
-        .btn-submit:disabled{opacity:.6;cursor:not-allowed}
-        .pending-notice{background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:16px;margin-top:16px;display:none}
-        .pending-notice.show{display:block}
-        .pending-notice h3{color:#92400e;font-size:16px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
-        .pending-notice p{color:#92400e;font-size:13px;line-height:1.6}
-        .whatsapp-btn{width:100%;padding:12px;background:#25d366;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s}
-        .whatsapp-btn:hover{background:#20ba5a;transform:translateY(-2px)}
-        @media(max-width:768px){
-            .content-grid{grid-template-columns:1fr}
-            .page-header h1{font-size:24px}
-            .card-value{font-size:28px}
-            .section.desktop{display:none}
-            .btn-withdraw.mobile{display:block;margin-bottom:32px}
-            .modal{padding:10px}
-            .modal-content{padding:16px}
-        }
-        @media(min-width:769px){
-            .btn-withdraw.mobile{display:none}
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Withdraw - BluStone</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,-apple-system,sans-serif;background:#fafafa;padding:20px}
+.container{max-width:900px;margin:0 auto;padding-bottom:80px}.page-header{margin-bottom:32px}
+.page-header h1{font-size:28px;color:#0f172a;margin-bottom:8px}.page-header p{color:#64748b;font-size:15px}
+.content-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px}
+.card{background:white;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);border:1px solid #e5e7eb}
+.card-title{font-size:14px;font-weight:600;color:#64748b;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.card-value{font-size:32px;font-weight:700;color:#10b981;margin-bottom:12px}.card-meta{font-size:13px;color:#94a3b8}
+.section{background:white;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.05);border:1px solid #e5e7eb;margin-bottom:32px}
+.section-title{font-size:18px;font-weight:700;color:#0f172a;margin-bottom:24px;display:flex;align-items:center;gap:12px}
+.section-title i{color:#10b981;font-size:20px}.btn-withdraw{width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s;box-shadow:0 4px 12px rgba(16,185,129,.3)}
+.btn-withdraw:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(16,185,129,.4)}.btn-withdraw:active{transform:translateY(0)}
+.btn-withdraw:disabled{opacity:.6;cursor:not-allowed}.history-wrapper{overflow-x:auto;margin:0 -24px;padding:0 24px}
+.history-table{width:100%;border-collapse:collapse;min-width:500px}.history-table thead{background:#f8fafc;border-bottom:2px solid #e2e8f0}
+.history-table th{padding:12px;text-align:left;font-weight:600;color:#475569;font-size:13px;text-transform:uppercase;letter-spacing:.5px}
+.history-table td{padding:14px 12px;border-bottom:1px solid #e5e7eb;font-size:14px;color:#334155}.history-table tbody tr:hover{background:#f8fafc}
+.status-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;text-transform:capitalize}
+.status-pending{background:#fef3c7;color:#92400e}.status-completed{background:#d1fae5;color:#065f46}
+.status-approved{background:#d1fae5;color:#065f46}.status-rejected{background:#fee2e2;color:#991b1b}
+.empty-state{text-align:center;padding:40px 20px;color:#94a3b8}.empty-state-icon{font-size:48px;color:#cbd5e1;margin-bottom:16px}
+.info-box{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px;margin-bottom:24px;font-size:14px;color:#0c4a6e;display:flex;gap:12px;align-items:flex-start}
+.info-box i{color:#0284c7;flex-shrink:0;margin-top:2px}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(0,0,0,.6);z-index:10000;padding:20px;overflow-y:auto}
+.modal.active{display:flex;align-items:center;justify-content:center;animation:fadeIn .3s}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes scaleIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-content{width:100%;max-width:480px;background:white;border-radius:16px;padding:20px;animation:scaleIn .3s;box-shadow:0 20px 60px rgba(0,0,0,.3);max-height:85vh;overflow-y:auto}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid #e5e7eb}
+.modal-title{font-size:18px;font-weight:700;color:#0f172a}.close-btn{background:none;border:none;font-size:24px;color:#64748b;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:background .3s;line-height:1}
+.close-btn:hover{background:#f1f5f9}.form-group{margin-bottom:16px}.form-label{display:block;font-size:13px;font-weight:600;color:#334155;margin-bottom:6px}
+.form-input,.form-select{width:100%;padding:10px 12px;border:2px solid #e2e8f0;border-radius:8px;font-size:13px;transition:all .3s}
+.form-input:focus,.form-select:focus{outline:none;border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.1)}
+.amount-info{background:#f0fdf4;border:1px solid #dcfce7;border-radius:8px;padding:10px;margin-bottom:16px;font-size:13px;color:#166534}
+.info-row{display:flex;justify-content:space-between;padding:4px 0}.info-label{font-weight:500;font-size:12px}
+.info-value{font-weight:700;color:#15803d;font-size:13px}.fee-warning{background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px;margin-bottom:16px;font-size:12px;color:#92400e;display:none}
+.fee-warning.show{display:block}.message{border-radius:8px;padding:10px;margin-bottom:16px;font-size:13px;display:none}
+.message.show{display:block}.error{background:#fee2e2;border:1px solid #fecaca;color:#991b1b}
+.success{background:#f0fdf4;border:1px solid:#86efac;color:#166534}.button-group{display:flex;gap:10px;margin-top:20px}
+.btn{flex:1;padding:11px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .3s}
+.btn-cancel{background:#f1f5f9;color:#475569}.btn-submit{background:linear-gradient(135deg,#10b981,#059669);color:white;box-shadow:0 4px 12px rgba(16,185,129,.3)}
+.btn-submit:hover:not(:disabled){transform:translateY(-2px)}.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+.pending-notice{background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:16px;margin-top:16px;display:none}
+.pending-notice.show{display:block}.pending-notice h3{color:#92400e;font-size:16px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.pending-notice p{color:#92400e;font-size:13px;line-height:1.6}.whatsapp-btn{width:100%;padding:12px;background:#25d366;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s}
+.whatsapp-btn:hover{background:#20ba5a;transform:translateY(-2px)}.spinner{display:inline-block;width:14px;height:14px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media(max-width:768px){.content-grid{grid-template-columns:1fr}.page-header h1{font-size:24px}.card-value{font-size:28px}
+.section.desktop{display:none}.btn-withdraw.mobile{display:block;margin-bottom:32px}.modal{padding:10px}.modal-content{padding:16px}}
+@media(min-width:769px){.btn-withdraw.mobile{display:none}}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="page-header">
-            <h1>Withdraw Funds</h1>
-            <p>Request a withdrawal from your investment account</p>
-        </div>
+<div class="container">
+<div class="page-header">
+<h1>Withdraw Funds</h1>
+<p>Request a withdrawal from your investment account</p>
+</div>
 
-        <div class="content-grid">
-            <div class="card">
-                <div class="card-title">Available Balance</div>
-                <div class="card-value" id="availableAmount">₦0.00</div>
-                <div class="card-meta">Total funds available to withdraw</div>
-            </div>
-            <div class="card">
-                <div class="card-title">Total Withdrawn</div>
-                <div class="card-value" id="totalWithdrawn">₦0.00</div>
-                <div class="card-meta">Lifetime withdrawals</div>
-            </div>
-        </div>
+<div class="content-grid">
+<div class="card">
+<div class="card-title">Available Balance</div>
+<div class="card-value" id="availableAmount"><span class="spinner"></span></div>
+<div class="card-meta">Total funds available to withdraw</div>
+</div>
+<div class="card">
+<div class="card-title">Total Withdrawn</div>
+<div class="card-value" id="totalWithdrawn"><span class="spinner"></span></div>
+<div class="card-meta">Lifetime withdrawals</div>
+</div>
+</div>
 
-        <div class="info-box">
-            <i class="fas fa-info-circle"></i>
-            <div><strong>Processing:</strong> Withdrawals are processed within 2-5 business days. A 2.5% processing fee applies to all withdrawals.</div>
-        </div>
+<div class="info-box">
+<i class="fas fa-info-circle"></i>
+<div><strong>Processing:</strong> Withdrawals are processed within 2-5 business days. A 2.5% processing fee applies to all withdrawals.</div>
+</div>
 
-        <button class="btn-withdraw mobile" onclick="openModal()"><i class="fas fa-arrow-down"></i> Request Withdrawal</button>
+<button class="btn-withdraw mobile" onclick="openModal()"><i class="fas fa-arrow-down"></i> Request Withdrawal</button>
 
-        <div class="section desktop">
-            <div class="section-title"><i class="fas fa-wallet"></i>Request Withdrawal</div>
-            <button class="btn-withdraw" onclick="openModal()"><i class="fas fa-arrow-down"></i> Request Withdrawal</button>
-        </div>
+<div class="section desktop">
+<div class="section-title"><i class="fas fa-wallet"></i>Request Withdrawal</div>
+<button class="btn-withdraw" onclick="openModal()"><i class="fas fa-arrow-down"></i> Request Withdrawal</button>
+</div>
 
-        <div class="section">
-            <div class="section-title"><i class="fas fa-history"></i>Withdrawal History</div>
-            <div class="history-wrapper">
-                <table class="history-table">
-                    <thead>
-                        <tr><th>Date</th><th>Amount</th><th>Method</th><th>Status</th><th>Fee</th></tr>
-                    </thead>
-                    <tbody id="historyBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+<div class="section">
+<div class="section-title"><i class="fas fa-history"></i>Withdrawal History</div>
+<div class="history-wrapper">
+<table class="history-table">
+<thead>
+<tr><th>Date</th><th>Amount</th><th>Method</th><th>Status</th><th>Fee</th></tr>
+</thead>
+<tbody id="historyBody"><tr><td colspan="5"><div class="empty-state"><span class="spinner"></span></div></td></tr></tbody>
+</table>
+</div>
+</div>
+</div>
 
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Request Withdrawal</h2>
-                <button class="close-btn" onclick="closeModal()">✕</button>
-            </div>
+<div class="modal" id="modal">
+<div class="modal-content">
+<div class="modal-header">
+<h2 class="modal-title">Request Withdrawal</h2>
+<button class="close-btn" onclick="closeModal()">✕</button>
+</div>
 
-            <div class="message error" id="error"></div>
-            <div class="message success" id="success"></div>
+<div class="message error" id="error"></div>
+<div class="message success" id="success"></div>
 
-            <form id="form">
-                <div class="form-group">
-                    <label class="form-label">Available Balance</label>
-                    <div class="amount-info">
-                        <div class="info-row">
-                            <span class="info-label">Total Available:</span>
-                            <span class="info-value" id="balance">Loading...</span>
-                        </div>
-                    </div>
-                </div>
+<form id="form">
+<div class="form-group">
+<label class="form-label">Available Balance</label>
+<div class="amount-info">
+<div class="info-row">
+<span class="info-label">Total Available:</span>
+<span class="info-value" id="balance"><span class="spinner"></span></span>
+</div>
+</div>
+</div>
 
-                <div class="form-group">
-                    <label class="form-label">Select Payment Method</label>
-                    <select id="method" class="form-select" required>
-                        <option value="">Choose payment method...</option>
-                        <option value="Bank Transfer">Bank Transfer</option>
-                        <option value="Opay">Opay</option>
-                        <option value="Palmpay">Palmpay</option>
-                        <option value="Kuda Bank">Kuda Bank</option>
-                        <option value="GTBank">GTBank</option>
-                        <option value="First Bank">First Bank</option>
-                        <option value="Access Bank">Access Bank</option>
-                        <option value="Zenith Bank">Zenith Bank</option>
-                        <option value="UBA">UBA</option>
-                    </select>
-                </div>
+<div class="form-group">
+<label class="form-label">Select Payment Method</label>
+<select id="method" class="form-select" required>
+<option value="">Choose payment method...</option>
+<option value="Bank Transfer">Bank Transfer</option>
+<option value="Opay">Opay</option>
+<option value="Palmpay">Palmpay</option>
+<option value="Kuda Bank">Kuda Bank</option>
+<option value="GTBank">GTBank</option>
+<option value="First Bank">First Bank</option>
+<option value="Access Bank">Access Bank</option>
+<option value="Zenith Bank">Zenith Bank</option>
+<option value="UBA">UBA</option>
+</select>
+</div>
 
-                <div class="form-group">
-                    <label class="form-label">Withdrawal Amount (₦)</label>
-                    <input type="number" class="form-input" id="amount" placeholder="Enter amount" step="0.01" min="1000" required>
-                </div>
+<div class="form-group">
+<label class="form-label">Account Number</label>
+<input type="text" class="form-input" id="accountNumber" placeholder="Enter account number" required>
+</div>
 
-                <div class="fee-warning" id="feeWarning">
-                    <strong>Processing Fee:</strong> <span id="feeAmount">₦0.00</span> (2.5%)
-                </div>
+<div class="form-group">
+<label class="form-label">Account Name</label>
+<input type="text" class="form-input" id="accountName" placeholder="Enter account name" required>
+</div>
 
-                <div class="pending-notice" id="pendingNotice">
-                    <h3><i class="fas fa-clock"></i> Withdrawal Request Created</h3>
-                    <p>Your withdrawal request has been submitted and is now <strong>pending approval</strong>. You can track its status in your withdrawal history below.</p>
-                    <p style="margin-top:8px">To speed up processing, contact us on WhatsApp with your request details.</p>
-                    <button type="button" class="whatsapp-btn" onclick="contactWhatsApp()">
-                        <i class="fab fa-whatsapp"></i> Contact via WhatsApp
-                    </button>
-                </div>
+<div class="form-group">
+<label class="form-label">Withdrawal Amount (₦)</label>
+<input type="number" class="form-input" id="amount" placeholder="Enter amount" step="0.01" min="1000" required>
+</div>
 
-                <div class="button-group" id="buttonGroup">
-                    <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-submit" id="submitBtn">Submit Request</button>
-                </div>
-            </form>
-        </div>
-    </div>
+<div class="fee-warning" id="feeWarning">
+<strong>Processing Fee:</strong> <span id="feeAmount">₦0.00</span> (2.5%)
+</div>
 
-    <script type="module">
-        import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-        import{getDatabase,ref,get,set,push,update}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
-        import{auth,database}from"./lib/firebase.js";
+<div class="pending-notice" id="pendingNotice">
+<h3><i class="fas fa-clock"></i> Withdrawal Request Created</h3>
+<p>Your withdrawal request has been submitted and is now <strong>pending approval</strong>. You can track its status in your withdrawal history below.</p>
+<p style="margin-top:8px">To speed up processing, contact us on WhatsApp with your request details.</p>
+<button type="button" class="whatsapp-btn" onclick="contactWhatsApp()">
+<i class="fab fa-whatsapp"></i> Contact via WhatsApp
+</button>
+</div>
 
-        let user,userData,currentWithdrawal;
-        const modal=document.getElementById('modal');
-        const form=document.getElementById('form');
-        const error=document.getElementById('error');
-        const success=document.getElementById('success');
+<div class="button-group" id="buttonGroup">
+<button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+<button type="submit" class="btn btn-submit" id="submitBtn">Submit Request</button>
+</div>
+</form>
+</div>
+</div>
 
-        const formatNaira=a=>`₦${a.toLocaleString('en-NG',{minimumFractionDigits:2})}`;
+<script type="module">
+import{getAuth,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import{getDatabase,ref,get,set,push,update}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import{auth,database}from"./lib/firebase.js";
 
-        window.openModal=async()=>{
-            modal.classList.add('active');
-            document.body.style.overflow='hidden';
-            await loadBalance();
-            resetForm();
-        };
+let user,userData,currentWithdrawal;
+const modal=document.getElementById('modal'),form=document.getElementById('form'),error=document.getElementById('error'),success=document.getElementById('success');
 
-        window.closeModal=()=>{
-            modal.classList.remove('active');
-            document.body.style.overflow='';
-            resetForm();
-        };
+const fmt=a=>`₦${a.toLocaleString('en-NG',{minimumFractionDigits:2})}`;
 
-        function resetForm(){
-            form.reset();
-            error.classList.remove('show');
-            success.classList.remove('show');
-            document.getElementById('feeWarning').classList.remove('show');
-            document.getElementById('pendingNotice').classList.remove('show');
-            document.getElementById('buttonGroup').style.display='flex';
-            currentWithdrawal=null;
-        }
+window.openModal=async()=>{
+modal.classList.add('active');
+document.body.style.overflow='hidden';
+await loadBalance();
+resetForm();
+};
 
-        window.contactWhatsApp=()=>{
-            if(!currentWithdrawal)return;
-            const msg=`Hello! I have a pending withdrawal request.\n\n*Account Details:*\nEmail: ${user.email}\n\n*Withdrawal Details:*\nPayment Method: ${currentWithdrawal.method}\nAmount: ${formatNaira(currentWithdrawal.amount)}\nProcessing Fee: ${formatNaira(currentWithdrawal.fee)}\nRequest ID: ${currentWithdrawal.id}\n\nPlease process my withdrawal. Thank you!`;
-            window.open(`https://wa.me/447940228929?text=${encodeURIComponent(msg)}`,'_blank');
-        };
+window.closeModal=()=>{
+modal.classList.remove('active');
+document.body.style.overflow='';
+resetForm();
+};
 
-        modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
+function resetForm(){
+form.reset();
+error.classList.remove('show');
+success.classList.remove('show');
+document.getElementById('feeWarning').classList.remove('show');
+document.getElementById('pendingNotice').classList.remove('show');
+document.getElementById('buttonGroup').style.display='flex';
+currentWithdrawal=null;
+}
 
-        onAuthStateChanged(auth,async u=>{
-            if(u){
-                user=u;
-                try{
-                    const snap=await get(ref(database,`users/${u.uid}`));
-                    if(snap.exists()){
-                        userData=snap.val();
-                        document.getElementById('availableAmount').textContent=formatNaira(userData.balance||0);
-                        loadHistory(u.uid);
-                    }
-                }catch(e){console.error(e)}
-            }else location.href='/login';
-        });
+window.contactWhatsApp=()=>{
+if(!currentWithdrawal)return;
+const msg=`Hello! I have a pending withdrawal request.\n\n*Account Details:*\nEmail: ${user.email}\n\n*Withdrawal Details:*\nPayment Method: ${currentWithdrawal.method}\nAccount Number: ${currentWithdrawal.accountNumber}\nAccount Name: ${currentWithdrawal.accountName}\nAmount: ${fmt(currentWithdrawal.amount)}\nProcessing Fee: ${fmt(currentWithdrawal.fee)}\nRequest ID: ${currentWithdrawal.id}\n\nPlease process my withdrawal. Thank you!`;
+window.open(`https://wa.me/447940228929?text=${encodeURIComponent(msg)}`,'_blank');
+};
 
-        async function loadBalance(){
-            try{
-                if(!user)return document.getElementById('balance').textContent='₦0.00';
-                const snap=await get(ref(database,`users/${user.uid}`));
-                if(snap.exists()){
-                    userData=snap.val();
-                    document.getElementById('balance').textContent=formatNaira(userData.balance||0);
-                }else document.getElementById('balance').textContent='₦0.00';
-            }catch(e){document.getElementById('balance').textContent='₦0.00'}
-        }
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
 
-        document.getElementById('amount').addEventListener('input',function(){
-            const amt=parseFloat(this.value)||0;
-            if(amt>0){
-                const fee=amt*.025;
-                document.getElementById('feeAmount').textContent=formatNaira(fee);
-                document.getElementById('feeWarning').classList.add('show');
-            }else document.getElementById('feeWarning').classList.remove('show');
-        });
+onAuthStateChanged(auth,async u=>{
+if(u){
+user=u;
+try{
+const snap=await get(ref(database,`users/${u.uid}`));
+if(snap.exists()){
+userData=snap.val();
+document.getElementById('availableAmount').textContent=fmt(userData.balance||0);
+loadHistory(u.uid);
+}
+}catch(e){console.error(e)}
+}else location.href='/login';
+});
 
-        form.addEventListener('submit',async e=>{
-            e.preventDefault();
-            const method=document.getElementById('method').value;
-            const amt=parseFloat(document.getElementById('amount').value);
-            const submitBtn=document.getElementById('submitBtn');
+async function loadBalance(){
+try{
+if(!user){document.getElementById('balance').innerHTML='<span class="spinner"></span>';return}
+const snap=await get(ref(database,`users/${user.uid}`));
+if(snap.exists()){
+userData=snap.val();
+document.getElementById('balance').textContent=fmt(userData.balance||0);
+}else document.getElementById('balance').textContent=fmt(0);
+}catch(e){document.getElementById('balance').textContent=fmt(0)}
+}
 
-            error.classList.remove('show');
-            success.classList.remove('show');
+document.getElementById('amount').addEventListener('input',function(){
+const amt=parseFloat(this.value)||0;
+if(amt>0){
+const fee=amt*.025;
+document.getElementById('feeAmount').textContent=fmt(fee);
+document.getElementById('feeWarning').classList.add('show');
+}else document.getElementById('feeWarning').classList.remove('show');
+});
 
-            if(!method){
-                error.textContent='Please select a payment method';
-                error.classList.add('show');
-                return;
-            }
+form.addEventListener('submit',async e=>{
+e.preventDefault();
+const method=document.getElementById('method').value;
+const accountNumber=document.getElementById('accountNumber').value.trim();
+const accountName=document.getElementById('accountName').value.trim();
+const amt=parseFloat(document.getElementById('amount').value);
+const submitBtn=document.getElementById('submitBtn');
 
-            if(amt<1000){
-                error.textContent='Minimum withdrawal amount is ₦1,000';
-                error.classList.add('show');
-                return;
-            }
+error.classList.remove('show');
+success.classList.remove('show');
 
-            if(!userData||amt>(userData.balance||0)){
-                error.textContent='Insufficient balance';
-                error.classList.add('show');
-                return;
-            }
+if(!method){error.textContent='Please select a payment method';error.classList.add('show');return}
+if(!accountNumber){error.textContent='Please enter account number';error.classList.add('show');return}
+if(!accountName){error.textContent='Please enter account name';error.classList.add('show');return}
+if(amt<1000){error.textContent='Minimum withdrawal amount is ₦1,000';error.classList.add('show');return}
+if(!userData||amt>(userData.balance||0)){error.textContent='Insufficient balance';error.classList.add('show');return}
 
-            submitBtn.disabled=true;
-            submitBtn.textContent='Processing...';
+submitBtn.disabled=true;
+submitBtn.textContent='Processing...';
 
-            try{
-                if(!user)throw new Error('User not authenticated');
+try{
+if(!user)throw new Error('User not authenticated');
 
-                const fee=amt*.025;
-                const ts=new Date().toISOString();
-                
-                const withdrawalData={
-                    userId:user.uid,
-                    userName:userData.name||userData.fullName||'User',
-                    userEmail:user.email||'',
-                    amount:amt,
-                    fee:fee,
-                    method:method,
-                    status:'pending',
-                    requestDate:ts,
-                    timestamp:Date.now()
-                };
+const fee=amt*.025;
+const ts=new Date().toISOString();
 
-                const withdrawalsRef=ref(database,'pendingWithdrawals');
-                const newRef=push(withdrawalsRef);
-                const id=newRef.key;
-                
-                await set(newRef,withdrawalData);
+const withdrawalData={
+userId:user.uid,
+userName:userData.name||userData.fullName||'User',
+userEmail:user.email||'',
+amount:amt,
+fee:fee,
+method:method,
+accountNumber:accountNumber,
+accountName:accountName,
+status:'pending',
+requestDate:ts,
+timestamp:Date.now()
+};
 
-                const transactionData={
-                    type:'withdrawal',
-                    amount:amt,
-                    fee:fee,
-                    status:'pending',
-                    method:method,
-                    requestDate:ts
-                };
+const withdrawalsRef=ref(database,'pendingWithdrawals');
+const newRef=push(withdrawalsRef);
+const id=newRef.key;
 
-                const snap=await get(ref(database,`users/${user.uid}`));
-                const balance=snap.val().balance||0;
-                
-                const updates={};
-                updates[`users/${user.uid}/balance`]=Math.max(0,balance-amt);
-                updates[`users/${user.uid}/transactions/${id}`]=transactionData;
-                
-                await update(ref(database),updates);
+await set(newRef,withdrawalData);
 
-                userData.balance=Math.max(0,balance-amt);
-                document.getElementById('availableAmount').textContent=formatNaira(userData.balance);
+const transactionData={
+type:'withdrawal',
+amount:amt,
+fee:fee,
+status:'pending',
+method:method,
+accountNumber:accountNumber,
+accountName:accountName,
+requestDate:ts
+};
 
-                currentWithdrawal={id,method,amount:amt,fee};
+const snap=await get(ref(database,`users/${user.uid}`));
+const balance=snap.val().balance||0;
 
-                await loadHistory(user.uid);
+const updates={};
+updates[`users/${user.uid}/balance`]=Math.max(0,balance-amt);
+updates[`users/${user.uid}/transactions/${id}`]=transactionData;
 
-                document.getElementById('buttonGroup').style.display='none';
-                document.getElementById('pendingNotice').classList.add('show');
-                success.textContent='✅ Withdrawal request created successfully!';
-                success.classList.add('show');
+await update(ref(database),updates);
 
-            }catch(e){
-                console.error(e);
-                error.textContent=e.message||'An error occurred';
-                error.classList.add('show');
-            }finally{
-                submitBtn.disabled=false;
-                submitBtn.textContent='Submit Request';
-            }
-        });
+userData.balance=Math.max(0,balance-amt);
+document.getElementById('availableAmount').textContent=fmt(userData.balance);
 
-        async function loadHistory(uid){
-            try{
-                const snap=await get(ref(database,`users/${uid}`));
-                if(snap.exists()){
-                    const data=snap.val();
-                    const txs=data.transactions||{};
-                    const withdrawals=Object.values(txs).filter(t=>t.type==='withdrawal').sort((a,b)=>new Date(b.requestDate)-new Date(a.requestDate));
+currentWithdrawal={id,method,accountNumber,accountName,amount:amt,fee};
 
-                    if(withdrawals.length>0){
-                        document.getElementById('historyBody').innerHTML=withdrawals.map(w=>`
-                            <tr>
-                                <td>${new Date(w.requestDate).toLocaleDateString()}</td>
-                                <td>${formatNaira(w.amount)}</td>
-                                <td>${w.method}</td>
-                                <td><span class="status-badge status-${w.status}">${w.status}</span></td>
-                                <td>${formatNaira(w.fee)}</td>
-                            </tr>
-                        `).join('');
+await loadHistory(user.uid);
 
-                        const total=withdrawals.filter(w=>w.status==='completed').reduce((sum,w)=>sum+w.amount,0);
-                        document.getElementById('totalWithdrawn').textContent=formatNaira(total);
-                    }else{
-                        document.getElementById('historyBody').innerHTML=`<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon"><i class="fas fa-inbox"></i></div><p>No withdrawal history yet</p></div></td></tr>`;
-                    }
-                }else{
-                    document.getElementById('historyBody').innerHTML=`<tr><td colspan="5"><div class="empty-state"><p>Unable to load history</p></div></td></tr>`;
-                }
-            }catch(e){console.error(e)}
-        }
-    </script>
+document.getElementById('buttonGroup').style.display='none';
+document.getElementById('pendingNotice').classList.add('show');
+success.textContent='✅ Withdrawal request created successfully!';
+success.classList.add('show');
+
+}catch(e){
+console.error(e);
+error.textContent=e.message||'An error occurred';
+error.classList.add('show');
+}finally{
+submitBtn.disabled=false;
+submitBtn.textContent='Submit Request';
+}
+});
+
+async function loadHistory(uid){
+try{
+const snap=await get(ref(database,`users/${uid}`));
+if(snap.exists()){
+const data=snap.val();
+const txs=data.transactions||{};
+const withdrawals=Object.values(txs).filter(t=>t.type==='withdrawal').sort((a,b)=>new Date(b.requestDate)-new Date(a.requestDate));
+
+if(withdrawals.length>0){
+document.getElementById('historyBody').innerHTML=withdrawals.map(w=>`
+<tr>
+<td>${new Date(w.requestDate).toLocaleDateString()}</td>
+<td>${fmt(w.amount)}</td>
+<td>${w.method}</td>
+<td><span class="status-badge status-${w.status}">${w.status}</span></td>
+<td>${fmt(w.fee)}</td>
+</tr>
+`).join('');
+
+const total=withdrawals.filter(w=>w.status==='completed'||w.status==='approved').reduce((sum,w)=>sum+w.amount,0);
+document.getElementById('totalWithdrawn').textContent=fmt(total);
+}else{
+document.getElementById('historyBody').innerHTML=`<tr><td colspan="5"><div class="empty-state"><div class="empty-state-icon"><i class="fas fa-inbox"></i></div><p>No withdrawal history yet</p></div></td></tr>`;
+document.getElementById('totalWithdrawn').textContent=fmt(0);
+}
+}else{
+document.getElementById('historyBody').innerHTML=`<tr><td colspan="5"><div class="empty-state"><p>Unable to load history</p></div></td></tr>`;
+}
+}catch(e){console.error(e)}
+}
+</script>
 </body>
     </html>
