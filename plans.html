@@ -8,62 +8,58 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:Inter,sans-serif;background:#fafafa;min-height:100vh;padding:40px 20px 100px}
+        body{font-family:Inter,sans-serif;background:#f8fafc;min-height:100vh;padding:20px;color:#1e293b}
         .container{max-width:1200px;margin:0 auto}
-        .header{text-align:center;margin-bottom:32px}
-        .header h1{font-size:32px;font-weight:700;color:#0f172a;margin-bottom:8px}
-        .header p{font-size:16px;color:#64748b}
-        .balance-display{background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:20px;border-radius:16px;text-align:center;margin-bottom:24px;box-shadow:0 4px 20px rgba(16,185,129,.25);position:relative;overflow:hidden}
-        .balance-display::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,transparent 40%,rgba(255,255,255,.15) 50%,transparent 60%,transparent);animation:shine 3s infinite}
-        @keyframes shine{0%{transform:translateX(-100%) translateY(-100%) rotate(45deg)}100%{transform:translateX(100%) translateY(100%) rotate(45deg)}}
-        .balance-content{position:relative;z-index:1}
-        .balance-label{font-size:14px;opacity:.9;margin-bottom:8px;font-weight:500}
-        .balance-amount{font-size:36px;font-weight:700}
-        .banner{padding:14px;border-radius:12px;margin-bottom:24px;font-size:13px;display:none;align-items:center;gap:10px}
+        .header{text-align:center;margin-bottom:24px}
+        .header h1{font-size:28px;font-weight:700;color:#0f172a;margin-bottom:6px}
+        .header p{font-size:14px;color:#64748b}
+        .balance{background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:16px;border-radius:12px;text-align:center;margin-bottom:20px;box-shadow:0 2px 12px rgba(16,185,129,.2)}
+        .balance-label{font-size:12px;opacity:.9;margin-bottom:4px}
+        .balance-amount{font-size:32px;font-weight:700}
+        .banner{padding:12px;border-radius:8px;margin-bottom:16px;font-size:12px;display:none;align-items:center;gap:8px}
         .banner.show{display:flex}
-        .banner i{font-size:18px}
-        .error-banner{background:#fee2e2;border:2px solid #dc2626;color:#dc2626}
-        .warning-banner{background:#fef3c7;border:2px solid #f59e0b;color:#92400e}
-        .info-note{background:#dbeafe;border:2px solid #3b82f6;color:#1e40af}
-        .plans-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
-        .plan-card{background:#fff;border-radius:20px;padding:24px;box-shadow:0 2px 16px rgba(0,0,0,.08);transition:all .3s;position:relative;border:2px solid transparent}
-        .plan-card:hover{transform:translateY(-6px);box-shadow:0 12px 32px rgba(0,0,0,.15);border-color:#10b981}
-        .plan-card.featured{border-color:#10b981;background:linear-gradient(135deg,#fff 0%,#f0fdf4 100%)}
-        .featured-badge{position:absolute;top:16px;right:16px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;box-shadow:0 2px 8px rgba(16,185,129,.3)}
-        .plan-header{text-align:center;margin-bottom:20px;padding-bottom:20px;border-bottom:2px solid #e2e8f0}
-        .plan-name{font-size:20px;color:#0f172a;font-weight:700}
-        .plan-price{text-align:center;margin:20px 0;padding:16px;background:#f8fafc;border-radius:12px}
-        .price-label{color:#64748b;font-size:11px;font-weight:600;text-transform:uppercase;margin-bottom:8px}
-        .price-amount{font-size:36px;color:#0f172a;font-weight:700}
-        .daily-income{background:#f0fdf4;border:2px solid #10b981;color:#059669;padding:10px;border-radius:10px;text-align:center;margin:12px 0;font-size:13px;font-weight:600}
-        .plan-features{list-style:none;margin:16px 0}
-        .plan-features li{padding:8px 0;color:#475569;display:flex;align-items:center;font-size:13px}
-        .plan-features li i{color:#10b981;font-size:14px;margin-right:10px;flex-shrink:0}
-        .purchase-btn{width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s;text-transform:uppercase;box-shadow:0 2px 8px rgba(16,185,129,.25)}
-        .purchase-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,185,129,.4)}
-        .purchase-btn:disabled{opacity:.6;cursor:not-allowed;background:#94a3b8}
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:1000;backdrop-filter:blur(4px);padding:40px 20px;overflow-y:auto}
-        .modal.active{display:block}
-        .modal-content{background:#fff;border-radius:12px;padding:24px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,.3);margin:60px auto;position:relative}
-        .modal h3{font-size:18px;color:#0f172a;margin-bottom:16px;text-align:center;font-weight:700}
-        .confirm-amount{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:2px solid #10b981;border-radius:8px;padding:16px;text-align:center;margin-bottom:16px}
-        .confirm-label{color:#059669;font-size:12px;font-weight:600;margin-bottom:6px}
-        .confirm-value{color:#10b981;font-size:32px;font-weight:700}
-        .summary{background:#f8fafc;padding:12px;border-radius:8px;margin-bottom:12px}
-        .summary-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
-        .summary-row span{color:#64748b}
-        .summary-row strong{color:#0f172a;font-weight:600}
-        .modal-actions{display:flex;gap:10px;margin-top:16px}
-        .modal-btn{flex:1;padding:12px;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .3s}
-        .modal-btn.cancel{background:#f1f5f9;color:#475569}
-        .modal-btn.confirm{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
+        .banner i{font-size:14px}
+        .error{background:#fee;border:1px solid #dc2626;color:#dc2626}
+        .warning{background:#fef3c7;border:1px solid #f59e0b;color:#92400e}
+        .info{background:#dbeafe;border:1px solid #3b82f6;color:#1e40af}
+        .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+        .card{background:#fff;border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:all .2s;border:1px solid #e2e8f0;position:relative}
+        .card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.1);border-color:#10b981}
+        .card.featured{border-color:#10b981;background:linear-gradient(135deg,#fff,#f0fdf4)}
+        .badge{position:absolute;top:12px;right:12px;background:#10b981;color:#fff;padding:4px 10px;border-radius:12px;font-size:10px;font-weight:700;text-transform:uppercase}
+        .plan-name{font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #e2e8f0}
+        .price{text-align:center;margin:12px 0;padding:12px;background:#f8fafc;border-radius:8px}
+        .price-label{font-size:10px;color:#64748b;font-weight:600;text-transform:uppercase;margin-bottom:4px}
+        .price-amount{font-size:28px;font-weight:700}
+        .daily{background:#f0fdf4;border:1px solid #10b981;color:#059669;padding:8px;border-radius:6px;text-align:center;margin:10px 0;font-size:12px;font-weight:600}
+        .features{list-style:none;margin:12px 0}
+        .features li{padding:6px 0;color:#475569;display:flex;align-items:center;font-size:12px}
+        .features i{color:#10b981;font-size:12px;margin-right:8px;flex-shrink:0}
+        .btn{width:100%;padding:12px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;text-transform:uppercase}
+        .btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 12px rgba(16,185,129,.3)}
+        .btn:disabled{opacity:.6;cursor:not-allowed;background:#94a3b8}
+        .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;backdrop-filter:blur(3px);padding:20px;align-items:center;justify-content:center}
+        .modal.active{display:flex}
+        .modal-content{background:#fff;border-radius:12px;padding:20px;max-width:360px;width:100%;box-shadow:0 20px 40px rgba(0,0,0,.2)}
+        .modal h3{font-size:16px;margin-bottom:12px;text-align:center;font-weight:700}
+        .confirm{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #10b981;border-radius:6px;padding:12px;text-align:center;margin-bottom:12px}
+        .confirm-label{color:#059669;font-size:11px;font-weight:600;margin-bottom:4px}
+        .confirm-value{color:#10b981;font-size:28px;font-weight:700}
+        .summary{background:#f8fafc;padding:10px;border-radius:6px;margin-bottom:10px}
+        .row{display:flex;justify-content:space-between;padding:5px 0;font-size:12px}
+        .row span{color:#64748b}
+        .row strong{color:#0f172a;font-weight:600}
+        .actions{display:flex;gap:8px;margin-top:12px}
+        .modal-btn{flex:1;padding:10px;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+        .cancel{background:#f1f5f9;color:#475569}
+        .confirm-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
         .modal-btn:disabled{opacity:.6;cursor:not-allowed}
-        .error{background:#fee2e2;border:1px solid #dc2626;color:#dc2626;padding:10px;border-radius:8px;font-size:12px;margin-top:10px;display:none}
-        .error.show{display:block}
-        .spinner{display:inline-block;width:14px;height:14px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}
+        .err{background:#fee;border:1px solid #dc2626;color:#dc2626;padding:8px;border-radius:6px;font-size:11px;margin-top:8px;display:none}
+        .err.show{display:block}
+        .spinner{display:inline-block;width:12px;height:12px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
         .loading{text-align:center;padding:40px;color:#64748b}
-        @media(max-width:768px){body{padding:20px 16px}.header h1{font-size:24px}.plans-grid{grid-template-columns:1fr}}
+        @media(max-width:768px){body{padding:12px}.header h1{font-size:24px}.grid{grid-template-columns:1fr}}
     </style>
 </head>
 <body>
@@ -73,48 +69,46 @@
             <p>Start growing your wealth with flexible options</p>
         </div>
 
-        <div class="banner error-banner" id="errorBanner">
+        <div class="banner error" id="errorBanner">
             <i class="fas fa-exclamation-circle"></i>
             <div><strong>Error:</strong> <span id="errorMsg"></span></div>
         </div>
 
-        <div class="banner warning-banner" id="warningBanner">
+        <div class="banner warning" id="warningBanner">
             <i class="fas fa-exclamation-triangle"></i>
             <div><strong>Notice:</strong> <span id="warningMsg"></span></div>
         </div>
 
-        <div class="banner info-note show">
+        <div class="banner info show">
             <i class="fas fa-lightbulb"></i>
-            <div><strong>Note:</strong> All investments are in Naira (₦). Returns are calculated daily. First-time investors get ₦1,000 bonus!</div>
+            <div>Confirm your investment plan properly before investing.</div>
         </div>
 
-        <div class="balance-display">
-            <div class="balance-content">
-                <div class="balance-label">Available Balance</div>
-                <div class="balance-amount" id="balance"><span class="spinner"></span></div>
-            </div>
+        <div class="balance">
+            <div class="balance-label">Available Balance</div>
+            <div class="balance-amount" id="balance"><span class="spinner"></span></div>
         </div>
 
-        <div id="loader" class="loading"><div class="spinner" style="width:32px;height:32px;border-width:3px"></div><div>Loading plans...</div></div>
-        <div class="plans-grid" id="grid"></div>
+        <div id="loader" class="loading"><div class="spinner" style="width:24px;height:24px;border-width:3px"></div><div>Loading plans...</div></div>
+        <div class="grid" id="grid"></div>
     </div>
 
     <div class="modal" id="modal">
         <div class="modal-content">
             <h3 id="modalTitle"></h3>
-            <div class="confirm-amount">
+            <div class="confirm">
                 <div class="confirm-label">Investment Amount</div>
                 <div class="confirm-value" id="amt"></div>
             </div>
             <div class="summary">
-                <div class="summary-row"><span>Plan:</span><strong id="sp"></strong></div>
-                <div class="summary-row"><span>Daily Income:</span><strong id="sd"></strong></div>
-                <div class="summary-row"><span>Duration:</span><strong id="su"></strong></div>
+                <div class="row"><span>Plan:</span><strong id="sp"></strong></div>
+                <div class="row"><span>Daily Income:</span><strong id="sd"></strong></div>
+                <div class="row"><span>Duration:</span><strong id="su"></strong></div>
             </div>
-            <div class="error" id="err"></div>
-            <div class="modal-actions">
+            <div class="err" id="err"></div>
+            <div class="actions">
                 <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
-                <button class="modal-btn confirm" id="btn">Invest Now</button>
+                <button class="modal-btn confirm-btn" id="btn">Invest Now</button>
             </div>
         </div>
     </div>
@@ -124,28 +118,28 @@
         import{ref,get,update,push}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
         import{auth,database}from"./lib/firebase.js";
 
-        const PLANS={starter:{cost:3000,income:1000,dur:'24hrs'},bronze:{cost:6000,income:2000,dur:'24hrs'},silver:{cost:10000,income:3500,dur:'24hrs'},gold:{cost:15000,income:5500,dur:'24hrs'},platinum:{cost:25000,income:8000,dur:'24hrs'}};
+        const P={starter:{cost:3000,income:750,dur:'30 days'},bronze:{cost:6000,income:1500,dur:'30 days'},silver:{cost:10000,income:2500,dur:'30 days'},gold:{cost:15000,income:4750,dur:'30 days'},platinum:{cost:25000,income:7000,dur:'30 days'}};
         const plans=[{id:'starter',name:'Starter Plan',badge:'Beginner'},{id:'bronze',name:'Bronze Plan',featured:1,badge:'Popular'},{id:'silver',name:'Silver Plan'},{id:'gold',name:'Gold Plan',featured:1,badge:'Best Value'},{id:'platinum',name:'Platinum Plan',badge:'Elite'}];
         let user,bal=0,sel,init=0;
 
-        function showErr(m){document.getElementById('errorMsg').textContent=m;document.getElementById('errorBanner').classList.add('show')}
-        function showWarn(m){document.getElementById('warningMsg').textContent=m;document.getElementById('warningBanner').classList.add('show')}
-        function hideWarn(){document.getElementById('warningBanner').classList.remove('show')}
+        const showErr=m=>{document.getElementById('errorMsg').textContent=m;document.getElementById('errorBanner').classList.add('show')};
+        const showWarn=m=>{document.getElementById('warningMsg').textContent=m;document.getElementById('warningBanner').classList.add('show')};
+        const hideWarn=()=>document.getElementById('warningBanner').classList.remove('show');
 
-        function render(){
+        const render=()=>{
             const g=document.getElementById('grid');
             document.getElementById('loader').style.display='none';
             g.style.display='grid';
             plans.forEach(p=>{
-                const c=PLANS[p.id];
+                const c=P[p.id];
                 const card=document.createElement('div');
-                card.className=`plan-card ${p.featured?'featured':''}`;
+                card.className=`card ${p.featured?'featured':''}`;
                 card.innerHTML=`
-                    ${p.badge?`<span class="featured-badge">${p.badge}</span>`:''}
-                    <div class="plan-header"><div class="plan-name">${p.name}</div></div>
-                    <div class="plan-price"><div class="price-label">Investment Amount</div><div class="price-amount">₦${c.cost.toLocaleString()}</div></div>
-                    <div class="daily-income"><i class="fas fa-coins"></i> Daily Income: ₦${c.income.toLocaleString()}</div>
-                    <ul class="plan-features">
+                    ${p.badge?`<span class="badge">${p.badge}</span>`:''}
+                    <div class="plan-name">${p.name}</div>
+                    <div class="price"><div class="price-label">Investment Amount</div><div class="price-amount">₦${c.cost.toLocaleString()}</div></div>
+                    <div class="daily"><i class="fas fa-coins"></i> Daily Income: ₦${c.income.toLocaleString()}</div>
+                    <ul class="features">
                         <li><i class="fas fa-check-circle"></i>Investment: ₦${c.cost.toLocaleString()}</li>
                         <li><i class="fas fa-check-circle"></i>Daily Earnings: ₦${c.income.toLocaleString()}</li>
                         <li><i class="fas fa-check-circle"></i>Duration: ${c.dur}</li>
@@ -153,43 +147,37 @@
                         <li><i class="fas fa-check-circle"></i>Auto-completes at maturity</li>
                         <li><i class="fas fa-check-circle"></i>24/7 Support</li>
                     </ul>
-                    <button class="purchase-btn" onclick="openPlan('${p.id}')"><i class="fas fa-rocket"></i> Invest Now</button>
+                    <button class="btn" onclick="openPlan('${p.id}')"><i class="fas fa-rocket"></i> Invest Now</button>
                 `;
                 g.appendChild(card);
             });
-        }
+        };
 
-        async function initApp(){
+        const initApp=async()=>{
             try{
                 init=1;
                 onAuthStateChanged(auth,async u=>{
                     if(!u){
                         showWarn('Not logged in. Log in to invest.');
                         document.getElementById('balance').textContent='₦0.00';
-                        user=null;
-                        bal=0;
-                        return;
+                        user=null;bal=0;return;
                     }
-                    hideWarn();
-                    user=u;
+                    hideWarn();user=u;
                     const s=await get(ref(database,'users/'+u.uid));
                     if(s.exists()){
                         bal=s.val().balance||0;
                         document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2});
-                    }else{
-                        document.getElementById('balance').textContent='₦0.00';
-                        bal=0;
-                    }
+                    }else{document.getElementById('balance').textContent='₦0.00';bal=0}
                 });
             }catch(e){
                 showErr('Firebase error: '+e.message);
                 document.getElementById('balance').textContent='₦0.00';
             }
-        }
+        };
 
         window.openPlan=id=>{
             sel=plans.find(p=>p.id===id);
-            const c=PLANS[id];
+            const c=P[id];
             document.getElementById('modalTitle').textContent=`Confirm ${sel.name}`;
             document.getElementById('amt').textContent='₦'+c.cost.toLocaleString();
             document.getElementById('sp').textContent=sel.name;
@@ -202,7 +190,7 @@
         window.closeModal=()=>document.getElementById('modal').classList.remove('active');
 
         document.getElementById('btn').onclick=async()=>{
-            const c=PLANS[sel.id],btn=document.getElementById('btn'),err=document.getElementById('err');
+            const c=P[sel.id],btn=document.getElementById('btn'),err=document.getElementById('err');
             if(!user){err.textContent='Please log in.';err.classList.add('show');return}
             if(!init){err.textContent='Firebase not ready.';err.classList.add('show');return}
             if(bal<c.cost){err.textContent='Insufficient funds. Fund wallet.';err.classList.add('show');return}
@@ -212,48 +200,24 @@
                 const userRef=ref(database,'users/'+user.uid);
                 const snapshot=await get(userRef);
                 const userData=snapshot.val()||{};
-                
-                // Check if this is first investment
-                const hasInvestments=userData.investments&&Object.keys(userData.investments).length>0;
-                const welcomeBonus=hasInvestments?0:1000;
-                
                 const invKey=push(ref(database,`users/${user.uid}/investments`)).key;
                 const updates={
-                    balance:bal-c.cost+welcomeBonus,
+                    balance:bal-c.cost,
                     [`investments/${invKey}`]:{
-                        planId:sel.id,
-                        planName:sel.name,
-                        amount:c.cost,
-                        dailyIncome:c.income,
-                        duration:c.dur,
-                        startDate:now,
-                        maturityDate:now+86400000,
-                        status:'active',
-                        totalClaimed:0
+                        planId:sel.id,planName:sel.name,amount:c.cost,dailyIncome:c.income,
+                        duration:c.dur,startDate:now,maturityDate:now+(86400000*30),
+                        status:'active',totalClaimed:0
                     }
                 };
-                
-                if(welcomeBonus>0){
-                    updates.hasReceivedWelcomeBonus=true;
-                }
-                
                 await update(userRef,updates);
-                bal=bal-c.cost+welcomeBonus;
+                bal=bal-c.cost;
                 document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2});
-                
-                const msg=welcomeBonus>0?'✓ Investment successful! 🎉\n\n🎁 Welcome Bonus: ₦1,000 added to your balance!':'✓ Investment successful!';
-                alert(msg);
-                closeModal();
-            }catch(e){
-                err.textContent='Error: '+e.message;
-                err.classList.add('show');
-            }finally{
-                btn.disabled=0;
-                btn.innerHTML='Invest Now';
-            }
+                alert('✓ Investment successful!');closeModal();
+            }catch(e){err.textContent='Error: '+e.message;err.classList.add('show')}
+            finally{btn.disabled=0;btn.innerHTML='Invest Now'}
         };
 
         document.addEventListener('DOMContentLoaded',()=>{render();initApp()});
     </script>
 </body>
-                </html>
+        </html>
