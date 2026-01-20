@@ -5,52 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crest Point - Sign Up</title>
     <link rel="icon" type="image/png" href="/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;background:#fafafa;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        body{font-family:Inter,sans-serif;background:#f8fafc;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 20px 300px;color:#1e293b}
         .main-container{max-width:400px;width:100%}
-        .logo-section{text-align:center;margin-bottom:40px}
+        .logo-section{text-align:center;margin-bottom:32px}
         .logo-wrapper{display:inline-flex;align-items:center;gap:12px;margin-bottom:8px}
         .logo-icon img{width:40px;height:40px;border-radius:8px}
-        .logo-text{font-size:24px;font-weight:600;color:#000;letter-spacing:-0.5px}
-        .card{background:white;border:1px solid #e5e5e5;border-radius:12px;padding:32px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
-        .card-header{text-align:center;margin-bottom:32px}
-        .card-title{font-size:24px;font-weight:600;color:#000;margin-bottom:8px}
-        .card-subtitle{font-size:14px;color:#666}
-        .form-group{margin-bottom:20px}
-        label{display:block;color:#000;font-size:14px;font-weight:500;margin-bottom:6px}
-        input,select{width:100%;padding:10px 12px;border:1px solid #e5e5e5;border-radius:6px;font-size:14px;transition:all .2s ease;outline:none;font-family:inherit;background:white}
+        .logo-text{font-size:24px;font-weight:700;color:#0f172a;letter-spacing:-0.5px}
+        .card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+        .card-header{text-align:center;margin-bottom:24px}
+        .card-title{font-size:20px;font-weight:700;color:#0f172a;margin-bottom:6px}
+        .card-subtitle{font-size:13px;color:#64748b}
+        .form-group{margin-bottom:16px}
+        label{display:block;color:#0f172a;font-size:12px;font-weight:600;margin-bottom:6px;text-transform:uppercase}
+        input,select{width:100%;padding:10px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;transition:all .2s ease;outline:none;font-family:inherit;background:#fff}
         input:focus,select:focus{border-color:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.1)}
-        input::placeholder{color:#999}
+        input::placeholder{color:#94a3b8}
         select{cursor:pointer}
         .password-toggle{position:relative}
         .password-toggle input{padding-right:40px}
-        .toggle-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#666;cursor:pointer;font-size:16px;padding:4px;display:flex;align-items:center;justify-content:center;transition:color .2s ease}
+        .toggle-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#64748b;cursor:pointer;font-size:16px;padding:4px;display:flex;align-items:center;justify-content:center;transition:color .2s ease}
         .toggle-btn:hover{color:#10b981}
-        .checkbox-group{display:flex;align-items:flex-start;gap:8px;margin-bottom:24px}
+        .checkbox-group{display:flex;align-items:flex-start;gap:8px;margin-bottom:20px}
         .checkbox-group input[type="checkbox"]{width:auto;margin:0;margin-top:2px;cursor:pointer;accent-color:#10b981;flex-shrink:0}
-        .checkbox-group label{margin:0;font-weight:400;color:#666;cursor:pointer;font-size:14px;line-height:1.5}
-        .checkbox-group a{color:#10b981;text-decoration:none;font-weight:500}
+        .checkbox-group label{margin:0;font-weight:400;color:#64748b;cursor:pointer;font-size:12px;line-height:1.5;text-transform:none}
+        .checkbox-group a{color:#10b981;text-decoration:none;font-weight:600}
         .checkbox-group a:hover{text-decoration:underline}
-        .submit-btn{width:100%;padding:10px;background:#10b981;color:white;border:none;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s ease;position:relative;overflow:hidden}
-        .submit-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);animation:wave 2s infinite}
-        @keyframes wave{0%{left:-100%}100%{left:100%}}
-        .submit-btn:hover{background:#059669}
+        .submit-btn{width:100%;padding:12px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s ease;text-transform:uppercase}
+        .submit-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 4px 12px rgba(16,185,129,.3)}
         .submit-btn:active{transform:scale(.98)}
-        .submit-btn:disabled{opacity:.5;cursor:not-allowed}
-        .divider{display:flex;align-items:center;text-align:center;margin:24px 0;color:#999;font-size:13px}
-        .divider::before,.divider::after{content:'';flex:1;border-bottom:1px solid #e5e5e5}
+        .submit-btn:disabled{opacity:.6;cursor:not-allowed;background:#94a3b8}
+        .divider{display:flex;align-items:center;text-align:center;margin:20px 0;color:#94a3b8;font-size:12px}
+        .divider::before,.divider::after{content:'';flex:1;border-bottom:1px solid #e2e8f0}
         .divider::before{margin-right:12px}
         .divider::after{margin-left:12px}
-        .signin-link{text-align:center;color:#666;font-size:14px}
-        .signin-link a{color:#10b981;text-decoration:none;font-weight:500}
+        .signin-link{text-align:center;color:#64748b;font-size:13px}
+        .signin-link a{color:#10b981;text-decoration:none;font-weight:600}
         .signin-link a:hover{text-decoration:underline}
-        .error-message,.success-message{font-size:13px;margin-bottom:20px;padding:10px 12px;border-radius:6px;display:none}
-        .error-message{color:#ef4444;background:#fef2f2;border:1px solid #fecaca}
-        .success-message{color:#10b981;background:#f0fdf4;border:1px solid #bbf7d0}
+        .error-message,.success-message{font-size:12px;margin-bottom:16px;padding:10px 12px;border-radius:8px;display:none}
+        .error-message{color:#dc2626;background:#fee2e2;border:1px solid #fecaca}
+        .success-message{color:#059669;background:#dcfce7;border:1px solid #10b981}
         .error-message.show,.success-message.show{display:block}
         .eye-icon{width:16px;height:16px}
-        @media (max-width:480px){.card{padding:24px}.card-title{font-size:20px}}
+        .ref-info{background:#f0fdf4;border:1px solid #10b981;border-radius:8px;padding:10px;margin-bottom:16px;font-size:11px;color:#059669;display:none}
+        .ref-info.show{display:block}
+        .spinner{display:inline-block;width:12px;height:12px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite;margin-right:6px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        @media(max-width:768px){body{padding:60px 12px 200px}.card{padding:20px}.card-title{font-size:18px}}
     </style>
 </head>
 <body>
@@ -70,6 +73,10 @@
 
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
+            <div class="ref-info" id="refInfo">
+                <strong>🎉 Referral Code Applied!</strong><br>
+                You'll get started with bonus rewards from your referrer.
+            </div>
 
             <form id="signupForm">
                 <div class="form-group">
@@ -86,11 +93,11 @@
                     <label for="country">Country</label>
                     <select id="country" required>
                         <option value="">Select Country</option>
+                        <option value="ng">Nigeria</option>
                         <option value="us">United States</option>
                         <option value="uk">United Kingdom</option>
                         <option value="ca">Canada</option>
                         <option value="au">Australia</option>
-                        <option value="ng">Nigeria</option>
                         <option value="za">South Africa</option>
                         <option value="gh">Ghana</option>
                         <option value="ke">Kenya</option>
@@ -106,10 +113,21 @@
                 <div class="form-group password-toggle">
                     <label for="password">Password</label>
                     <input type="password" id="password" placeholder="••••••••" required autocomplete="new-password">
-                    <button type="button" class="toggle-btn" onclick="togglePassword()">
+                    <button type="button" class="toggle-btn" onclick="togglePassword('password','eyeOpen','eyeOpen2')">
                         <svg class="eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path id="eyeOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             <path id="eyeOpen2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="form-group password-toggle">
+                    <label for="confirmPassword">Re-enter Password</label>
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required autocomplete="new-password">
+                    <button type="button" class="toggle-btn" onclick="togglePassword('confirmPassword','eyeOpen3','eyeOpen4')">
+                        <svg class="eye-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path id="eyeOpen3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path id="eyeOpen4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                         </svg>
                     </button>
                 </div>
@@ -134,10 +152,24 @@
         import{auth,database}from"./lib/firebase.js";
 
         const params=new URLSearchParams(window.location.search);
-        if(params.get('ref'))document.getElementById('referralCode').value=params.get('ref');
+        const urlRef=params.get('ref');
+        if(urlRef){
+            document.getElementById('referralCode').value=urlRef;
+            document.getElementById('refInfo').classList.add('show');
+        }
 
-        window.togglePassword=function(){
-            const field=document.getElementById('password'),eyeOpen=document.getElementById('eyeOpen'),eyeOpen2=document.getElementById('eyeOpen2');
+        document.getElementById('referralCode').addEventListener('input',function(e){
+            if(e.target.value.trim()){
+                document.getElementById('refInfo').classList.add('show');
+            }else{
+                document.getElementById('refInfo').classList.remove('show');
+            }
+        });
+
+        window.togglePassword=function(fieldId,eye1Id,eye2Id){
+            const field=document.getElementById(fieldId);
+            const eyeOpen=document.getElementById(eye1Id);
+            const eyeOpen2=document.getElementById(eye2Id);
             if(field.type==='password'){
                 field.type='text';
                 eyeOpen.setAttribute('d','M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21');
@@ -153,22 +185,53 @@
 
         document.getElementById('signupForm').addEventListener('submit',async function(e){
             e.preventDefault();
-            const fullName=document.getElementById('fullName').value,email=document.getElementById('email').value,country=document.getElementById('country').value,password=document.getElementById('password').value,refCode=document.getElementById('referralCode').value.trim(),terms=document.getElementById('terms').checked,submitBtn=document.getElementById('submitBtn'),errorMessage=document.getElementById('errorMessage'),successMessage=document.getElementById('successMessage');
+            const fullName=document.getElementById('fullName').value;
+            const email=document.getElementById('email').value;
+            const country=document.getElementById('country').value;
+            const password=document.getElementById('password').value;
+            const confirmPassword=document.getElementById('confirmPassword').value;
+            const refCode=document.getElementById('referralCode').value.trim().toUpperCase();
+            const terms=document.getElementById('terms').checked;
+            const submitBtn=document.getElementById('submitBtn');
+            const errorMessage=document.getElementById('errorMessage');
+            const successMessage=document.getElementById('successMessage');
             
             errorMessage.classList.remove('show');
             successMessage.classList.remove('show');
             
-            if(password.length<8){errorMessage.textContent='Password must be at least 8 characters long.';errorMessage.classList.add('show');return}
-            if(!terms){errorMessage.textContent='Please accept the Terms of Service to continue.';errorMessage.classList.add('show');return}
+            if(password.length<8){
+                errorMessage.textContent='Password must be at least 8 characters long.';
+                errorMessage.classList.add('show');
+                return;
+            }
+            if(password!==confirmPassword){
+                errorMessage.textContent='Passwords do not match. Please re-enter.';
+                errorMessage.classList.add('show');
+                return;
+            }
+            if(!terms){
+                errorMessage.textContent='Please accept the Terms of Service to continue.';
+                errorMessage.classList.add('show');
+                return;
+            }
             
             submitBtn.disabled=true;
-            submitBtn.textContent='Creating Account...';
+            submitBtn.innerHTML='<span class="spinner"></span>Creating Account...';
 
             try{
                 let referrerId=null;
+                let referrerLevel=0;
+                
+                // Validate referral code
                 if(refCode){
-                    const snapshot=await get(ref(database,'referralCodes/'+refCode));
-                    if(snapshot.exists())referrerId=snapshot.val().userId;
+                    const refSnapshot=await get(ref(database,'referralCodes/'+refCode));
+                    if(refSnapshot.exists()){
+                        referrerId=refSnapshot.val().userId;
+                        referrerLevel=1; // Direct referral (Level 1)
+                    }else{
+                        errorMessage.textContent='Invalid referral code. Proceeding without referral.';
+                        errorMessage.classList.add('show');
+                    }
                 }
 
                 const userCredential=await createUserWithEmailAndPassword(auth,email,password);
@@ -177,12 +240,17 @@
 
                 const now=new Date().toISOString();
                 const myRefCode=generateCode();
+                
                 const userData={
                     uid:user.uid,
-                    fullName,email,country,
-                    balance:0,totalClaimed:0,
+                    fullName,
+                    email,
+                    country,
+                    balance:0,
+                    totalClaimed:0,
                     referralCode:myRefCode,
-                    referredBy:referrerId,
+                    referredBy:referrerId||null,
+                    referredByLevel:referrerLevel,
                     referrals:[],
                     totalReferralEarnings:0,
                     createdAt:now,
@@ -192,20 +260,43 @@
                 await set(ref(database,'users/'+user.uid),userData);
                 await set(ref(database,'referralCodes/'+myRefCode),{userId:user.uid,createdAt:now});
 
+                // Process referral tracking (no signup bonus, commission comes from investments)
                 if(referrerId){
                     const refSnap=await get(ref(database,'users/'+referrerId));
                     if(refSnap.exists()){
                         const refData=refSnap.val();
-                        const bonus=40;
                         await update(ref(database,'users/'+referrerId),{
-                            referrals:[...(refData.referrals||[]),{userId:user.uid,name:fullName,email,joinedAt:now,earned:bonus}],
-                            balance:(refData.balance||0)+bonus,
-                            totalReferralEarnings:(refData.totalReferralEarnings||0)+bonus
+                            referrals:[...(refData.referrals||[]),{
+                                userId:user.uid,
+                                name:fullName,
+                                email,
+                                joinedAt:now,
+                                level:1,
+                                earned:0
+                            }]
                         });
+                        
+                        // Check if referrer was also referred (Level 2)
+                        if(refData.referredBy){
+                            const level2Snap=await get(ref(database,'users/'+refData.referredBy));
+                            if(level2Snap.exists()){
+                                const level2Data=level2Snap.val();
+                                await update(ref(database,'users/'+refData.referredBy),{
+                                    referrals:[...(level2Data.referrals||[]),{
+                                        userId:user.uid,
+                                        name:fullName,
+                                        email,
+                                        joinedAt:now,
+                                        level:2,
+                                        earned:0
+                                    }]
+                                });
+                            }
+                        }
                     }
                 }
 
-                successMessage.textContent='Account created successfully! Redirecting to login...';
+                successMessage.textContent='✅ Account created successfully! Redirecting to login...';
                 successMessage.classList.add('show');
                 setTimeout(()=>window.location.href='/login.html',2000);
             }catch(error){
@@ -216,9 +307,9 @@
                 errorMessage.textContent=errorText;
                 errorMessage.classList.add('show');
                 submitBtn.disabled=false;
-                submitBtn.textContent='Create Account';
+                submitBtn.innerHTML='Create Account';
             }
         });
     </script>
 </body>
-    </html>
+                                </html>
