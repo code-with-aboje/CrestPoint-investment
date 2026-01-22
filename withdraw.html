@@ -76,7 +76,7 @@
 
 <div class="info-box">
 <i class="fas fa-info-circle"></i>
-<div><strong>Processing:</strong> Withdrawals are processed within 2-5 business days. A 2.5% processing fee applies to all withdrawals.</div>
+<div><strong>Processing:</strong> Withdrawals are processed within 2-5 business days. A 2.5% processing fee applies to all withdrawals. Minimum withdrawal: ₦800</div>
 </div>
 
 <button class="btn-withdraw mobile" onclick="openModal()"><i class="fas fa-arrow-down"></i> Request Withdrawal</button>
@@ -148,7 +148,7 @@
 
 <div class="form-group">
 <label class="form-label">Withdrawal Amount (₦)</label>
-<input type="number" class="form-input" id="amount" placeholder="Enter amount" step="0.01" min="1000" required>
+<input type="number" class="form-input" id="amount" placeholder="Enter amount (min. ₦800)" step="0.01" min="800" required>
 </div>
 
 <div class="fee-warning" id="feeWarning">
@@ -261,7 +261,7 @@ success.classList.remove('show');
 if(!method){error.textContent='Please select a payment method';error.classList.add('show');return}
 if(!accountNumber){error.textContent='Please enter account number';error.classList.add('show');return}
 if(!accountName){error.textContent='Please enter account name';error.classList.add('show');return}
-if(amt<1000){error.textContent='Minimum withdrawal amount is ₦1,000';error.classList.add('show');return}
+if(amt<800){error.textContent='Minimum withdrawal amount is ₦800';error.classList.add('show');return}
 if(!userData||amt>(userData.balance||0)){error.textContent='Insufficient balance';error.classList.add('show');return}
 
 submitBtn.disabled=true;
@@ -367,4 +367,4 @@ document.getElementById('historyBody').innerHTML=`<tr><td colspan="5"><div class
 }
 </script>
 </body>
-    </html>
+                                                                  </html>
