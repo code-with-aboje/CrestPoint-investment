@@ -120,7 +120,7 @@
 
         const P={starter:{cost:3000,income:750,dur:'30 days'},bronze:{cost:6000,income:1500,dur:'30 days'},silver:{cost:10000,income:2500,dur:'30 days'},gold:{cost:15000,income:4750,dur:'30 days'},platinum:{cost:25000,income:7000,dur:'30 days'}};
         const plans=[{id:'starter',name:'Starter Plan',badge:'Beginner'},{id:'bronze',name:'Bronze Plan',featured:1,badge:'Popular'},{id:'silver',name:'Silver Plan'},{id:'gold',name:'Gold Plan',featured:1,badge:'Best Value'},{id:'platinum',name:'Platinum Plan',badge:'Elite'}];
-        let user,bal=0,sel,init=0;
+        let user,bal=0,sel,init=0,userData={};
 
         const showErr=m=>{document.getElementById('errorMsg').textContent=m;document.getElementById('errorBanner').classList.add('show')};
         const showWarn=m=>{document.getElementById('warningMsg').textContent=m;document.getElementById('warningBanner').classList.add('show')};
@@ -153,6 +153,74 @@
             });
         };
 
+        const processReferralCommissions=async(investmentAmount,investorId,investorName)=>{
+            try{
+                const investorSnap=await get(ref(database,`users/${investorId}`));
+                if(!investorSnap.exists())return;
+                
+                const investorData=investorSnap.val();
+                const referredBy=investorData.referredBy;
+                
+                if(!referredBy)return;
+                
+                const level1Snap=await get(ref(database,`users/${referredBy}`));
+                if(!level1Snap.exists())return;
+                
+                const level1Data=level1Snap.val();
+                const level1Commission=investmentAmount*0.10;
+                
+                const level1Updates={
+                    balance:(level1Data.balance||0)+level1Commission,
+                    totalReferralEarnings:(level1Data.totalReferralEarnings||0)+level1Commission
+                };
+                
+                const level1Refs=level1Data.referrals||[];
+                const refIndex=level1Refs.findIndex(r=>r.userId===investorId);
+                if(refIndex>=0){
+                    level1Refs[refIndex].earned=(level1Refs[refIndex].earned||0)+level1Commission;
+                    level1Refs[refIndex].lastInvestment=new Date().toISOString();
+                    level1Updates.referrals=level1Refs;
+                }
+                
+                await update(ref(database,`users/${referredBy}`),level1Updates);
+                
+                if(level1Data.referredBy){
+                    const level2Snap=await get(ref(database,`users/${level1Data.referredBy}`));
+                    if(level2Snap.exists()){
+                        const level2Data=level2Snap.val();
+                        const level2Commission=investmentAmount*0.20;
+                        
+                        const level2Updates={
+                            balance:(level2Data.balance||0)+level2Commission,
+                            totalReferralEarnings:(level2Data.totalReferralEarnings||0)+level2Commission
+                        };
+                        
+                        const level2Refs=level2Data.referrals||[];
+                        const l2RefIndex=level2Refs.findIndex(r=>r.userId===investorId);
+                        if(l2RefIndex>=0){
+                            level2Refs[l2RefIndex].earned=(level2Refs[l2RefIndex].earned||0)+level2Commission;
+                            level2Refs[l2RefIndex].lastInvestment=new Date().toISOString();
+                            level2Updates.referrals=level2Refs;
+                        }else{
+                            level2Refs.push({
+                                userId:investorId,
+                                name:investorName,
+                                level:2,
+                                earned:level2Commission,
+                                joinedAt:investorData.createdAt||new Date().toISOString(),
+                                lastInvestment:new Date().toISOString()
+                            });
+                            level2Updates.referrals=level2Refs;
+                        }
+                        
+                        await update(ref(database,`users/${level1Data.referredBy}`),level2Updates);
+                    }
+                }
+            }catch(e){
+                console.error('Referral commission error:',e);
+            }
+        };
+
         const initApp=async()=>{
             try{
                 init=1;
@@ -165,7 +233,8 @@
                     hideWarn();user=u;
                     const s=await get(ref(database,'users/'+u.uid));
                     if(s.exists()){
-                        bal=s.val().balance||0;
+                        userData=s.val();
+                        bal=userData.balance||0;
                         document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2});
                     }else{document.getElementById('balance').textContent='₦0.00';bal=0}
                 });
@@ -199,7 +268,7 @@
                 const now=Date.now();
                 const userRef=ref(database,'users/'+user.uid);
                 const snapshot=await get(userRef);
-                const userData=snapshot.val()||{};
+                const currentData=snapshot.val()||{};
                 const invKey=push(ref(database,`users/${user.uid}/investments`)).key;
                 const updates={
                     balance:bal-c.cost,
@@ -210,6 +279,9 @@
                     }
                 };
                 await update(userRef,updates);
+                
+                await processReferralCommissions(c.cost,user.uid,currentData.fullName||currentData.email||'User');
+                
                 bal=bal-c.cost;
                 document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2});
                 alert('✓ Investment successful!');closeModal();
@@ -220,4 +292,4 @@
         document.addEventListener('DOMContentLoaded',()=>{render();initApp()});
     </script>
 </body>
-            </html>
+        </html>
