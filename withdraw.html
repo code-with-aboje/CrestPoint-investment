@@ -38,7 +38,9 @@
 .amount-info{background:#f0fdf4;border:1px solid #dcfce7;border-radius:8px;padding:10px;margin-bottom:16px;font-size:13px;color:#166534}
 .info-row{display:flex;justify-content:space-between;padding:4px 0}.info-label{font-weight:500;font-size:12px}
 .info-value{font-weight:700;color:#15803d;font-size:13px}.fee-warning{background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:10px;margin-bottom:16px;font-size:12px;color:#92400e;display:none}
-.fee-warning.show{display:block}.message{border-radius:8px;padding:10px;margin-bottom:16px;font-size:13px;display:none}
+.fee-warning.show{display:block}.fee-breakdown{margin-top:8px;padding-top:8px;border-top:1px solid #fde68a}
+.fee-breakdown .info-row{font-size:11px;padding:2px 0}
+.message{border-radius:8px;padding:10px;margin-bottom:16px;font-size:13px;display:none}
 .message.show{display:block}.error{background:#fee2e2;border:1px solid #fecaca;color:#991b1b}
 .success{background:#f0fdf4;border:1px solid:#86efac;color:#166534}.button-group{display:flex;gap:10px;margin-top:20px}
 .btn{flex:1;padding:11px;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .3s}
@@ -46,8 +48,8 @@
 .btn-submit:hover:not(:disabled){transform:translateY(-2px)}.btn-submit:disabled{opacity:.6;cursor:not-allowed}
 .pending-notice{background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:16px;margin-top:16px;display:none}
 .pending-notice.show{display:block}.pending-notice h3{color:#92400e;font-size:16px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.pending-notice p{color:#92400e;font-size:13px;line-height:1.6}.whatsapp-btn{width:100%;padding:12px;background:#25d366;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s}
-.whatsapp-btn:hover{background:#20ba5a;transform:translateY(-2px)}.spinner{display:inline-block;width:14px;height:14px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}
+.pending-notice p{color:#92400e;font-size:13px;line-height:1.6}.whatsapp-btn{width:100%;padding:12px;background:#0088cc;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s}
+.whatsapp-btn:hover{background:#0077b3;transform:translateY(-2px)}.spinner{display:inline-block;width:14px;height:14px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:768px){.content-grid{grid-template-columns:1fr}.page-header h1{font-size:24px}.card-value{font-size:28px}
 .section.desktop{display:none}.btn-withdraw.mobile{display:block;margin-bottom:32px}.modal{padding:10px}.modal-content{padding:16px}}
@@ -76,7 +78,7 @@
 
 <div class="info-box">
 <i class="fas fa-info-circle"></i>
-<div><strong>Processing:</strong> Withdrawals are processed within 2-5 business days. A 2.5% processing fee applies to all withdrawals. Minimum withdrawal: ₦800</div>
+<div><strong>Processing:</strong> Withdrawals are processed within 2-5 business days. A 25% processing fee applies to all withdrawals. Minimum withdrawal: ₦800</div>
 </div>
 
 <button class="btn-withdraw mobile" onclick="openModal()"><i class="fas fa-arrow-down"></i> Request Withdrawal</button>
@@ -152,15 +154,29 @@
 </div>
 
 <div class="fee-warning" id="feeWarning">
-<strong>Processing Fee:</strong> <span id="feeAmount">₦0.00</span> (2.5%)
+<strong>Processing Fee:</strong> <span id="feeAmount">₦0.00</span> (25%)
+<div class="fee-breakdown">
+<div class="info-row">
+<span>Requested Amount:</span>
+<strong id="requestedAmt">₦0.00</strong>
+</div>
+<div class="info-row">
+<span>Processing Fee (25%):</span>
+<strong id="feeAmt">₦0.00</strong>
+</div>
+<div class="info-row" style="border-top:1px solid #fde68a;margin-top:4px;padding-top:4px">
+<span>You Will Receive:</span>
+<strong style="color:#f59e0b" id="netAmt">₦0.00</strong>
+</div>
+</div>
 </div>
 
 <div class="pending-notice" id="pendingNotice">
 <h3><i class="fas fa-clock"></i> Withdrawal Request Created</h3>
 <p>Your withdrawal request has been submitted and is now <strong>pending approval</strong>. You can track its status in your withdrawal history below.</p>
-<p style="margin-top:8px">To speed up processing, contact us on WhatsApp with your request details.</p>
-<button type="button" class="whatsapp-btn" onclick="contactWhatsApp()">
-<i class="fab fa-whatsapp"></i> Contact via WhatsApp
+<p style="margin-top:8px">To speed up processing, contact our customer service with your request details.</p>
+<button type="button" class="whatsapp-btn" onclick="contactCustomerService()">
+<i class="fab fa-telegram"></i> Contact Customer Service
 </button>
 </div>
 
@@ -205,10 +221,10 @@ document.getElementById('buttonGroup').style.display='flex';
 currentWithdrawal=null;
 }
 
-window.contactWhatsApp=()=>{
+window.contactCustomerService=()=>{
 if(!currentWithdrawal)return;
-const msg=`Hello! I have a pending withdrawal request.\n\n*Account Details:*\nEmail: ${user.email}\n\n*Withdrawal Details:*\nPayment Method: ${currentWithdrawal.method}\nAccount Number: ${currentWithdrawal.accountNumber}\nAccount Name: ${currentWithdrawal.accountName}\nAmount: ${fmt(currentWithdrawal.amount)}\nProcessing Fee: ${fmt(currentWithdrawal.fee)}\nRequest ID: ${currentWithdrawal.id}\n\nPlease process my withdrawal. Thank you!`;
-window.open(`https://wa.me/447940228929?text=${encodeURIComponent(msg)}`,'_blank');
+const msg=`Hello! I have a pending withdrawal request.\n\n*Account Details:*\nEmail: ${user.email}\n\n*Withdrawal Details:*\nPayment Method: ${currentWithdrawal.method}\nAccount Number: ${currentWithdrawal.accountNumber}\nAccount Name: ${currentWithdrawal.accountName}\nRequested Amount: ${fmt(currentWithdrawal.amount)}\nProcessing Fee (25%): ${fmt(currentWithdrawal.fee)}\nNet Amount: ${fmt(currentWithdrawal.netAmount)}\nRequest ID: ${currentWithdrawal.id}\n\nPlease process my withdrawal. Thank you!`;
+window.open(`https://t.me/+haQbwQasg8xjZjRk?text=${encodeURIComponent(msg)}`,'_blank');
 };
 
 modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});
@@ -241,8 +257,12 @@ document.getElementById('balance').textContent=fmt(userData.balance||0);
 document.getElementById('amount').addEventListener('input',function(){
 const amt=parseFloat(this.value)||0;
 if(amt>0){
-const fee=amt*.025;
+const fee=amt*0.25;
+const net=amt-fee;
 document.getElementById('feeAmount').textContent=fmt(fee);
+document.getElementById('requestedAmt').textContent=fmt(amt);
+document.getElementById('feeAmt').textContent=fmt(fee);
+document.getElementById('netAmt').textContent=fmt(net);
 document.getElementById('feeWarning').classList.add('show');
 }else document.getElementById('feeWarning').classList.remove('show');
 });
@@ -270,7 +290,8 @@ submitBtn.textContent='Processing...';
 try{
 if(!user)throw new Error('User not authenticated');
 
-const fee=amt*.025;
+const fee=amt*0.25;
+const netAmount=amt-fee;
 const ts=new Date().toISOString();
 
 const withdrawalData={
@@ -279,6 +300,7 @@ userName:userData.name||userData.fullName||'User',
 userEmail:user.email||'',
 amount:amt,
 fee:fee,
+netAmount:netAmount,
 method:method,
 accountNumber:accountNumber,
 accountName:accountName,
@@ -297,6 +319,7 @@ const transactionData={
 type:'withdrawal',
 amount:amt,
 fee:fee,
+netAmount:netAmount,
 status:'pending',
 method:method,
 accountNumber:accountNumber,
@@ -316,7 +339,7 @@ await update(ref(database),updates);
 userData.balance=Math.max(0,balance-amt);
 document.getElementById('availableAmount').textContent=fmt(userData.balance);
 
-currentWithdrawal={id,method,accountNumber,accountName,amount:amt,fee};
+currentWithdrawal={id,method,accountNumber,accountName,amount:amt,fee,netAmount};
 
 await loadHistory(user.uid);
 
@@ -367,4 +390,4 @@ document.getElementById('historyBody').innerHTML=`<tr><td colspan="5"><div class
 }
 </script>
 </body>
-                                                                  </html>
+  </html>
