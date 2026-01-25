@@ -40,7 +40,7 @@
         .btn:disabled{opacity:.6;cursor:not-allowed;background:#94a3b8}
         .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;backdrop-filter:blur(3px);padding:20px;align-items:center;justify-content:center}
         .modal.active{display:flex}
-        .modal-content{background:#fff;border-radius:12px;padding:20px;max-width:360px;width:100%;box-shadow:0 20px 40px rgba(0,0,0,.2)}
+        .modal-content{background:#fff;border-radius:12px;padding:20px;max-width:360px;width:100%;box-shadow:0 20px 40px rgba(0,0,0,.2);max-height:85vh;overflow-y:auto}
         .modal h3{font-size:16px;margin-bottom:12px;text-align:center;font-weight:700}
         .confirm{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border:1px solid #10b981;border-radius:6px;padding:12px;text-align:center;margin-bottom:12px}
         .confirm-label{color:#059669;font-size:11px;font-weight:600;margin-bottom:4px}
@@ -59,7 +59,22 @@
         .spinner{display:inline-block;width:12px;height:12px;border:2px solid #e0e0e0;border-top-color:#10b981;border-radius:50%;animation:spin .8s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
         .loading{text-align:center;padding:40px;color:#64748b}
-        @media(max-width:768px){body{padding:60px 12px 200px}.header h1{font-size:24px}.grid{grid-template-columns:1fr}}
+        .welcome-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;backdrop-filter:blur(4px);padding:20px;align-items:center;justify-content:center;animation:fadeIn .3s}
+        .welcome-modal.active{display:flex}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        @keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+        .welcome-content{background:#fff;border-radius:16px;padding:32px 24px;max-width:420px;width:100%;box-shadow:0 25px 50px rgba(0,0,0,.3);text-align:center;animation:slideUp .4s ease-out}
+        .welcome-icon{width:80px;height:80px;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 8px 20px rgba(16,185,129,.3)}
+        .welcome-icon i{font-size:40px;color:#fff}
+        .welcome-title{font-size:24px;font-weight:700;color:#0f172a;margin-bottom:12px}
+        .welcome-text{font-size:14px;color:#64748b;line-height:1.6;margin-bottom:20px}
+        .bonus-box{background:linear-gradient(135deg,#fef3c7,#fde68a);border:2px solid #f59e0b;border-radius:12px;padding:16px;margin:20px 0}
+        .bonus-label{font-size:12px;color:#92400e;font-weight:600;margin-bottom:6px;text-transform:uppercase}
+        .bonus-amount{font-size:36px;font-weight:700;color:#f59e0b;margin-bottom:4px}
+        .bonus-note{font-size:11px;color:#92400e}
+        .welcome-btn{width:100%;padding:14px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+        .welcome-btn:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(16,185,129,.4)}
+        @media(max-width:768px){body{padding:60px 12px 200px}.header h1{font-size:24px}.grid{grid-template-columns:1fr}.welcome-content{padding:24px 20px}.welcome-title{font-size:20px}.bonus-amount{font-size:32px}}
     </style>
 </head>
 <body>
@@ -113,6 +128,23 @@
         </div>
     </div>
 
+    <div class="welcome-modal" id="welcomeModal">
+        <div class="welcome-content">
+            <div class="welcome-icon">
+                <i class="fas fa-gift"></i>
+            </div>
+            <h2 class="welcome-title">🎉 Welcome Bonus!</h2>
+            <p class="welcome-text">Congratulations on making your first investment! As a warm welcome to Crest Point Investment, we're crediting your account with a special bonus.</p>
+            <div class="bonus-box">
+                <div class="bonus-label">Welcome Bonus Credited</div>
+                <div class="bonus-amount">₦1,000</div>
+                <div class="bonus-note">Added to your available balance</div>
+            </div>
+            <p class="welcome-text" style="margin-top:16px">Start growing your wealth with us today! Your investment journey begins now.</p>
+            <button class="welcome-btn" onclick="closeWelcome()"><i class="fas fa-check-circle"></i> Got it, Thanks!</button>
+        </div>
+    </div>
+
     <script type="module">
         import{onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
         import{ref,get,update,push}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
@@ -125,6 +157,16 @@
         const showErr=m=>{document.getElementById('errorMsg').textContent=m;document.getElementById('errorBanner').classList.add('show')};
         const showWarn=m=>{document.getElementById('warningMsg').textContent=m;document.getElementById('warningBanner').classList.add('show')};
         const hideWarn=()=>document.getElementById('warningBanner').classList.remove('show');
+
+        window.closeWelcome=()=>{
+            document.getElementById('welcomeModal').classList.remove('active');
+            document.body.style.overflow='';
+        };
+
+        const showWelcomeBonus=()=>{
+            document.getElementById('welcomeModal').classList.add('active');
+            document.body.style.overflow='hidden';
+        };
 
         const render=()=>{
             const g=document.getElementById('grid');
@@ -167,7 +209,7 @@
                 if(!level1Snap.exists())return;
                 
                 const level1Data=level1Snap.val();
-                const level1Commission=investmentAmount*0.20;
+                const level1Commission=investmentAmount*0.10;
                 
                 const level1Updates={
                     balance:(level1Data.balance||0)+level1Commission,
@@ -188,7 +230,7 @@
                     const level2Snap=await get(ref(database,`users/${level1Data.referredBy}`));
                     if(level2Snap.exists()){
                         const level2Data=level2Snap.val();
-                        const level2Commission=investmentAmount*0.02;
+                        const level2Commission=investmentAmount*0.20;
                         
                         const level2Updates={
                             balance:(level2Data.balance||0)+level2Commission,
@@ -269,24 +311,16 @@
                 const userRef=ref(database,'users/'+user.uid);
                 const snapshot=await get(userRef);
                 const currentData=snapshot.val()||{};
+                
+                const isFirstInvestment=!currentData.investments||Object.keys(currentData.investments).length===0;
+                const welcomeBonus=isFirstInvestment?1000:0;
+                
                 const invKey=push(ref(database,`users/${user.uid}/investments`)).key;
                 const updates={
-                    balance:bal-c.cost,
+                    balance:(bal-c.cost)+welcomeBonus,
                     [`investments/${invKey}`]:{
                         planId:sel.id,planName:sel.name,amount:c.cost,dailyIncome:c.income,
-                        duration:c.dur,startDate:now,maturityDate:now+(86400000*30),
-                        status:'active',totalClaimed:0
-                    }
-                };
-                await update(userRef,updates);
-                
-                await processReferralCommissions(c.cost,user.uid,currentData.fullName||currentData.email||'User');
-                
-                bal=bal-c.cost;
-                document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2});
-                alert('✓ Investment successful!');closeModal();
-            }catch(e){err.textContent='Error: '+e.message;err.classList.add('show')}
-            finally{btn.disabled=0;btn.innerHTML='Invest Now'}
+                      .innerHTML='Invest Now'}
         };
 
         document.addEventListener('DOMContentLoaded',()=>{render();initApp()});
