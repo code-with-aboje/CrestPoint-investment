@@ -249,14 +249,17 @@ onAuthStateChanged(auth,u=>{if(u)admin=u});
 
 onValue(ref(db,'fundingRequests'),snap=>{
 fundings=snap.val()||{};
-if(curTab==='funding'){updateStats();renderFunding()}
+console.log('Funding requests loaded:', Object.keys(fundings).length, 'items');
+updateStats();
+renderFunding();
 });
 
 onValue(ref(db,'pendingWithdrawals'),snap=>{
 withdrawals=snap.val()||{};
 console.log('Withdrawals loaded:', Object.keys(withdrawals).length, 'items');
 console.log('Sample withdrawal:', Object.values(withdrawals)[0]);
-if(curTab==='withdrawals'){updateStats();renderWithdrawal()}
+updateStats();
+renderWithdrawal();
 });
 </script>
 </body>
