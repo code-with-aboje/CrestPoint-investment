@@ -104,7 +104,7 @@
             <div class="balance-amount" id="balance"><span class="spinner"></span></div>
         </div>
 
-        <div id="loader" class="loading"><div class="spinner" style="width:24px;height:24px;border-width:3px"></div><div>Loading plans...</div></div>
+        <div id="loader" class="loading" style="display:none"><div class="spinner" style="width:24px;height:24px;border-width:3px"></div><div>Loading plans...</div></div>
         <div class="grid" id="grid"></div>
     </div>
 
@@ -170,8 +170,7 @@
 
         const render=()=>{
             const g=document.getElementById('grid');
-            document.getElementById('loader').style.display='none';
-            g.style.display='grid';
+            g.innerHTML='';
             plans.forEach(p=>{
                 const c=P[p.id];
                 const card=document.createElement('div');
@@ -270,7 +269,9 @@
                     if(!u){
                         showWarn('Not logged in. Log in to invest.');
                         document.getElementById('balance').textContent='₦0.00';
-                        user=null;bal=0;return;
+                        user=null;bal=0;
+                        render();
+                        return;
                     }
                     hideWarn();user=u;
                     const s=await get(ref(database,'users/'+u.uid));
@@ -279,10 +280,12 @@
                         bal=userData.balance||0;
                         document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2});
                     }else{document.getElementById('balance').textContent='₦0.00';bal=0}
+                    render();
                 });
             }catch(e){
                 showErr('Firebase error: '+e.message);
                 document.getElementById('balance').textContent='₦0.00';
+                render();
             }
         };
 
@@ -320,10 +323,34 @@
                     balance:(bal-c.cost)+welcomeBonus,
                     [`investments/${invKey}`]:{
                         planId:sel.id,planName:sel.name,amount:c.cost,dailyIncome:c.income,
-                      .innerHTML='Invest Now'}
+                        duration:c.dur,startDate:now,maturityDate:now+(86400000*30),
+                        status:'active',totalClaimed:0
+                    }
+                };
+                
+                if(isFirstInvestment){
+                    updates.firstInvestmentDate=new Date().toISOString();
+                    updates.welcomeBonusReceived=true;
+                }
+                
+                await update(userRef,updates);
+                
+                await processReferralCommissions(c.cost,user.uid,currentData.fullName||currentData.email||'User');
+                
+                bal=(bal-c.cost)+welcomeBonus;
+                document.getElementById('balance').textContent='₦'+bal.toLocaleString('en-NG',{minimumFractionDigits:2});
+                closeModal();
+                
+                if(isFirstInvestment){
+                    setTimeout(()=>showWelcomeBonus(),500);
+                }else{
+                    alert('✓ Investment successful!');
+                }
+            }catch(e){err.textContent='Error: '+e.message;err.classList.add('show')}
+            finally{btn.disabled=0;btn.innerHTML='Invest Now'}
         };
 
-        document.addEventListener('DOMContentLoaded',()=>{render();initApp()});
+        initApp();
     </script>
 </body>
-        </html>
+</html>
