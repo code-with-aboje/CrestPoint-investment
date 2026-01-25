@@ -254,6 +254,8 @@ if(curTab==='funding'){updateStats();renderFunding()}
 
 onValue(ref(db,'pendingWithdrawals'),snap=>{
 withdrawals=snap.val()||{};
+console.log('Withdrawals loaded:', Object.keys(withdrawals).length, 'items');
+console.log('Sample withdrawal:', Object.values(withdrawals)[0]);
 if(curTab==='withdrawals'){updateStats();renderWithdrawal()}
 });
 </script>
