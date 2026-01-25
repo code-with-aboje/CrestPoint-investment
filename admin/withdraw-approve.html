@@ -21,7 +21,13 @@
 .card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}.card-info h3{font-size:16px;font-weight:600;margin-bottom:2px}
 .card-info p{font-size:13px;color:#9ca3af;margin:2px 0}.amount{background:#10b981;color:#fff;padding:6px 12px;border-radius:6px;font-weight:700;font-size:16px}
 .details{background:#f9fafb;padding:12px;border-radius:6px;margin:12px 0;font-size:13px;display:grid;gap:8px}
-.detail-row{display:flex;justify-content:space-between;gap:8px}.detail-lbl{font-weight:500;color:#9ca3af}.detail-val{font-family:monospace;word-break:break-all}
+.detail-row{display:flex;justify-content:space-between;gap:8px}.detail-lbl{font-weight:500;color:#9ca3af}.detail-val{font-family:monospace;word-break:break-all;text-align:right}
+.account-box{background:#eff6ff;border:2px solid #3b82f6;border-radius:8px;padding:14px;margin:12px 0}
+.account-title{font-size:11px;font-weight:700;color:#1e40af;text-transform:uppercase;margin-bottom:10px;letter-spacing:.5px}
+.account-detail{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #bfdbfe}
+.account-detail:last-child{border-bottom:0}
+.account-detail .label{font-size:12px;color:#3b82f6;font-weight:600}
+.account-detail .value{font-size:13px;color:#1e40af;font-weight:700;font-family:monospace}
 .proof{margin:12px 0;border-radius:8px;overflow:hidden;border:2px solid #e5e7eb;cursor:pointer}.proof img{width:100%;height:auto;display:block}
 .badge{padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase;width:fit-content}
 .badge-pending{background:#fef3c7;color:#92400e}.badge-approved{background:#dcfce7;color:#166534}.badge-rejected{background:#fee2e2;color:#991b1b}
@@ -161,7 +167,8 @@ const grid=document.getElementById('withdrawalGrid');
 if(!list.length){grid.innerHTML=`<div class="empty"><h3>No ${wFilter} withdrawals</h3></div>`;return}
 grid.innerHTML=list.sort(([,a],[,b])=>new Date(b.requestDate)-new Date(a.requestDate)).map(([id,w])=>{
 const st=w.status||'pending';
-return`<div class="card"><div class="card-header"><div class="card-info"><h3>${w.userName||'Unknown'}</h3><p>${w.userEmail||''}</p><p>${fDate(w.requestDate)}</p></div><div class="amount">${fmt(w.amount||0)}</div></div><div class="details"><div class="detail-row"><span class="detail-lbl">User ID:</span><span class="detail-val">${(w.userId||'').substring(0,12)}...</span></div><div class="detail-row"><span class="detail-lbl">Method:</span><span class="detail-val">${w.method||'N/A'}</span></div><div class="detail-row"><span class="detail-lbl">Fee (2.5%):</span><span class="detail-val">${fmt(w.fee||0)}</span></div><div class="detail-row"><span class="detail-lbl">Status:</span><span class="badge badge-${st}">${st}</span></div>${w.processedBy?`<div class="detail-row"><span class="detail-lbl">By:</span><span class="detail-val">${w.processedBy}</span></div>`:''}</div>${st==='pending'?`<div class="actions"><button class="btn btn-approve" onclick="approveWith('${id}',${w.amount},'${w.userId}')">Approve</button><button class="btn btn-reject" onclick="rejectWith('${id}',${w.amount},'${w.userId}')">Reject</button></div>`:''}</div>`;
+const netAmount=w.netAmount||(w.amount-(w.fee||0));
+return`<div class="card"><div class="card-header"><div class="card-info"><h3>${w.userName||'Unknown'}</h3><p>${w.userEmail||''}</p><p>${fDate(w.requestDate)}</p></div><div class="amount">${fmt(w.amount||0)}</div></div><div class="account-box"><div class="account-title">💳 Withdrawal Account Details</div><div class="account-detail"><span class="label">Payment Method:</span><span class="value">${w.method||'N/A'}</span></div><div class="account-detail"><span class="label">Account Number:</span><span class="value">${w.accountNumber||'N/A'}</span></div><div class="account-detail"><span class="label">Account Name:</span><span class="value">${w.accountName||'N/A'}</span></div></div><div class="details"><div class="detail-row"><span class="detail-lbl">User ID:</span><span class="detail-val">${(w.userId||'').substring(0,12)}...</span></div><div class="detail-row"><span class="detail-lbl">Requested Amount:</span><span class="detail-val">${fmt(w.amount||0)}</span></div><div class="detail-row"><span class="detail-lbl">Fee (25%):</span><span class="detail-val">${fmt(w.fee||0)}</span></div><div class="detail-row"><span class="detail-lbl">Net to Pay:</span><span class="detail-val" style="color:#10b981;font-weight:700">${fmt(netAmount)}</span></div><div class="detail-row"><span class="detail-lbl">Status:</span><span class="badge badge-${st}">${st}</span></div>${w.processedBy?`<div class="detail-row"><span class="detail-lbl">Processed By:</span><span class="detail-val">${w.processedBy}</span></div>`:''}${w.processedDate?`<div class="detail-row"><span class="detail-lbl">Processed Date:</span><span class="detail-val">${fDate(w.processedDate)}</span></div>`:''}</div>${st==='pending'?`<div class="actions"><button class="btn btn-approve" onclick="approveWith('${id}',${w.amount},'${w.userId}')">Approve & Pay ${fmt(netAmount)}</button><button class="btn btn-reject" onclick="rejectWith('${id}',${w.amount},'${w.userId}')">Reject & Refund</button></div>`:''}</div>`;
 }).join('');
 };
 
@@ -196,7 +203,7 @@ showAlert('✓ Rejected!','success');
 };
 
 window.approveWith=async(id,amt,uid)=>{
-if(!confirm(`Approve ${fmt(amt)}?`))return;
+if(!confirm(`Approve withdrawal?`))return;
 try{
 const ts=new Date().toISOString();
 const snap=await get(ref(db,`pendingWithdrawals/${id}`));
@@ -208,12 +215,12 @@ await update(ref(db),{
 [`users/${uid}/transactions/${id}/status`]:'approved',
 [`users/${uid}/transactions/${id}/processedDate`]:ts
 });
-showAlert(`✓ Approved ${fmt(amt)}!`,'success');
+showAlert(`✓ Withdrawal approved!`,'success');
 }catch(e){showAlert('Failed: '+e.message,'error')}
 };
 
 window.rejectWith=async(id,amt,uid)=>{
-if(!confirm(`Reject ${fmt(amt)}?`))return;
+if(!confirm(`Reject and refund ${fmt(amt)}?`))return;
 try{
 const ts=new Date().toISOString();
 const snap=await get(ref(db,`users/${uid}`));
@@ -251,4 +258,4 @@ if(curTab==='withdrawals'){updateStats();renderWithdrawal()}
 });
 </script>
 </body>
-</html>
+  </html>
