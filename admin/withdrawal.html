@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Withdrawal Requests</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:#f9fafb;color:#1f2937}
+.header{background:#fff;border-bottom:1px solid #e5e7eb;padding:32px 24px}
+.header h1{font-size:24px;font-weight:700;max-width:1200px;margin:0 auto}
+.header p{color:#9ca3af;font-size:14px;max-width:1200px;margin:4px auto 0}
+.stats{background:#fff;border-bottom:1px solid #e5e7eb;padding:20px 24px}
+.stats-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:24px}
+.stat{text-align:center}
+.stat-val{font-size:28px;font-weight:700;color:#10b981}
+.stat-lbl{font-size:12px;color:#9ca3af;margin-top:4px;text-transform:uppercase}
+.container{max-width:1200px;margin:0 auto;padding:24px}
+.controls{display:flex;gap:16px;margin-bottom:24px;align-items:center}
+.tabs{display:flex;gap:8px;border-radius:8px;background:#fff;padding:4px;border:1px solid #e5e7eb}
+.tab{padding:8px 14px;background:0;border:0;cursor:pointer;font-size:13px;font-weight:500;border-radius:6px;color:#9ca3af}
+.tab.active{background:#10b981;color:#fff}
+.btn-refresh{background:#10b981;color:#fff;border:0;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;margin-left:auto}
+.btn-refresh:hover{background:#059669}
+.grid{display:grid;gap:16px}
+.card{background:#fff;border-radius:8px;padding:20px;border:1px solid #e5e7eb}
+.card:hover{box-shadow:0 4px 12px rgba(16,185,129,.15)}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.card-info h3{font-size:16px;font-weight:600;margin-bottom:2px}
+.card-info p{font-size:13px;color:#9ca3af;margin:2px 0}
+.amount{background:#10b981;color:#fff;padding:6px 12px;border-radius:6px;font-weight:700;font-size:16px}
+.account-box{background:#f0fdf4;border:2px solid #10b981;border-radius:8px;padding:14px;margin:12px 0}
+.account-title{font-size:11px;font-weight:700;color:#065f46;text-transform:uppercase;margin-bottom:10px;letter-spacing:.5px}
+.account-detail{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #bbf7d0}
+.account-detail:last-child{border-bottom:0}
+.account-detail .label{font-size:12px;color:#10b981;font-weight:600}
+.account-detail .value{font-size:13px;color:#065f46;font-weight:700;font-family:monospace}
+.details{background:#f9fafb;padding:12px;border-radius:6px;margin:12px 0;font-size:13px;display:grid;gap:8px}
+.detail-row{display:flex;justify-content:space-between;gap:8px}
+.detail-lbl{font-weight:500;color:#9ca3af}
+.detail-val{font-family:monospace;word-break:break-all;text-align:right}
+.badge{padding:4px 10px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase;width:fit-content}
+.badge-pending{background:#fef3c7;color:#92400e}
+.badge-approved{background:#dcfce7;color:#166534}
+.badge-rejected{background:#fee2e2;color:#991b1b}
+.actions{display:flex;gap:12px;margin-top:16px}
+.btn{flex:1;padding:9px 16px;border:0;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500}
+.btn-approve{background:#22c55e;color:#fff}
+.btn-approve:hover{background:#16a34a}
+.btn-reject{background:#ef4444;color:#fff}
+.btn-reject:hover{background:#dc2626}
+.loading,.empty{text-align:center;padding:48px 20px;color:#9ca3af}
+.empty h3{font-size:16px;margin-bottom:6px;color:#1f2937}
+.alert{position:fixed;top:20px;right:20px;z-index:1000;padding:12px 16px;border-radius:6px;font-size:13px;font-weight:500;color:#fff;animation:slideIn .3s}
+.alert.success{background:#22c55e}
+.alert.error{background:#ef4444}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@media(max-width:640px){
+.header{padding:20px 16px}
+.header h1{font-size:20px}
+.stats-inner{grid-template-columns:1fr;gap:16px}
+.container{padding:16px}
+.controls{flex-direction:column}
+.btn-refresh{margin-left:0}
+.card-header{flex-direction:column}
+.actions{flex-direction:column}
+}
+</style>
+</head>
+<body>
+<div class="header">
+<div style="max-width:1200px;margin:0 auto">
+<h1>💸 Withdrawal Requests</h1>
+<p>Review and manage user withdrawal requests</p>
+</div>
+</div>
+
+<div class="stats" id="statsBar"></div>
+
+<div class="container">
+<div class="controls">
+<div class="tabs">
+<button class="tab active" onclick="filter('all')">All</button>
+<button class="tab" onclick="filter('pending')">Pending</button>
+<button class="tab" onclick="filter('approved')">Approved</button>
+<button class="tab" onclick="filter('rejected')">Rejected</button>
+</div>
+<button class="btn-refresh" onclick="location.reload()">Refresh</button>
+</div>
+<div id="withdrawalGrid" class="grid">
+<div class="loading">Loading withdrawal requests...</div>
+</div>
+</div>
+
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import{getDatabase,ref,onValue,update,get}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+import{getAuth,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+import firebaseConfig from'./firebaseConfig.js';
+
+const app=initializeApp(firebaseConfig),db=getDatabase(app),auth=getAuth(app);
+let withdrawals={},currentFilter='all',admin;
+
+const fmt=a=>`₦${a.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',')}`;
+const fDate=d=>new Date(d).toLocaleString();
+
+window.filter=f=>{
+currentFilter=f;
+document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+event.target.classList.add('active');
+renderWithdrawals();
+};
+
+const updateStats=()=>{
+const pending=Object.values(withdrawals).filter(w=>w.status==='pending');
+const totalPending=pending.reduce((s,w)=>s+(w.amount||0),0);
+const today=new Date().toDateString();
+const processedToday=Object.values(withdrawals).filter(w=>w.processedDate&&new Date(w.processedDate).toDateString()===today).length;
+const totalApproved=Object.values(withdrawals).filter(w=>w.status==='approved').length;
+
+document.getElementById('statsBar').innerHTML=`
+<div class="stats-inner">
+<div class="stat">
+<div class="stat-val">${pending.length}</div>
+<div class="stat-lbl">Pending</div>
+</div>
+<div class="stat">
+<div class="stat-val">${fmt(totalPending)}</div>
+<div class="stat-lbl">Total Pending</div>
+</div>
+<div class="stat">
+<div class="stat-val">${processedToday}</div>
+<div class="stat-lbl">Processed Today</div>
+</div>
+<div class="stat">
+<div class="stat-val">${totalApproved}</div>
+<div class="stat-lbl">Total Approved</div>
+</div>
+</div>`;
+};
+
+const renderWithdrawals=()=>{
+let list=Object.entries(withdrawals);
+if(currentFilter!=='all')list=list.filter(([_,w])=>w.status===currentFilter);
+const grid=document.getElementById('withdrawalGrid');
+
+if(!list.length){
+grid.innerHTML=`<div class="empty"><h3>No ${currentFilter} withdrawal requests</h3><p>All clear here!</p></div>`;
+return;
+}
+
+grid.innerHTML=list.sort(([,a],[,b])=>new Date(b.requestDate)-new Date(a.requestDate)).map(([id,w])=>{
+const st=w.status||'pending';
+const netAmount=w.netAmount||(w.amount-(w.fee||0));
+return`
+<div class="card">
+<div class="card-header">
+<div class="card-info">
+<h3>${w.userName||'Unknown User'}</h3>
+<p>${w.userEmail||''}</p>
+<p>📅 ${fDate(w.requestDate)}</p>
+</div>
+<div class="amount">${fmt(w.amount||0)}</div>
+</div>
+
+<div class="account-box">
+<div class="account-title">💳 Withdrawal Account Details</div>
+<div class="account-detail">
+<span class="label">Payment Method:</span>
+<span class="value">${w.method||'N/A'}</span>
+</div>
+<div class="account-detail">
+<span class="label">Account Number:</span>
+<span class="value">${w.accountNumber||'N/A'}</span>
+</div>
+<div class="account-detail">
+<span class="label">Account Name:</span>
+<span class="value">${w.accountName||'N/A'}</span>
+</div>
+${w.bankName?`<div class="account-detail">
+<span class="label">Bank Name:</span>
+<span class="value">${w.bankName}</span>
+</div>`:''}
+</div>
+
+<div class="details">
+<div class="detail-row">
+<span class="detail-lbl">User ID:</span>
+<span class="detail-val">${(w.userId||'').substring(0,12)}...</span>
+</div>
+<div class="detail-row">
+<span class="detail-lbl">Requested Amount:</span>
+<span class="detail-val">${fmt(w.amount||0)}</span>
+</div>
+<div class="detail-row">
+<span class="detail-lbl">Fee (25%):</span>
+<span class="detail-val">${fmt(w.fee||0)}</span>
+</div>
+<div class="detail-row">
+<span class="detail-lbl">Net to Pay:</span>
+<span class="detail-val" style="color:#10b981;font-weight:700;font-size:15px">${fmt(netAmount)}</span>
+</div>
+<div class="detail-row">
+<span class="detail-lbl">Status:</span>
+<span class="badge badge-${st}">${st}</span>
+</div>
+${w.processedBy?`<div class="detail-row">
+<span class="detail-lbl">Processed By:</span>
+<span class="detail-val">${w.processedBy}</span>
+</div>`:''}
+${w.processedDate?`<div class="detail-row">
+<span class="detail-lbl">Processed Date:</span>
+<span class="detail-val">${fDate(w.processedDate)}</span>
+</div>`:''}
+</div>
+
+${st==='pending'?`<div class="actions">
+<button class="btn btn-approve" onclick="approveWithdrawal('${id}',${w.amount},'${w.userId}')">
+✓ Approve & Pay ${fmt(netAmount)}
+</button>
+<button class="btn btn-reject" onclick="rejectWithdrawal('${id}',${w.amount},'${w.userId}')">
+✕ Reject & Refund
+</button>
+</div>`:''}
+</div>`;
+}).join('');
+};
+
+window.approveWithdrawal=async(id,amt,uid)=>{
+const w=withdrawals[id];
+const netAmount=w.netAmount||(amt-(w.fee||0));
+if(!confirm(`Approve withdrawal and pay ${fmt(netAmount)} to ${w.accountName}?`))return;
+try{
+const ts=new Date().toISOString();
+const snap=await get(ref(db,`pendingWithdrawals/${id}`));
+if(!snap.exists()){showAlert('Withdrawal request not found','error');return}
+await update(ref(db),{
+[`pendingWithdrawals/${id}/status`]:'approved',
+[`pendingWithdrawals/${id}/processedDate`]:ts,
+[`pendingWithdrawals/${id}/processedBy`]:admin?.email||'Admin',
+[`users/${uid}/transactions/${id}/status`]:'approved',
+[`users/${uid}/transactions/${id}/processedDate`]:ts
+});
+showAlert(`✓ Withdrawal approved! Pay ${fmt(netAmount)} to ${w.accountName}`,'success');
+}catch(e){showAlert('Failed: '+e.message,'error')}
+};
+
+window.rejectWithdrawal=async(id,amt,uid)=>{
+if(!confirm(`Reject withdrawal and refund ${fmt(amt)} to user balance?`))return;
+try{
+const ts=new Date().toISOString();
+const snap=await get(ref(db,`users/${uid}`));
+if(!snap.exists()){showAlert('User not found','error');return}
+const bal=snap.val().balance||0;
+await update(ref(db),{
+[`pendingWithdrawals/${id}/status`]:'rejected',
+[`pendingWithdrawals/${id}/processedDate`]:ts,
+[`pendingWithdrawals/${id}/processedBy`]:admin?.email||'Admin',
+[`users/${uid}/transactions/${id}/status`]:'rejected',
+[`users/${uid}/balance`]:bal+amt
+});
+showAlert(`✓ Withdrawal rejected & ${fmt(amt)} refunded to user!`,'success');
+}catch(e){showAlert('Failed: '+e.message,'error')}
+};
+
+const showAlert=(msg,type)=>{
+const div=document.createElement('div');
+div.className=`alert ${type}`;
+div.textContent=msg;
+document.body.appendChild(div);
+setTimeout(()=>div.remove(),3000);
+};
+
+onAuthStateChanged(auth,u=>{if(u)admin=u});
+
+onValue(ref(db,'pendingWithdrawals'),snap=>{
+withdrawals=snap.val()||{};
+console.log('✓ Withdrawals loaded:',Object.keys(withdrawals).length,'requests');
+updateStats();
+renderWithdrawals();
+});
+</script>
+</body>
+</html>
