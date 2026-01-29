@@ -170,7 +170,7 @@
 <strong id="requestedAmt">₦0.00</strong>
 </div>
 <div class="info-row">
-<span>Processing Fee (25%):</span>
+<span>Processing Fee (15%):</span>
 <strong id="feeAmt">₦0.00</strong>
 </div>
 <div class="info-row" style="border-top:1px solid #fde68a;margin-top:4px;padding-top:4px">
@@ -210,7 +210,7 @@ const fmt=a=>`₦${a.toLocaleString('en-NG',{minimumFractionDigits:2})}`;
 function isWithinWithdrawalHours(){
 const now=new Date();
 const hour=now.getHours();
-return hour>=10&&hour<16;
+return hour>=10&&hour<18;
 }
 
 function updateWithdrawalButtons(){
@@ -221,7 +221,7 @@ const desktopBtn=document.getElementById('withdrawBtnDesktop');
 if(btn){
 btn.disabled=!allowed;
 if(!allowed){
-btn.innerHTML='<i class="fas fa-clock"></i> Available 10 AM - 4 PM';
+btn.innerHTML='<i class="fas fa-clock"></i> Available 10 AM - 6 PM';
 }else{
 btn.innerHTML='<i class="fas fa-arrow-down"></i> Request Withdrawal';
 }
@@ -306,7 +306,7 @@ form.addEventListener('submit',async e=>{
 e.preventDefault();
 
 if(!isWithinWithdrawalHours()){
-error.textContent='⏰ Withdrawals can only be requested between 10:00 AM and 4:00 PM';
+error.textContent='⏰ Withdrawals can only be requested between 10:00 AM and 6:00 PM';
 error.classList.add('show');
 return;
 }
