@@ -82,12 +82,12 @@
 
 <div class="time-restriction">
 <i class="fas fa-clock"></i>
-<div><strong>⏰ Withdrawal Hours:</strong> Withdrawals can only be requested between <strong>10:00 AM and 4:00 PM</strong> daily. Please return during these hours to process your withdrawal.</div>
+<div><strong>⏰ Withdrawal Hours:</strong> Withdrawals can only be requested between <strong>10:00 AM and 6:00 PM</strong> daily. Please return during these hours to process your withdrawal.</div>
 </div>
 
 <div class="info-box">
 <i class="fas fa-info-circle"></i>
-<div><strong>Processing:</strong> Withdrawals are processed within 2-5 business days. A 25% processing fee applies to all withdrawals. Minimum withdrawal: ₦800</div>
+<div><strong>Processing:</strong> Withdrawals are processed within 2-5 business days. A 15% processing fee applies to all withdrawals. Minimum withdrawal: ₦800</div>
 </div>
 
 <button class="btn-withdraw mobile" onclick="openModal()" id="withdrawBtnMobile"><i class="fas fa-arrow-down"></i> Request Withdrawal</button>
@@ -231,7 +231,7 @@ btn.innerHTML='<i class="fas fa-arrow-down"></i> Request Withdrawal';
 
 window.openModal=async()=>{
 if(!isWithinWithdrawalHours()){
-alert('⏰ Withdrawals can only be requested between 10:00 AM and 4:00 PM. Please return during these hours.');
+alert('⏰ Withdrawals can only be requested between 10:00 AM and 6:00 PM. Please return during these hours.');
 return;
 }
 modal.classList.add('active');
@@ -332,7 +332,7 @@ submitBtn.textContent='Processing...';
 try{
 if(!user)throw new Error('User not authenticated');
 
-const fee=amt*0.25;
+const fee=amt*0.15;
 const netAmount=amt-fee;
 const ts=new Date().toISOString();
 
