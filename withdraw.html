@@ -292,7 +292,7 @@ document.getElementById('balance').textContent=fmt(userData.balance||0);
 document.getElementById('amount').addEventListener('input',function(){
 const amt=parseFloat(this.value)||0;
 if(amt>0){
-const fee=amt*0.25;
+const fee=amt*0.15;
 const net=amt-fee;
 document.getElementById('feeAmount').textContent=fmt(fee);
 document.getElementById('requestedAmt').textContent=fmt(amt);
