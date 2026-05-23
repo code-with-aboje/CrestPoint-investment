@@ -13,7 +13,7 @@
   --glass:rgba(232,25,44,0.10);--glass2:rgba(255,255,255,0.04);
   --border:rgba(232,25,44,0.25);--border2:rgba(255,255,255,0.07);
   --txt:#f0f2f5;--txt2:#8a9bb0;--txt3:#c5cdd8;
-  --sidebar:220px;--topnav-h:60px;
+  --sidebar:220px;--topnav-h:64px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--txt);height:100vh;overflow:hidden}
@@ -34,55 +34,65 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* LAYOUT */
 .shell{display:flex;height:100vh;width:100%;position:relative;z-index:1;flex-direction:column}
 
-/* TOP NAV */
+/* TOP NAV — Facebook style */
 .top-nav{
   position:relative;z-index:100;height:var(--topnav-h);flex-shrink:0;
   background:var(--bg2);
   border-bottom:1px solid var(--border2);
-  box-shadow:0 1px 0 rgba(232,25,44,.15),0 4px 20px rgba(0,0,0,.4);
-  padding:0 24px;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
-}
-.top-nav::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--red) 30%,var(--red) 70%,transparent);
-  opacity:.35;
+  box-shadow:0 2px 12px rgba(0,0,0,.5);
+  padding:0 16px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:stretch;
 }
 
-/* Brand */
-.tn-brand{display:flex;align-items:center;gap:10px;flex-shrink:0;min-width:0}
-.tn-logo svg{width:26px;height:26px;filter:drop-shadow(0 0 6px rgba(232,25,44,.5))}
-.tn-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap}
+/* Brand — left column, only visible on dashboard */
+.tn-brand{
+  display:flex;align-items:center;gap:10px;
+  min-width:0;align-self:center;
+}
+.tn-brand.hidden{visibility:hidden}
+.tn-logo svg{width:28px;height:28px;filter:drop-shadow(0 0 8px rgba(232,25,44,.6))}
+.tn-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px;letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap}
 .tn-name span{color:var(--red)}
-.tn-divider{width:1px;height:20px;background:var(--border2);margin:0 4px;flex-shrink:0}
-.tn-page{font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--txt2);white-space:nowrap}
 
-/* Top nav pills — only primary 3 items */
-.tn-pills{display:flex;align-items:center;gap:2px;flex:0 0 auto}
-
-/* Shared nav item style (top + sidebar) */
-.tn-item,.sb-item{
-  display:flex;align-items:center;gap:8px;
-  border-radius:9px;cursor:pointer;
-  color:var(--txt2);font-size:12px;font-weight:600;letter-spacing:.4px;
-  transition:.18s;border:1px solid transparent;
-  text-decoration:none;font-family:'Exo 2',sans-serif;white-space:nowrap;
+/* Center tab strip — Facebook style */
+.tn-pills{display:flex;align-items:stretch;height:100%}
+.tn-item{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;
+  width:96px;height:100%;
+  cursor:pointer;color:var(--txt2);
+  text-decoration:none;transition:.15s;
+  border-bottom:3px solid transparent;
+  border-radius:0;border:none;
 }
-.tn-item{padding:7px 13px}
-.tn-item i{font-size:13px}
+.tn-item i{font-size:22px;transition:.15s}
 .tn-item:hover{background:var(--glass2);color:var(--txt3)}
-.tn-item.active{background:var(--glass);color:var(--txt);border-color:var(--border);box-shadow:0 0 10px rgba(232,25,44,.12)}
+.tn-item:hover i{color:var(--txt3)}
+.tn-item.active{color:var(--red);border-bottom:3px solid var(--red)}
 .tn-item.active i{color:var(--red)}
+/* Tooltip label on hover */
+.tn-item::after{
+  content:attr(data-title);
+  position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);
+  background:rgba(0,0,0,.85);color:var(--txt3);
+  font-size:11px;font-weight:600;letter-spacing:.5px;
+  padding:4px 8px;border-radius:5px;white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity .15s;
+  font-family:'Exo 2',sans-serif;
+}
+.tn-item:hover::after{opacity:1}
 
-/* Right: bell + user */
-.tn-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.tn-bell{position:relative;width:34px;height:34px;border-radius:9px;background:var(--glass2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);font-size:13px;transition:.18s}
-.tn-bell:hover{border-color:var(--border);color:var(--txt)}
-.tn-badge{position:absolute;top:7px;right:7px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid var(--bg2)}
-.tn-user{display:flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border-radius:10px;cursor:pointer;border:1px solid var(--border2);background:var(--glass2);transition:.18s}
-.tn-user:hover{border-color:var(--border)}
-.tn-avatar{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--red2),var(--red));display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;letter-spacing:.5px}
-.tn-uname{font-size:11px;font-weight:600;color:var(--txt3);letter-spacing:.3px}
+/* Right utilities */
+.tn-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;align-self:center}
+.tn-bell{position:relative;width:36px;height:36px;border-radius:50%;background:var(--glass2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);font-size:14px;transition:.15s}
+.tn-bell:hover{background:rgba(232,25,44,.1);border-color:var(--border);color:var(--txt)}
+.tn-badge{position:absolute;top:5px;right:5px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--bg2)}
+.tn-user{display:flex;align-items:center;gap:8px;padding:4px 10px 4px 4px;border-radius:20px;cursor:pointer;border:1px solid var(--border2);background:var(--glass2);transition:.15s}
+.tn-user:hover{border-color:var(--border);background:rgba(232,25,44,.06)}
+.tn-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--red2),var(--red));display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:11px;letter-spacing:.5px}
+.tn-uname{font-size:12px;font-weight:600;color:var(--txt3);letter-spacing:.2px}
 
 /* BODY BELOW NAV */
 .body-wrap{display:flex;flex:1;overflow:hidden;min-height:0}
@@ -93,14 +103,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .sb-nav{flex:1;padding:14px 10px;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
 .sb-nav::-webkit-scrollbar{width:3px}
 .sb-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
-.sb-item{padding:11px 14px}
-.sb-item i{width:18px;text-align:center;font-size:15px}
-.sb-item:hover{background:var(--glass2);color:var(--txt3);border-color:var(--border2)}
-.sb-item.active{background:var(--glass);color:var(--txt);border-color:var(--border)}
-.sb-item.active i{color:var(--red)}
 .sb-divider{height:1px;background:var(--border2);margin:8px 14px}
 .sb-footer{padding:12px 10px;border-top:1px solid var(--border2)}
-.sb-logout{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;color:var(--txt2);transition:.18s;font-size:13px;font-weight:500;border:1px solid transparent;width:100%;background:none}
+.sb-logout{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;color:var(--txt2);transition:.15s;font-size:13px;font-weight:500;border:1px solid transparent;width:100%;background:none}
 .sb-logout:hover{background:rgba(232,25,44,.08);color:var(--red);border-color:var(--border)}
 
 /* CONTENT / IFRAME */
@@ -150,10 +155,33 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .chat-spin{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite}
 .chat-loading-txt{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--txt2)}
 
+/* SIDEBAR item standalone styles */
+.sb-item{
+  display:flex;align-items:center;gap:12px;padding:11px 14px;
+  border-radius:9px;cursor:pointer;color:var(--txt2);
+  font-size:13px;font-weight:500;letter-spacing:.3px;
+  transition:.15s;border:1px solid transparent;text-decoration:none;
+}
+.sb-item i{width:18px;text-align:center;font-size:15px}
+.sb-item:hover{background:var(--glass2);color:var(--txt3);border-color:var(--border2)}
+.sb-item.active{background:var(--glass);color:var(--txt);border-color:var(--border)}
+.sb-item.active i{color:var(--red)}
+
 /* RESPONSIVE */
-@media(max-width:960px){.tn-item span{display:none}.tn-item{padding:8px 11px}.tn-uname{display:none}}
-@media(max-width:768px){.sidebar{display:none}.tn-pills{gap:2px}.tn-item{padding:7px 9px}.chat-btn{bottom:20px;right:16px;width:46px;height:46px;font-size:18px}}
-@media(max-width:520px){.tn-bell{display:none}.top-nav{padding:0 12px}.tn-divider,.tn-page{display:none}}
+@media(max-width:960px){.tn-item{width:72px}.tn-uname{display:none}}
+@media(max-width:768px){
+  .sidebar{display:none}
+  .tn-item{width:52px}
+  .chat-btn{bottom:20px;right:16px;width:46px;height:46px;font-size:18px}
+  .top-nav{overflow:visible}
+}
+@media(max-width:520px){
+  .tn-bell{display:none}
+  .top-nav{padding:0 8px}
+  .tn-brand{display:none}
+  .tn-item{width:44px}
+  .tn-item i{font-size:18px}
+}
 </style>
 </head>
 <body>
@@ -174,21 +202,19 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <!-- ===== TOP NAV ===== -->
   <nav class="top-nav">
 
-    <!-- Brand -->
-    <div class="tn-brand">
+    <!-- Brand — only visible on dashboard page -->
+    <div class="tn-brand" id="tnBrand">
       <div class="tn-logo">
         <svg viewBox="0 0 342 512" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 55.2L170.7 512 341.5 55.2c-55.9 16.7-129.1 25.4-170.7 25.4C129.1 80.6 55.9 71.9 0 55.2zm0 0C62.3 36.8 136.7 0 170.7 0c34 0 108.4 36.8 170.8 55.2z" fill="#E8192C"/></svg>
       </div>
       <div class="tn-name"><span>TESLA</span> COOP</div>
-      <div class="tn-divider"></div>
-      <span class="tn-page" id="pageTitle">Home</span>
     </div>
 
-    <!-- Nav pills — primary 3 only; rest in sidebar -->
+    <!-- Nav tabs — Facebook style, icon only -->
     <div class="tn-pills">
-      <a class="tn-item active" data-page="./dashboard.html" data-title="Home"><i class="fas fa-home"></i><span>Home</span></a>
-      <a class="tn-item" data-page="plans.html" data-title="Invest"><i class="fas fa-chart-line"></i><span>Invest</span></a>
-      <a class="tn-item" data-page="withdraw.html" data-title="Withdraw"><i class="fas fa-wallet"></i><span>Withdraw</span></a>
+      <a class="tn-item active" data-page="./dashboard.html" data-title="Home"><i class="fas fa-home"></i></a>
+      <a class="tn-item" data-page="plans.html" data-title="Invest"><i class="fas fa-chart-line"></i></a>
+      <a class="tn-item" data-page="withdraw.html" data-title="Withdraw"><i class="fas fa-wallet"></i></a>
     </div>
 
     <!-- Right: bell + user -->
@@ -292,7 +318,7 @@ const chatIframe=document.getElementById('chatIframe');
 const chatLoading=document.getElementById('chatLoading');
 const chatCloseBtn=document.getElementById('chatCloseBtn');
 const contentFrame=document.getElementById('contentFrame');
-const pageTitle=document.getElementById('pageTitle');
+const tnBrand=document.getElementById('tnBrand');
 const allNavItems=[...document.querySelectorAll('.tn-item,.sb-item')];
 
 window.addEventListener('message',e=>{
@@ -371,7 +397,7 @@ function finishPageLoader(){
 // Hook into iframe load
 contentFrame.addEventListener('load',()=>finishPageLoader());
 
-// Show loader on initial dashboard load too
+// Show loader on initial dashboard load
 startPageLoader('Home');
 
 function handleNav(item){
@@ -379,7 +405,9 @@ function handleNav(item){
   const title=item.getAttribute('data-title');
   allNavItems.forEach(n=>n.classList.remove('active'));
   allNavItems.filter(n=>n.getAttribute('data-page')===page).forEach(n=>n.classList.add('active'));
-  pageTitle.textContent=title;
+  // Show brand only on dashboard (Home)
+  const isDash=page==='./dashboard.html'||page==='dashboard.html';
+  tnBrand.classList.toggle('hidden',!isDash);
   startPageLoader(title);
   contentFrame.src=page;
 }
