@@ -27,33 +27,12 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .ambient2{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(232,25,44,0.07) 0%,transparent 70%);bottom:-100px;left:-100px;pointer-events:none;z-index:0;animation:pulse 8s ease-in-out infinite reverse}
 @keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
 
-/* ---- NAV ---- */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:60px;background:rgba(8,10,12,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border2)}
-.nav-logo{display:flex;align-items:center;gap:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;letter-spacing:2px;text-transform:uppercase}
-.nav-logo svg{width:28px;height:28px}
-.logo-t{color:var(--red)}
-.logo-sub{color:var(--txt2);font-size:10px;letter-spacing:3px;font-weight:500}
-.nav-right{display:flex;align-items:center;gap:12px}
-.nav-bell{position:relative;width:36px;height:36px;border-radius:8px;background:var(--glass2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);font-size:14px;transition:.2s}
-.nav-bell:hover{border-color:var(--border);color:var(--txt)}
-.nav-badge{position:absolute;top:6px;right:6px;width:7px;height:7px;background:var(--red);border-radius:50%;border:1.5px solid var(--bg)}
-.nav-avatar{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--red2),var(--red));display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:14px;cursor:pointer;letter-spacing:1px}
-
-/* ---- BOTTOM NAV (mobile) ---- */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(8,10,12,0.95);backdrop-filter:blur(20px);border-top:1px solid var(--border2);padding:8px 0 max(8px,env(safe-area-inset-bottom))}
-.bnav-items{display:flex;justify-content:space-around}
-.bnav-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 12px;border-radius:10px;cursor:pointer;color:var(--txt2);font-size:10px;letter-spacing:.5px;text-transform:uppercase;font-weight:600;transition:.2s;text-decoration:none}
-.bnav-item.active{color:var(--red)}
-.bnav-item i{font-size:18px}
-.bnav-item:hover{color:var(--txt3)}
-
 /* ---- MAIN LAYOUT ---- */
-main{position:relative;z-index:1;padding:80px 20px 20px;max-width:520px;margin:0 auto}
+main{position:relative;z-index:1;padding:20px 20px 20px;max-width:520px;margin:0 auto}
 @media(min-width:900px){
-  main{max-width:1100px;padding:80px 40px 40px;display:grid;grid-template-columns:300px 1fr;grid-template-rows:auto;gap:24px;align-items:start}
+  main{max-width:1100px;padding:20px 40px 40px;display:grid;grid-template-columns:300px 1fr;grid-template-rows:auto;gap:24px;align-items:start}
   .col-left{grid-column:1;display:flex;flex-direction:column;gap:20px}
   .col-right{grid-column:2;display:flex;flex-direction:column;gap:20px}
-  .bottom-nav{display:none!important}
 }
 
 /* ---- HERO BALANCE CARD ---- */
@@ -191,8 +170,7 @@ main{position:relative;z-index:1;padding:80px 20px 20px;max-width:520px;margin:0
 
 /* ---- MOBILE SPECIFIC ---- */
 @media(max-width:899px){
-  .bottom-nav{display:block}
-  main{padding:76px 16px 90px}
+  main{padding:16px 16px 20px}
   .hero-balance{font-size:38px}
 }
 
@@ -221,20 +199,6 @@ main{position:relative;z-index:1;padding:80px 20px 20px;max-width:520px;margin:0
 <div class="ambient"></div>
 <div class="ambient2"></div>
 
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">
-    <svg viewBox="0 0 342 512" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 55.2L170.7 512 341.5 55.2c-55.9 16.7-129.1 25.4-170.7 25.4C129.1 80.6 55.9 71.9 0 55.2zm0 0C62.3 36.8 136.7 0 170.7 0c34 0 108.4 36.8 170.8 55.2z" fill="#E8192C"/></svg>
-    <div>
-      <div class="logo-t">TESLA</div>
-      <div class="logo-sub">COOPERATIVE</div>
-    </div>
-  </div>
-  <div class="nav-right">
-    <div class="nav-bell"><i class="fas fa-bell"></i><span class="nav-badge"></span></div>
-    <div class="nav-avatar" id="navInitial">TC</div>
-  </div>
-</nav>
 
 <!-- MAIN -->
 <main>
@@ -292,7 +256,7 @@ main{position:relative;z-index:1;padding:80px 20px 20px;max-width:520px;margin:0
       <button class="ref-share-btn" onclick="shareRefLink()"><i class="fas fa-share-alt"></i> Share Referral Link</button>
       <div class="ref-stats">
         <div class="ref-stat"><div class="ref-stat-lbl">Referrals</div><div class="ref-stat-val" id="refCount">0</div></div>
-        <div class="ref-stat"><div class="ref-stat-lbl">Earned</div><div class="ref-stat-val" id="refEarnings">₦0</div></div>
+        <div class="ref-stat"><div class="ref-stat-lbl">Earned</div><div class="ref-stat-val" id="refEarnings">$0</div></div>
       </div>
       <div id="refList" style="margin-top:10px"></div>
     </div>
@@ -306,7 +270,7 @@ main{position:relative;z-index:1;padding:80px 20px 20px;max-width:520px;margin:0
         <div class="sec-title"><i class="fas fa-hand-holding-usd"></i> Claimable Earnings</div>
       </div>
       <div class="claim-amount-lbl">Ready to Withdraw</div>
-      <div class="claim-amount" id="totalPending">₦0.00</div>
+      <div class="claim-amount" id="totalPending">$0.00</div>
       <button class="claim-btn" id="claimAllBtn" onclick="claimAll()"><i class="fas fa-bolt"></i> Claim All Earnings</button>
       <div class="claim-timer" id="claimCooldown" style="display:none"></div>
     </div>
@@ -322,16 +286,6 @@ main{position:relative;z-index:1;padding:80px 20px 20px;max-width:520px;margin:0
   </div>
 </main>
 
-<!-- BOTTOM NAV (mobile) -->
-<nav class="bottom-nav">
-  <div class="bnav-items">
-    <a href="/dashboard.html" class="bnav-item active"><i class="fas fa-home"></i>Home</a>
-    <a href="/plans.html" class="bnav-item"><i class="fas fa-chart-line"></i>Invest</a>
-    <a href="#" class="bnav-item" onclick="openModal();return false"><i class="fas fa-wallet"></i>Fund</a>
-    <a href="/transactions.html" class="bnav-item"><i class="fas fa-list"></i>History</a>
-    <a href="/profile.html" class="bnav-item"><i class="fas fa-user"></i>Profile</a>
-  </div>
-</nav>
 
 <!-- FUND MODAL -->
 <div id="fundModal" class="modal">
@@ -352,7 +306,7 @@ main{position:relative;z-index:1;padding:80px 20px 20px;max-width:520px;margin:0
         <div><div class="bank-lbl">Account Name</div><div class="bank-val">Baxi-Nkechi Jacob</div></div>
       </div>
     </div>
-    <label class="inp-lbl">Amount Sent (₦)</label>
+    <label class="inp-lbl">Amount Sent ($)</label>
     <input type="number" id="amountSent" class="inp-field" placeholder="Enter amount" min="1" step="0.01">
     <label class="inp-lbl">Payment Proof <span style="color:var(--red)">*</span></label>
     <label for="proofUpload" class="file-zone" id="fileUploadArea">
@@ -487,7 +441,7 @@ window.claimEarnings=async id=>{
       balance:(d.balance||0)+amt,totalClaimed:(d.totalClaimed||0)+amt,
       [`investments/${id}/totalClaimed`]:claimed,[`investments/${id}/lastClaim`]:Date.now()
     });
-    alert(`✅ Successfully claimed ₦${amt.toFixed(2)}!`);
+    alert(`✅ Successfully claimed $${amt.toFixed(2)}!`);
   }catch{alert('Failed to claim. Try again.')}
 };
 
@@ -504,16 +458,15 @@ window.claimAll=async()=>{
     const snap=await get(ref(database,`users/${user.uid}`));
     const d=snap.val();
     await update(ref(database,`users/${user.uid}`),{...updates,balance:(d.balance||0)+total,totalClaimed:(d.totalClaimed||0)+total});
-    alert(`✅ Successfully claimed ₦${total.toFixed(2)}!`);
+    alert(`✅ Successfully claimed $${total.toFixed(2)}!`);
   }catch{alert('Failed to claim. Try again.')}
 };
 
-const fmt=n=>`₦${(n||0).toLocaleString('en-NG',{minimumFractionDigits:2})}`;
+const fmt=n=>`$${(n||0).toLocaleString('en-US',{minimumFractionDigits:2})}`;
 
 const updateUI=async d=>{
   userData=d;
   const name=d.fullName||d.email?.split('@')[0]||'Investor';
-  document.getElementById('navInitial').textContent=name.substring(0,2).toUpperCase();
   const firstName=name.split(' ')[0];
   document.getElementById('welcomeName').textContent=firstName;
   const now=new Date();
@@ -543,7 +496,7 @@ const updateUI=async d=>{
   const level1Count=(d.referrals||[]).filter(r=>r.level===1).length;
   const level2Count=(d.referrals||[]).filter(r=>r.level===2).length;
   document.getElementById('refCount').textContent=level1Count+level2Count;
-  document.getElementById('refEarnings').textContent=`₦${(d.totalReferralEarnings||0).toLocaleString('en-NG')}`;
+  document.getElementById('refEarnings').textContent=`$${(d.totalReferralEarnings||0).toLocaleString('en-US')}`;
 
   const refList=document.getElementById('refList');
   if((d.referrals||[]).length>0){
@@ -574,7 +527,7 @@ const updateUI=async d=>{
 
     if(totalPending>=1||earliestClaim){
       document.getElementById('pendingSection').style.display='block';
-      document.getElementById('totalPending').textContent=`₦${totalPending.toFixed(2)}`;
+      document.getElementById('totalPending').textContent=`$${totalPending.toFixed(2)}`;
       const allClaimable=!earliestClaim||canClaim({lastClaim:earliestClaim});
       document.getElementById('claimAllBtn').disabled=!allClaimable||totalPending<1;
       if(!allClaimable){

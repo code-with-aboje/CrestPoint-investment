@@ -9,17 +9,16 @@
 <style>
 :root{
   --red:#e8192c;--red2:#c0111f;--red3:#ff3347;
-  --bg:#080a0c;--bg2:#0d1014;--bg3:#12171c;
-  --glass:rgba(232,25,44,.10);--glass2:rgba(255,255,255,.04);
-  --border:rgba(232,25,44,.25);--border2:rgba(255,255,255,.07);
+  --bg:#0e1117;--bg2:#13181f;--bg3:#181e27;
+  --glass:rgba(232,25,44,.10);--glass2:rgba(255,255,255,.05);
+  --border:rgba(232,25,44,.25);--border2:rgba(255,255,255,.09);
   --txt:#f0f2f5;--txt2:#8a9bb0;--txt3:#c5cdd8;--topnav-h:72px;
   --R:#CC0000;--Rg:rgba(204,0,0,.15);--Rb:rgba(204,0,0,.06);
-  --g1:#1a1d24;--g2:#21252e;--g3:#2a2f3a;
-  --line:rgba(255,255,255,.10);--M:#9aa3b0;--dim:#555;--gold:#C9A84C;
+  --g1:#1c2029;--g2:#232830;--g3:#2c3140;
+  --line:rgba(255,255,255,.11);--M:#9aa3b0;--dim:#666;--gold:#C9A84C;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--txt);height:100vh;overflow:hidden}
-body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
@@ -115,7 +114,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .amount-field{margin-bottom:10px}
 .amount-field label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--M);font-family:'DM Mono',monospace;display:block;margin-bottom:6px}
 .amount-input-wrap{position:relative}
-.amount-input-wrap span{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--M)}
 .amount-input{width:100%;padding:12px 12px 12px 30px;background:var(--g2);border:1px solid var(--line);border-radius:10px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;outline:none;transition:border-color .2s}
 .amount-input:focus{border-color:rgba(204,0,0,.5)}
 .amount-input::placeholder{color:var(--dim)}
@@ -198,7 +196,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
             <div class="pl-page-name" id="plPageName">Home</div>
           </div>
         </div>
-        <iframe class="content-frame" id="contentFrame" src="./dashboard.html"></iframe>
+        <iframe class="content-frame" id="contentFrame"></iframe>
       </div>
     </div>
   </div>
@@ -245,7 +243,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="amount-field">
         <label>Enter Amount</label>
         <div class="amount-input-wrap">
-          <span>$</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--M);position:absolute;left:12px;top:50%;transform:translateY(-50%)">$</span>
           <input class="amount-input" id="im_input" type="number" placeholder="0">
         </div>
         <div class="amount-hint"><span id="im_range_hint">Min — Max</span><span class="rec" id="im_rec_hint"></span></div>
@@ -266,11 +264,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="wb-top">
       <div class="wb-icon"><i class="fas fa-gift"></i></div>
       <div class="wb-eyebrow">// Welcome Bonus</div>
-      <div class="wb-amount">$1K</div>
+      <div class="wb-amount">$10</div>
       <div class="wb-sub">credited to your balance</div>
     </div>
     <div class="wb-body">
-      <p>Congratulations on your first investment! We've added a $1,000 welcome bonus to your account. Your journey to financial growth starts now.</p>
+      <p>Congratulations on your first investment! We've added a $10 welcome bonus to your account. Your journey to financial growth starts now.</p>
       <button class="btn-gold" id="welcomeCloseBtn"><i class="fas fa-check"></i> AWESOME, THANKS!</button>
     </div>
   </div>
@@ -336,7 +334,7 @@ imBtn.addEventListener('click',async()=>{
     const now=Date.now(),uRef=ref(database,'users/'+uid);
     const snap=await get(uRef),cur=snap.val()||{};
     const isFirst=!cur.investments||!Object.keys(cur.investments).length;
-    const bonus=isFirst?1000:0,daily=Math.round(amount*sel.income_pct);
+    const bonus=isFirst?10:0,daily=Math.round(amount*sel.income_pct);
     const invKey=push(ref(database,`users/${uid}/investments`)).key;
     const upd={balance:(bal-amount)+bonus,[`investments/${invKey}`]:{planId:sel._id,planName:sel.name,amount,dailyIncome:daily,duration:sel.dur,startDate:now,maturityDate:now+2592000000,status:'active',totalClaimed:0}};
     if(isFirst){upd.firstInvestmentDate=new Date().toISOString();upd.welcomeBonusReceived=true}
@@ -377,6 +375,9 @@ onAuthStateChanged(auth,async user=>{
     try{await get(ref(database,'users/'+user.uid))}catch(e){console.error(e)}
     authLoader.classList.add('hidden');
     mainContainer.style.display='flex';
+    // Set src AFTER shell is visible so load event is reliably caught
+    startLoader('Home');
+    contentFrame.src='./dashboard.html';
   }else window.location.href='/login';
 });
 window.handleLogout=async()=>{try{const{getAuth}=await import("https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js");await getAuth().signOut();window.location.href='/login'}catch(e){console.error(e)}};
@@ -392,11 +393,17 @@ chatModal.addEventListener('click',e=>{if(e.target===chatModal)chatModal.classLi
 
 /* ── PAGE LOADER ── */
 const pageLoader=$('pageLoader'),plFill=$('plBarFill'),plName=$('plPageName');
-let bar;
-const startLoader=t=>{pageLoader.classList.add('visible');contentFrame.classList.add('loading');plName.textContent=t||'Loading';plFill.style.width='0%';let p=0;clearInterval(bar);bar=setInterval(()=>{p+=p<75?Math.random()*8+3:.5;plFill.style.width=Math.min(p,90)+'%'},120)};
-const finishLoader=()=>{clearInterval(bar);plFill.style.transition='width .3s';plFill.style.width='100%';setTimeout(()=>{pageLoader.classList.remove('visible');contentFrame.classList.remove('loading');plFill.style.transition='';plFill.style.width='0%'},350)};
+let bar,safetyTimer;
+const startLoader=t=>{
+  clearTimeout(safetyTimer);
+  pageLoader.classList.add('visible');contentFrame.classList.add('loading');
+  plName.textContent=t||'Loading';plFill.style.width='0%';
+  let p=0;clearInterval(bar);
+  bar=setInterval(()=>{p+=p<75?Math.random()*8+3:.5;plFill.style.width=Math.min(p,90)+'%'},120);
+  safetyTimer=setTimeout(finishLoader,6000);
+};
+const finishLoader=()=>{clearTimeout(safetyTimer);clearInterval(bar);plFill.style.transition='width .3s';plFill.style.width='100%';setTimeout(()=>{pageLoader.classList.remove('visible');contentFrame.classList.remove('loading');plFill.style.transition='';plFill.style.width='0%'},350)};
 contentFrame.addEventListener('load',finishLoader);
-startLoader('Home');
 
 allNavItems.forEach(item=>item.addEventListener('click',()=>{
   const page=item.dataset.page,title=item.dataset.title;
