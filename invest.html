@@ -13,7 +13,7 @@
   --glass:rgba(232,25,44,0.10);--glass2:rgba(255,255,255,0.04);
   --border:rgba(232,25,44,0.25);--border2:rgba(255,255,255,0.07);
   --txt:#f0f2f5;--txt2:#8a9bb0;--txt3:#c5cdd8;
-  --sidebar:220px;--topnav-h:64px;
+  --sidebar:220px;--topnav-h:72px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--txt);height:100vh;overflow:hidden}
@@ -34,7 +34,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* LAYOUT */
 .shell{display:flex;height:100vh;width:100%;position:relative;z-index:1;flex-direction:column}
 
-/* TOP NAV — Facebook style */
+/* TOP NAV */
 .top-nav{
   position:relative;z-index:100;height:var(--topnav-h);flex-shrink:0;
   background:var(--bg2);
@@ -42,50 +42,41 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   box-shadow:0 2px 12px rgba(0,0,0,.5);
   padding:0 16px;
   display:grid;
-  grid-template-columns:1fr auto 1fr;
+  grid-template-columns:auto 1fr auto;
   align-items:stretch;
 }
 
-/* Brand — left column, only visible on dashboard */
+/* Brand — left, only on dashboard */
 .tn-brand{
   display:flex;align-items:center;gap:10px;
-  min-width:0;align-self:center;
+  padding-right:16px;align-self:center;
 }
 .tn-brand.hidden{visibility:hidden}
 .tn-logo svg{width:28px;height:28px;filter:drop-shadow(0 0 8px rgba(232,25,44,.6))}
 .tn-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px;letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap}
 .tn-name span{color:var(--red)}
 
-/* Center tab strip — Facebook style */
+/* Tab strip */
 .tn-pills{display:flex;align-items:stretch;height:100%}
 .tn-item{
   position:relative;
-  display:flex;align-items:center;justify-content:center;
-  width:96px;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;
+  min-width:90px;padding:0 18px;height:100%;
   cursor:pointer;color:var(--txt2);
   text-decoration:none;transition:.15s;
-  border-bottom:3px solid transparent;
-  border-radius:0;border:none;
+  border-top:3px solid transparent;
+  background:transparent;
 }
-.tn-item i{font-size:22px;transition:.15s}
-.tn-item:hover{background:var(--glass2);color:var(--txt3)}
-.tn-item:hover i{color:var(--txt3)}
-.tn-item.active{color:var(--red);border-bottom:3px solid var(--red)}
-.tn-item.active i{color:var(--red)}
-/* Tooltip label on hover */
-.tn-item::after{
-  content:attr(data-title);
-  position:absolute;bottom:-30px;left:50%;transform:translateX(-50%);
-  background:rgba(0,0,0,.85);color:var(--txt3);
-  font-size:11px;font-weight:600;letter-spacing:.5px;
-  padding:4px 8px;border-radius:5px;white-space:nowrap;
-  opacity:0;pointer-events:none;transition:opacity .15s;
-  font-family:'Exo 2',sans-serif;
-}
-.tn-item:hover::after{opacity:1}
+.tn-item i{font-size:24px;transition:.15s}
+.tn-item span{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;font-family:'Exo 2',sans-serif;transition:.15s}
+.tn-item:hover{background:var(--glass2)}
+.tn-item:hover i,.tn-item:hover span{color:var(--txt3)}
+.tn-item.active{border-top:3px solid var(--red)}
+.tn-item.active i,.tn-item.active span{color:var(--red)}
 
 /* Right utilities */
-.tn-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;align-self:center}
+.tn-right{display:flex;align-items:center;justify-content:flex-end;gap:8px;align-self:center;padding-left:16px}
 .tn-bell{position:relative;width:36px;height:36px;border-radius:50%;background:var(--glass2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);font-size:14px;transition:.15s}
 .tn-bell:hover{background:rgba(232,25,44,.1);border-color:var(--border);color:var(--txt)}
 .tn-badge{position:absolute;top:5px;right:5px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--bg2)}
@@ -168,20 +159,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .sb-item.active i{color:var(--red)}
 
 /* RESPONSIVE */
-@media(max-width:960px){.tn-item{width:72px}.tn-uname{display:none}}
-@media(max-width:768px){
-  .sidebar{display:none}
-  .tn-item{width:52px}
-  .chat-btn{bottom:20px;right:16px;width:46px;height:46px;font-size:18px}
-  .top-nav{overflow:visible}
-}
-@media(max-width:520px){
-  .tn-bell{display:none}
-  .top-nav{padding:0 8px}
-  .tn-brand{display:none}
-  .tn-item{width:44px}
-  .tn-item i{font-size:18px}
-}
+@media(max-width:960px){.tn-uname{display:none}.tn-item{min-width:72px;padding:0 12px}}
+@media(max-width:768px){.sidebar{display:none}.tn-item{min-width:60px;padding:0 8px}.chat-btn{bottom:20px;right:16px;width:46px;height:46px;font-size:18px}}
+@media(max-width:520px){.tn-bell{display:none}.top-nav{padding:0 8px}.tn-brand{display:none}.tn-item{min-width:50px;padding:0 6px}.tn-item i{font-size:20px}.tn-item span{font-size:10px}}
 </style>
 </head>
 <body>
@@ -210,11 +190,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="tn-name"><span>TESLA</span> COOP</div>
     </div>
 
-    <!-- Nav tabs — Facebook style, icon only -->
+    <!-- Nav tabs — icon + label style -->
     <div class="tn-pills">
-      <a class="tn-item active" data-page="./dashboard.html" data-title="Home"><i class="fas fa-home"></i></a>
-      <a class="tn-item" data-page="plans.html" data-title="Invest"><i class="fas fa-chart-line"></i></a>
-      <a class="tn-item" data-page="withdraw.html" data-title="Withdraw"><i class="fas fa-wallet"></i></a>
+      <a class="tn-item active" data-page="./dashboard.html" data-title="Home"><i class="fas fa-home"></i><span>Home</span></a>
+      <a class="tn-item" data-page="plans.html" data-title="Invest"><i class="fas fa-chart-line"></i><span>Invest</span></a>
+      <a class="tn-item" data-page="withdraw.html" data-title="Withdraw"><i class="fas fa-wallet"></i><span>Withdraw</span></a>
     </div>
 
     <!-- Right: bell + user -->
