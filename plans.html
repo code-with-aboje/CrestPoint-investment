@@ -14,7 +14,8 @@
   --gold:#C9A84C;--green:#22c55e;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--T);min-height:100vh;padding-bottom:100px;overflow-x:hidden}
+html,body{height:100%;overflow-x:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--T);min-height:100vh;padding-bottom:100px}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
 
 /* HERO */
@@ -49,88 +50,22 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .plan-tier-sub{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--M);margin-bottom:3px}
 .plan-badge{background:var(--R);color:#fff;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;font-family:'DM Mono',monospace;white-space:nowrap}
 .plan-badge.gold{background:var(--gold);color:#000}
-
 .card-body{padding:14px 18px 18px}
 .cost-label{font-size:10px;letter-spacing:1.5px;color:var(--M);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:2px}
 .cost-range{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:var(--M)}
 .cost-range span{color:var(--T);font-size:22px}
-
 .daily-row{display:flex;align-items:center;gap:8px;background:var(--Rb);border:1px solid rgba(204,0,0,0.18);border-radius:8px;padding:8px 11px;margin:10px 0}
 .daily-row i{color:var(--R);font-size:11px}
 .daily-row span{font-size:12px;color:var(--M)}
 .daily-row strong{font-family:'DM Mono',monospace;color:var(--T);margin-left:auto;font-size:13px}
-
-/* Recommendation tag */
 .rec-tag{font-size:11px;color:var(--M);background:var(--g2);border:1px solid var(--line);border-radius:6px;padding:5px 9px;margin-bottom:10px;line-height:1.5}
 .rec-tag i{color:var(--gold);margin-right:4px;font-size:10px}
-
 .divider{height:1px;background:var(--line);margin:12px 0}
 .feat-list{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .feat{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--M)}
 .feat::before{content:'';width:4px;height:4px;border-radius:50%;background:var(--R);flex-shrink:0}
 .invest-btn{width:100%;padding:12px;background:var(--R);border:none;border-radius:10px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px}
 .invest-btn:hover{background:#a80000;box-shadow:0 4px 20px rgba(204,0,0,0.3)}
-
-/* MODAL OVERLAY */
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;backdrop-filter:blur(6px);padding:0;align-items:flex-end;justify-content:center}
-.overlay.open{display:flex;animation:fadeIn .2s}
-@media(min-width:600px){.overlay{padding:20px;align-items:center}}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-
-.modal-panel{width:100%;max-width:100%;background:var(--g1);border:1px solid var(--line);border-radius:22px 22px 0 0;display:flex;flex-direction:column;max-height:88vh;animation:slideUp .28s}
-@media(min-width:600px){.modal-panel{max-width:440px;border-radius:20px;max-height:90vh}}
-@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
-
-.modal-top{background:linear-gradient(135deg,var(--R),#8B0000);padding:14px 20px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.modal-top::after{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,0.06);border-radius:50%}
-.mt-info .mt-label{font-size:10px;letter-spacing:3px;color:rgba(255,255,255,0.65);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:2px}
-.mt-info .mt-plan{font-size:13px;color:rgba(255,255,255,0.65);margin-top:3px}
-.mt-amount{font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:1px;line-height:1;position:relative;z-index:1}
-
-.modal-body{padding:12px 20px 0;overflow-y:auto;flex:1}
-.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
-.meta-cell{background:var(--g2);border-radius:10px;padding:9px}
-.mc-l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--M);font-family:'DM Mono',monospace;margin-bottom:3px}
-.mc-v{font-size:14px;font-weight:600;color:var(--T)}
-
-/* Amount input */
-.amount-field{margin-bottom:10px}
-.amount-field label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--M);font-family:'DM Mono',monospace;display:block;margin-bottom:6px}
-.amount-input-wrap{position:relative}
-.amount-input-wrap span{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--M)}
-.amount-input{width:100%;padding:12px 12px 12px 30px;background:var(--g2);border:1px solid var(--line);border-radius:10px;color:var(--T);font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;outline:none;transition:border-color .2s}
-.amount-input:focus{border-color:rgba(204,0,0,0.5)}
-.amount-input::placeholder{color:var(--dim)}
-.amount-hint{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--M)}
-.amount-hint .rec{color:var(--gold)}
-.amount-rec-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
-.rec-chip{padding:4px 10px;background:var(--g3);border:1px solid var(--line);border-radius:20px;font-size:11px;font-family:'DM Mono',monospace;color:var(--M);cursor:pointer;transition:all .15s}
-.rec-chip:hover,.rec-chip.active{background:var(--Rg);border-color:rgba(204,0,0,0.35);color:var(--T)}
-
-.modal-err{background:var(--Rb);border:1px solid rgba(204,0,0,0.2);border-radius:8px;padding:9px 11px;font-size:12px;color:#ff7070;margin-bottom:12px;display:none}
-.modal-err.show{display:block}
-
-/* Sticky button bar always visible */
-.modal-btns{display:flex;gap:10px;padding:14px 20px 24px;flex-shrink:0;background:var(--g1);border-top:1px solid var(--line)}
-.btn-ghost{flex:1;padding:14px 12px;background:var(--g2);border:1px solid var(--line);border-radius:12px;color:var(--T);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s}
-.btn-ghost:hover{border-color:rgba(255,255,255,0.2);background:var(--g3)}
-.btn-red{flex:2;padding:14px 12px;background:var(--R);border:none;border-radius:12px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 18px rgba(204,0,0,0.3)}
-.btn-red:hover:not(:disabled){background:#a80000}
-.btn-red:disabled{opacity:.45;cursor:not-allowed}
-
-/* WELCOME */
-.welcome-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:600;padding:20px;align-items:center;justify-content:center}
-.welcome-overlay.open{display:flex;animation:fadeIn .3s}
-.welcome-panel{width:100%;max-width:370px;background:var(--g1);border:1px solid rgba(201,168,76,0.3);border-radius:22px;overflow:hidden;animation:slideUp .4s}
-.wb-top{background:linear-gradient(135deg,#211a00,#2e2200);padding:28px 22px;text-align:center;border-bottom:1px solid rgba(201,168,76,0.15)}
-.wb-icon{width:60px;height:60px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:26px;color:var(--gold)}
-.wb-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
-.wb-amount{font-family:'Bebas Neue',sans-serif;font-size:68px;color:var(--gold);line-height:1;letter-spacing:2px}
-.wb-sub{font-size:13px;color:var(--M);margin-top:3px}
-.wb-body{padding:18px 22px}
-.wb-body p{font-size:13px;color:var(--M);line-height:1.6;margin-bottom:14px}
-.btn-gold{width:100%;padding:13px;background:var(--gold);border:none;border-radius:10px;color:#000;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;cursor:pointer}
-.btn-gold:hover{opacity:.9}
 
 .spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,0.15);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 .spinner-sm{border-top-color:var(--R);border-color:var(--Rb);width:12px;height:12px}
@@ -160,62 +95,6 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="plans-grid" id="grid"></div>
 </div>
 
-<!-- INVEST MODAL -->
-<div class="overlay" id="modal">
-  <div class="modal-panel">
-    <div class="modal-top">
-      <div class="mt-info">
-        <div class="mt-label">Investing in</div>
-        <div class="mt-amount" id="m_amount">—</div>
-        <div class="mt-plan" id="m_plan"></div>
-      </div>
-    </div>
-    <div class="modal-body">
-      <div class="meta-grid">
-        <div class="meta-cell"><div class="mc-l">Daily Income</div><div class="mc-v" id="m_daily"></div></div>
-        <div class="meta-cell"><div class="mc-l">Duration</div><div class="mc-v" id="m_dur"></div></div>
-      </div>
-
-      <!-- Amount input -->
-      <div class="amount-field">
-        <label>Enter Amount</label>
-        <div class="amount-input-wrap">
-          <span>$</span>
-          <input class="amount-input" id="m_input" type="number" placeholder="0">
-        </div>
-        <div class="amount-hint">
-          <span id="m_range_hint">Min — Max</span>
-          <span class="rec" id="m_rec_hint"></span>
-        </div>
-        <div class="amount-rec-list" id="m_chips"></div>
-      </div>
-
-      <div class="modal-err" id="m_err"></div>
-    </div>
-    <!-- Sticky button footer always visible -->
-    <div class="modal-btns">
-      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
-      <button class="btn-red" id="m_btn"><i class="fas fa-rocket"></i> INVEST NOW</button>
-    </div>
-  </div>
-</div>
-
-<!-- WELCOME MODAL -->
-<div class="welcome-overlay" id="welcomeModal">
-  <div class="welcome-panel">
-    <div class="wb-top">
-      <div class="wb-icon"><i class="fas fa-gift"></i></div>
-      <div class="wb-eyebrow">// Welcome Bonus</div>
-      <div class="wb-amount">$1K</div>
-      <div class="wb-sub">credited to your balance</div>
-    </div>
-    <div class="wb-body">
-      <p>Congratulations on your first investment! We've added a $1,000 welcome bonus to your account. Your journey to financial growth starts now.</p>
-      <button class="btn-gold" onclick="closeWelcome()"><i class="fas fa-check"></i> AWESOME, THANKS!</button>
-    </div>
-  </div>
-</div>
-
 <script type="module">
 import{onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import{ref,get,update,push}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
@@ -223,24 +102,22 @@ import{auth,database}from"./lib/firebase.js";
 
 /* ── PLAN DEFINITIONS ── */
 const P={
-  starter: {name:'Starter', min:200,   max:500,   recs:[200,300,500],   rec:'Great for beginners',     income_pct:.25, dur:'30 days'},
-  bronze:  {name:'Bronze',  min:500,   max:700,   recs:[500,600,700],   rec:'Most popular choice',     income_pct:.25, dur:'30 days'},
-  silver:  {name:'Silver',  min:700,   max:1500,  recs:[700,1000,1500], rec:'Steady mid-range returns', income_pct:.25, dur:'30 days'},
-  gold:    {name:'Gold',    min:1500,  max:4000,  recs:[1500,2500,4000],rec:'Best value for growth',   income_pct:.25, dur:'30 days', featured:1,badge:'Best Value',goldBadge:1},
-  platinum:{name:'Platinum',min:4000,  max:10000, recs:[4000,7000,10000],rec:'Elite high-yield tier',  income_pct:.25, dur:'30 days', badge:'Elite'},
+  starter: {name:'Starter', min:200,   max:500,   recs:[200,300,500],   rec:'Great for beginners',      income_pct:.25, dur:'30 days'},
+  bronze:  {name:'Bronze',  min:500,   max:700,   recs:[500,600,700],   rec:'Most popular choice',      income_pct:.25, dur:'30 days'},
+  silver:  {name:'Silver',  min:700,   max:1500,  recs:[700,1000,1500], rec:'Steady mid-range returns',  income_pct:.25, dur:'30 days'},
+  gold:    {name:'Gold',    min:1500,  max:4000,  recs:[1500,2500,4000],rec:'Best value for growth',    income_pct:.25, dur:'30 days', featured:1,badge:'Best Value',goldBadge:1},
+  platinum:{name:'Platinum',min:4000,  max:10000, recs:[4000,7000,10000],rec:'Elite high-yield tier',   income_pct:.25, dur:'30 days', badge:'Elite'},
 };
 const planOrder=['starter','bronze','silver','gold','platinum'];
 const badges={starter:'Beginner',bronze:'Popular',gold:'Best Value',platinum:'Elite'};
 const fmt=n=>`$${Number(n).toLocaleString('en-US',{minimumFractionDigits:2})}`;
 const fmtShort=n=>n>=1000?`$${n/1000}K`:`$${n}`;
 
-let user,bal=0,sel=null,userData={};
+let user,bal=0,userData={};
 
 const el=id=>document.getElementById(id);
 const showErr=m=>{el('errorMsg').textContent=m;el('errorBanner').classList.add('show')};
 const showWarn=m=>{el('warningMsg').textContent=m;el('warningBanner').classList.add('show')};
-window.closeWelcome=()=>{el('welcomeModal').classList.remove('open');document.body.style.overflow=''};
-window.closeModal=()=>el('modal').classList.remove('open');
 
 /* ── RENDER CARDS ── */
 const render=()=>{
@@ -269,8 +146,10 @@ const render=()=>{
           <div class="feat">Auto-completes at maturity</div>
           <div class="feat">24/7 Support</div>
         </div>
-        <button class="invest-btn" onclick="openPlan('${id}')"><i class="fas fa-rocket"></i> INVEST NOW</button>
+        <button class="invest-btn" data-plan-id="${id}"><i class="fas fa-rocket"></i> INVEST NOW</button>
       </div>`;
+    // Attach click via event delegation to avoid inline onclick issues
+    card.querySelector('.invest-btn').addEventListener('click',()=>openPlan(id));
     g.appendChild(card);
   });
 };
@@ -285,91 +164,45 @@ onAuthStateChanged(auth,async u=>{
   render();
 });
 
-/* ── OPEN MODAL ── */
-window.openPlan=id=>{
-  sel=P[id];sel._id=id;
-  const dailyExample=Math.round(sel.min*sel.income_pct);
-  el('m_plan').textContent=sel.name+' Plan';
-  el('m_amount').textContent=fmtShort(sel.min)+' – '+fmtShort(sel.max);
-  el('m_daily').textContent=`~${fmt(dailyExample)} / day`;
-  el('m_dur').textContent=sel.dur;
-  el('m_range_hint').textContent=`Min ${fmt(sel.min)} — Max ${fmt(sel.max)}`;
-  el('m_rec_hint').textContent='★ Recommended: '+fmtShort(sel.recs[1]);
-  el('m_err').classList.remove('show');
-  // chips
-  const chips=el('m_chips');chips.innerHTML='';
-  sel.recs.forEach(v=>{
-    const btn=document.createElement('button');
-    btn.className='rec-chip';btn.textContent=fmtShort(v);
-    btn.onclick=()=>{
-      el('m_input').value=v;
-      chips.querySelectorAll('.rec-chip').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      updateAmount();
-    };
-    chips.appendChild(btn);
-  });
-  el('m_input').value='';
-  el('modal').classList.add('open');
-};
+/* ── OPEN PLAN — send to PARENT via postMessage ── */
+/* The modal lives in the parent (invest.html) to avoid iframe viewport clipping */
+function openPlan(id){
+  const plan=P[id];
+  // Send full plan data + current balance to parent
+  window.parent.postMessage({
+    type:'OPEN_INVEST_MODAL',
+    planId:id,
+    plan:{
+      name:plan.name,
+      min:plan.min,
+      max:plan.max,
+      recs:plan.recs,
+      rec:plan.rec,
+      income_pct:plan.income_pct,
+      dur:plan.dur
+    },
+    balance:bal,
+    uid:user?user.uid:null
+  },'*');
+}
 
-/* live amount display */
-const updateAmount=()=>{
-  const v=Number(el('m_input').value)||0;
-  if(v>=sel.min&&v<=sel.max){
-    const daily=Math.round(v*sel.income_pct);
-    el('m_daily').textContent=fmt(daily)+' / day';
-  }
-};
-el('m_input').addEventListener('input',updateAmount);
+/* ── LISTEN FOR RESULTS FROM PARENT ── */
+/* Parent does the DB write and sends back the result */
+window.addEventListener('message',e=>{
+  if(!e.data||typeof e.data!=='object')return;
 
-/* ── INVEST ── */
-el('m_btn').onclick=async()=>{
-  const amount=Number(el('m_input').value);
-  const err=el('m_err'),btn=el('m_btn');
-  err.classList.remove('show');
-  if(!user){err.textContent='Please log in.';err.classList.add('show');return;}
-  if(!amount||amount<sel.min||amount>sel.max){
-    err.textContent=`Enter an amount between ${fmt(sel.min)} and ${fmt(sel.max)}.`;
-    err.classList.add('show');return;
-  }
-  if(bal<amount){err.textContent='Insufficient funds. Please top up your wallet.';err.classList.add('show');return;}
-  btn.disabled=1;btn.innerHTML='<span class="spinner"></span>';
-  try{
-    const now=Date.now(),userRef=ref(database,'users/'+user.uid);
-    const snap=await get(userRef),cur=snap.val()||{};
-    const isFirst=!cur.investments||Object.keys(cur.investments).length===0;
-    const bonus=isFirst?1000:0;
-    const dailyIncome=Math.round(amount*sel.income_pct);
-    const invKey=push(ref(database,`users/${user.uid}/investments`)).key;
-    const updates={
-      balance:(bal-amount)+bonus,
-      [`investments/${invKey}`]:{planId:sel._id,planName:sel.name,amount,dailyIncome,duration:sel.dur,startDate:now,maturityDate:now+(86400000*30),status:'active',totalClaimed:0}
-    };
-    if(isFirst){updates.firstInvestmentDate=new Date().toISOString();updates.welcomeBonusReceived=true;}
-    await update(userRef,updates);
-    // referral
-    try{
-      const ref2=cur.referredBy;
-      if(ref2){
-        const l1=await get(ref(database,`users/${ref2}`));
-        if(l1.exists()){const l1d=l1.val(),l1c=amount*.10;
-          await update(ref(database,`users/${ref2}`),{balance:(l1d.balance||0)+l1c,totalReferralEarnings:(l1d.totalReferralEarnings||0)+l1c});
-          if(l1d.referredBy){const l2=await get(ref(database,`users/${l1d.referredBy}`));
-            if(l2.exists()){const l2d=l2.val(),l2c=amount*.20;
-              await update(ref(database,`users/${l1d.referredBy}`),{balance:(l2d.balance||0)+l2c,totalReferralEarnings:(l2d.totalReferralEarnings||0)+l2c});}
-          }
-        }
-      }
-    }catch(e){console.error('Referral:',e);}
-    bal=(bal-amount)+bonus;
+  // Parent confirmed investment success — update balance display
+  if(e.data.type==='INVEST_SUCCESS'){
+    bal=e.data.newBalance;
     el('balance').textContent=fmt(bal);
-    closeModal();
-    if(isFirst){setTimeout(()=>{el('welcomeModal').classList.add('open');document.body.style.overflow='hidden';},500);}
-    else alert('✓ Investment successful!');
-  }catch(e){err.textContent='Error: '+e.message;err.classList.add('show');}
-  finally{btn.disabled=0;btn.innerHTML='<i class="fas fa-rocket"></i> INVEST NOW';}
-};
+  }
+
+  // Parent confirmed investment success AND it was the first investment
+  if(e.data.type==='INVEST_SUCCESS_FIRST'){
+    bal=e.data.newBalance;
+    el('balance').textContent=fmt(bal);
+  }
+});
 </script>
 </body>
 </html>

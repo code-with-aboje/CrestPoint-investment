@@ -2,121 +2,88 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Tesla Cooperative — Platform</title>
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:wght@300;400;500;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root{
   --red:#e8192c;--red2:#c0111f;--red3:#ff3347;
   --bg:#080a0c;--bg2:#0d1014;--bg3:#12171c;
-  --glass:rgba(232,25,44,0.10);--glass2:rgba(255,255,255,0.04);
-  --border:rgba(232,25,44,0.25);--border2:rgba(255,255,255,0.07);
-  --txt:#f0f2f5;--txt2:#8a9bb0;--txt3:#c5cdd8;
-  --sidebar:220px;--topnav-h:72px;
+  --glass:rgba(232,25,44,.10);--glass2:rgba(255,255,255,.04);
+  --border:rgba(232,25,44,.25);--border2:rgba(255,255,255,.07);
+  --txt:#f0f2f5;--txt2:#8a9bb0;--txt3:#c5cdd8;--topnav-h:72px;
+  --R:#CC0000;--Rg:rgba(204,0,0,.15);--Rb:rgba(204,0,0,.06);
+  --g1:#1a1d24;--g2:#21252e;--g3:#2a2f3a;
+  --line:rgba(255,255,255,.10);--M:#9aa3b0;--dim:#555;--gold:#C9A84C;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--txt);height:100vh;overflow:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes logoSpin{0%,100%{filter:drop-shadow(0 0 8px rgba(232,25,44,.4))}50%{filter:drop-shadow(0 0 20px rgba(232,25,44,.8))}}
+@keyframes iconPulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.9)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
 
 /* AUTH LOADER */
 .auth-loader{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;gap:20px}
 .auth-loader.hidden{display:none}
 .loader-logo{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .loader-logo svg{width:40px;height:40px;animation:logoSpin 2s ease-in-out infinite}
-@keyframes logoSpin{0%,100%{filter:drop-shadow(0 0 8px rgba(232,25,44,.4))}50%{filter:drop-shadow(0 0 20px rgba(232,25,44,.8))}}
 .loader-brand{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:3px;text-transform:uppercase}
 .loader-brand span{color:var(--red)}
 .loader-ring{width:44px;height:44px;border:3px solid rgba(232,25,44,.15);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 .loader-txt{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--txt2)}
 
-/* LAYOUT */
+/* SHELL + NAV */
 .shell{display:flex;height:100vh;width:100%;position:relative;z-index:1;flex-direction:column}
-
-/* TOP NAV */
-.top-nav{
-  position:relative;z-index:100;height:var(--topnav-h);flex-shrink:0;
-  background:var(--bg2);
-  border-bottom:1px solid var(--border2);
-  box-shadow:0 2px 12px rgba(0,0,0,.5);
-  padding:0;
-  display:flex;
-  align-items:stretch;
-  width:100%;
-}
-
-/* Brand — left, only on dashboard */
-.tn-brand{
-  display:flex;align-items:center;gap:10px;
-  padding:0 16px;flex-shrink:0;
-}
+.top-nav{position:relative;z-index:100;height:var(--topnav-h);flex-shrink:0;background:var(--bg2);border-bottom:1px solid var(--border2);box-shadow:0 2px 12px rgba(0,0,0,.5);display:flex;align-items:stretch;width:100%}
+.tn-brand{display:flex;align-items:center;gap:10px;padding:0 16px;flex-shrink:0}
 .tn-brand.hidden{visibility:hidden;width:0;padding:0;overflow:hidden}
 .tn-logo svg{width:28px;height:28px;filter:drop-shadow(0 0 8px rgba(232,25,44,.6))}
 .tn-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:17px;letter-spacing:2.5px;text-transform:uppercase;white-space:nowrap}
 .tn-name span{color:var(--red)}
-
-/* Tab strip */
 .tn-pills{display:flex;align-items:stretch;height:100%;flex:1;justify-content:center}
-.tn-item{
-  position:relative;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;
-  flex:1;max-width:120px;padding:0;height:100%;
-  cursor:pointer;color:var(--txt2);
-  text-decoration:none;transition:.15s;
-  border-top:3px solid transparent;
-  background:transparent;
-}
+.tn-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex:1;max-width:120px;height:100%;cursor:pointer;color:var(--txt2);text-decoration:none;transition:.15s;border-top:3px solid transparent}
 .tn-item i{font-size:24px;transition:.15s}
 .tn-item span{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;font-family:'Exo 2',sans-serif;transition:.15s}
 .tn-item:hover{background:var(--glass2)}
 .tn-item:hover i,.tn-item:hover span{color:var(--txt3)}
 .tn-item.active{border-top:3px solid var(--red)}
 .tn-item.active i,.tn-item.active span{color:var(--red)}
-
-/* Right utilities */
 .tn-right{display:flex;align-items:center;justify-content:flex-end;padding:0 12px;flex-shrink:0}
 .tn-bell{position:relative;width:36px;height:36px;border-radius:50%;background:var(--glass2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt2);font-size:14px;transition:.15s}
 .tn-bell:hover{background:rgba(232,25,44,.1);border-color:var(--border);color:var(--txt)}
 .tn-badge{position:absolute;top:5px;right:5px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--bg2)}
 
-/* BODY BELOW NAV */
+/* LAYOUT */
 .body-wrap{display:flex;flex:1;overflow:hidden;min-height:0}
-
-/* CONTENT / IFRAME */
 .content-wrap{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 .iframe-wrap{flex:1;overflow:hidden;position:relative}
-.content-frame{width:100%;height:100%;border:none;background:var(--bg);display:block;transition:opacity .25s ease}
+.content-frame{width:100%;height:100%;border:none;background:var(--bg);display:block;transition:opacity .25s}
 .content-frame.loading{opacity:0;pointer-events:none}
 
 /* PAGE LOADER */
-.page-loader{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:50;opacity:0;pointer-events:none;transition:opacity .2s ease}
+.page-loader{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;z-index:50;opacity:0;pointer-events:none;transition:opacity .2s}
 .page-loader.visible{opacity:1;pointer-events:all}
 .pl-bar{position:absolute;top:0;left:0;right:0;height:3px;background:rgba(232,25,44,.12);overflow:hidden}
-.pl-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--red2),var(--red),var(--red3));box-shadow:0 0 12px var(--red);transition:width .08s linear}
-.pl-center{display:flex;flex-direction:column;align-items:center;gap:16px}
+.pl-bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--red2),var(--red),var(--red3));box-shadow:0 0 12px var(--red);transition:width .08s linear}
 .pl-ring-wrap{position:relative;width:56px;height:56px}
 .pl-ring{width:56px;height:56px;border-radius:50%;border:2px solid rgba(232,25,44,.12);border-top-color:var(--red);animation:spin .75s linear infinite}
 .pl-ring-inner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;border:2px solid rgba(232,25,44,.08);border-bottom-color:rgba(232,25,44,.5);animation:spin 1.1s linear infinite reverse}
 .pl-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:var(--red);font-size:14px;animation:iconPulse 1.5s ease-in-out infinite}
-@keyframes iconPulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.9)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}}
-.pl-label{font-family:'Rajdhani',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--txt2)}
-.pl-page-name{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--txt);margin-top:-6px}
+.pl-label,.pl-page-name{font-family:'Rajdhani',sans-serif;text-transform:uppercase;color:var(--txt2);letter-spacing:3px}
+.pl-label{font-size:12px}
+.pl-page-name{font-size:18px;font-weight:700;letter-spacing:2px;color:var(--txt);margin-top:-6px}
 
-/* CHAT BUTTON */
+/* CHAT */
 .chat-btn{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:14px;background:var(--red);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 8px 24px rgba(232,25,44,.35);transition:.2s;z-index:99}
 .chat-btn:hover{background:var(--red3);transform:translateY(-2px);box-shadow:0 12px 32px rgba(232,25,44,.5)}
-
-/* CHAT MODAL */
 .chat-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-end;justify-content:center;z-index:200;backdrop-filter:blur(8px);padding:16px}
-@media(min-width:600px){.chat-modal{align-items:center}}
-.chat-modal.active{display:flex;animation:fadeIn .2s ease}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.chat-box{width:100%;max-width:480px;height:70vh;max-height:600px;background:var(--bg3);border:1px solid var(--border);border-radius:20px 20px 0 0;display:flex;flex-direction:column;overflow:hidden;animation:slideUp .25s ease;position:relative}
-@media(min-width:600px){.chat-box{border-radius:20px}}
+.chat-modal.active{display:flex;animation:fadeIn .2s}
+.chat-box{width:100%;max-width:480px;height:70vh;max-height:600px;background:var(--bg3);border:1px solid var(--border);border-radius:20px 20px 0 0;display:flex;flex-direction:column;overflow:hidden;animation:slideUp .25s;position:relative}
 .chat-box::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),transparent)}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .chat-head{padding:16px 20px;background:var(--bg2);border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between}
 .chat-head-left{display:flex;align-items:center;gap:12px}
 .chat-icon{width:34px;height:34px;background:rgba(232,25,44,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--red);font-size:15px}
@@ -131,22 +98,61 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .chat-spin{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--red);border-radius:50%;animation:spin .8s linear infinite}
 .chat-loading-txt{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--txt2)}
 
-/* SIDEBAR item standalone styles */
-.sb-item{
-  display:flex;align-items:center;gap:12px;padding:11px 14px;
-  border-radius:9px;cursor:pointer;color:var(--txt2);
-  font-size:13px;font-weight:500;letter-spacing:.3px;
-  transition:.15s;border:1px solid transparent;text-decoration:none;
-}
-.sb-item i{width:18px;text-align:center;font-size:15px}
-.sb-item:hover{background:var(--glass2);color:var(--txt3);border-color:var(--border2)}
-.sb-item.active{background:var(--glass);color:var(--txt);border-color:var(--border)}
-.sb-item.active i{color:var(--red)}
+/* INVEST MODAL */
+.inv-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;backdrop-filter:blur(6px);align-items:flex-end;justify-content:center}
+.inv-overlay.open{display:flex;animation:fadeIn .2s}
+.inv-panel{width:100%;background:var(--g1);border:1px solid var(--line);border-radius:22px 22px 0 0;display:flex;flex-direction:column;max-height:88vh;animation:slideUp .28s}
+.inv-top{background:linear-gradient(135deg,var(--R),#8B0000);padding:14px 20px;position:relative;overflow:hidden;display:flex;align-items:center;flex-shrink:0}
+.inv-top::after{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:rgba(255,255,255,.06);border-radius:50%}
+.it-label{font-size:10px;letter-spacing:3px;color:rgba(255,255,255,.65);text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:2px}
+.it-plan{font-size:13px;color:rgba(255,255,255,.65);margin-top:3px}
+.it-amount{font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;letter-spacing:1px;line-height:1;position:relative;z-index:1}
+.inv-body{padding:12px 20px 0;overflow-y:auto;flex:1}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.meta-cell{background:var(--g2);border-radius:10px;padding:9px}
+.mc-l{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--M);font-family:'DM Mono',monospace;margin-bottom:3px}
+.mc-v{font-size:14px;font-weight:600;color:var(--txt)}
+.amount-field{margin-bottom:10px}
+.amount-field label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--M);font-family:'DM Mono',monospace;display:block;margin-bottom:6px}
+.amount-input-wrap{position:relative}
+.amount-input-wrap span{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--M)}
+.amount-input{width:100%;padding:12px 12px 12px 30px;background:var(--g2);border:1px solid var(--line);border-radius:10px;color:var(--txt);font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;outline:none;transition:border-color .2s}
+.amount-input:focus{border-color:rgba(204,0,0,.5)}
+.amount-input::placeholder{color:var(--dim)}
+.amount-hint{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--M)}
+.amount-hint .rec{color:var(--gold)}
+.amount-rec-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.rec-chip{padding:4px 10px;background:var(--g3);border:1px solid var(--line);border-radius:20px;font-size:11px;font-family:'DM Mono',monospace;color:var(--M);cursor:pointer;transition:all .15s}
+.rec-chip:hover,.rec-chip.active{background:var(--Rg);border-color:rgba(204,0,0,.35);color:var(--txt)}
+.inv-err{background:var(--Rb);border:1px solid rgba(204,0,0,.2);border-radius:8px;padding:9px 11px;font-size:12px;color:#ff7070;margin-bottom:12px;display:none}
+.inv-err.show{display:block}
+.inv-btns{display:flex;gap:10px;padding:14px 20px 24px;flex-shrink:0;background:var(--g1);border-top:1px solid var(--line)}
+.btn-ghost{flex:1;padding:14px 12px;background:var(--g2);border:1px solid var(--line);border-radius:12px;color:var(--txt);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-ghost:hover{border-color:rgba(255,255,255,.2);background:var(--g3)}
+.btn-red{flex:2;padding:14px 12px;background:var(--R);border:none;border-radius:12px;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 4px 18px rgba(204,0,0,.3)}
+.btn-red:hover:not(:disabled){background:#a80000}
+.btn-red:disabled{opacity:.45;cursor:not-allowed}
+.inv-spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.15);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+
+/* WELCOME MODAL */
+.welcome-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:600;padding:20px;align-items:center;justify-content:center}
+.welcome-overlay.open{display:flex;animation:fadeIn .3s}
+.welcome-panel{width:100%;max-width:370px;background:var(--g1);border:1px solid rgba(201,168,76,.3);border-radius:22px;overflow:hidden;animation:slideUp .4s}
+.wb-top{background:linear-gradient(135deg,#211a00,#2e2200);padding:28px 22px;text-align:center;border-bottom:1px solid rgba(201,168,76,.15)}
+.wb-icon{width:60px;height:60px;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:26px;color:var(--gold)}
+.wb-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:6px}
+.wb-amount{font-family:'Bebas Neue',sans-serif;font-size:68px;color:var(--gold);line-height:1;letter-spacing:2px}
+.wb-sub{font-size:13px;color:var(--M);margin-top:3px}
+.wb-body{padding:18px 22px}
+.wb-body p{font-size:13px;color:var(--M);line-height:1.6;margin-bottom:14px}
+.btn-gold{width:100%;padding:13px;background:var(--gold);border:none;border-radius:10px;color:#000;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;cursor:pointer}
+.btn-gold:hover{opacity:.9}
 
 /* RESPONSIVE */
+@media(min-width:600px){.chat-modal{align-items:center}.chat-box{border-radius:20px}.inv-overlay{padding:20px;align-items:center}.inv-panel{max-width:440px;border-radius:20px;max-height:90vh}}
 @media(max-width:960px){.tn-item{max-width:100px}}
-@media(max-width:768px){.sidebar{display:none}.tn-item i{font-size:22px}.chat-btn{bottom:20px;right:16px;width:46px;height:46px;font-size:18px}}
-@media(max-width:520px){.tn-bell{display:none}.tn-right{padding:0}.tn-brand{display:none}.tn-item i{font-size:20px}.tn-item span{font-size:10px}}
+@media(max-width:768px){.tn-item i{font-size:22px}.chat-btn{bottom:20px;right:16px;width:46px;height:46px;font-size:18px}}
+@media(max-width:520px){.tn-bell,.tn-brand{display:none}.tn-right{padding:0}.tn-item i{font-size:20px}.tn-item span{font-size:10px}}
 </style>
 </head>
 <body>
@@ -154,7 +160,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <!-- AUTH LOADER -->
 <div class="auth-loader" id="authLoader">
   <div class="loader-logo">
-    <svg viewBox="0 0 342 512" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 55.2L170.7 512 341.5 55.2c-55.9 16.7-129.1 25.4-170.7 25.4C129.1 80.6 55.9 71.9 0 55.2zm0 0C62.3 36.8 136.7 0 170.7 0c34 0 108.4 36.8 170.8 55.2z" fill="#E8192C"/></svg>
+    <svg viewBox="0 0 342 512" fill="none"><path d="M0 55.2L170.7 512 341.5 55.2c-55.9 16.7-129.1 25.4-170.7 25.4C129.1 80.6 55.9 71.9 0 55.2zm0 0C62.3 36.8 136.7 0 170.7 0c34 0 108.4 36.8 170.8 55.2z" fill="#E8192C"/></svg>
     <div class="loader-brand"><span>TESLA</span> COOPERATIVE</div>
   </div>
   <div class="loader-ring"></div>
@@ -163,19 +169,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 <!-- MAIN SHELL -->
 <div class="shell" id="mainContainer" style="display:none">
-
-  <!-- ===== TOP NAV ===== -->
   <nav class="top-nav">
-
-    <!-- Brand — only visible on dashboard page -->
     <div class="tn-brand" id="tnBrand">
-      <div class="tn-logo">
-        <svg viewBox="0 0 342 512" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 55.2L170.7 512 341.5 55.2c-55.9 16.7-129.1 25.4-170.7 25.4C129.1 80.6 55.9 71.9 0 55.2zm0 0C62.3 36.8 136.7 0 170.7 0c34 0 108.4 36.8 170.8 55.2z" fill="#E8192C"/></svg>
-      </div>
+      <div class="tn-logo"><svg viewBox="0 0 342 512" fill="none"><path d="M0 55.2L170.7 512 341.5 55.2c-55.9 16.7-129.1 25.4-170.7 25.4C129.1 80.6 55.9 71.9 0 55.2zm0 0C62.3 36.8 136.7 0 170.7 0c34 0 108.4 36.8 170.8 55.2z" fill="#E8192C"/></svg></div>
       <div class="tn-name"><span>TESLA</span> COOP</div>
     </div>
-
-    <!-- Nav tabs — icon + label style -->
     <div class="tn-pills">
       <a class="tn-item active" data-page="./dashboard.html" data-title="Home"><i class="fas fa-home"></i><span>Home</span></a>
       <a class="tn-item" data-page="plans.html" data-title="Invest"><i class="fas fa-chart-line"></i><span>Invest</span></a>
@@ -183,25 +181,14 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <a class="tn-item" data-page="profile.html" data-title="Profile"><i class="fas fa-user"></i><span>Profile</span></a>
       <a class="tn-item" data-page="settings.html" data-title="Settings"><i class="fas fa-gear"></i><span>Settings</span></a>
     </div>
-
-    <!-- Right: bell + user -->
-    <div class="tn-right">
-      <div class="tn-bell"><i class="fas fa-bell"></i><span class="tn-badge"></span></div>
-
-    </div>
-
+    <div class="tn-right"><div class="tn-bell"><i class="fas fa-bell"></i><span class="tn-badge"></span></div></div>
   </nav>
-
-  <!-- ===== BODY ===== -->
   <div class="body-wrap">
-
-    <!-- CONTENT -->
     <div class="content-wrap">
       <div class="iframe-wrap">
-        <!-- Page transition loader -->
         <div class="page-loader" id="pageLoader">
           <div class="pl-bar"><div class="pl-bar-fill" id="plBarFill"></div></div>
-          <div class="pl-center">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
             <div class="pl-ring-wrap">
               <div class="pl-ring"></div>
               <div class="pl-ring-inner"></div>
@@ -214,12 +201,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <iframe class="content-frame" id="contentFrame" src="./dashboard.html"></iframe>
       </div>
     </div>
-
   </div>
 </div>
 
 <!-- CHAT BUTTON -->
-<button class="chat-btn" id="chatButton" title="Chat with support"><i class="fas fa-comments"></i></button>
+<button class="chat-btn" id="chatButton"><i class="fas fa-comments"></i></button>
 
 <!-- CHAT MODAL -->
 <div class="chat-modal" id="chatModal">
@@ -227,10 +213,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="chat-head">
       <div class="chat-head-left">
         <div class="chat-icon"><i class="fas fa-headset"></i></div>
-        <div>
-          <div class="chat-title">Support Chat</div>
-          <div class="chat-sub">We're here to help</div>
-        </div>
+        <div><div class="chat-title">Support Chat</div><div class="chat-sub">We're here to help</div></div>
       </div>
       <button class="chat-close" id="chatCloseBtn"><i class="fas fa-times"></i></button>
     </div>
@@ -244,6 +227,55 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   </div>
 </div>
 
+<!-- INVEST MODAL (parent-level: full viewport, no iframe clipping) -->
+<div class="inv-overlay" id="invModal">
+  <div class="inv-panel">
+    <div class="inv-top">
+      <div>
+        <div class="it-label">Investing in</div>
+        <div class="it-amount" id="im_amount">—</div>
+        <div class="it-plan" id="im_plan"></div>
+      </div>
+    </div>
+    <div class="inv-body">
+      <div class="meta-grid">
+        <div class="meta-cell"><div class="mc-l">Daily Income</div><div class="mc-v" id="im_daily"></div></div>
+        <div class="meta-cell"><div class="mc-l">Duration</div><div class="mc-v" id="im_dur"></div></div>
+      </div>
+      <div class="amount-field">
+        <label>Enter Amount</label>
+        <div class="amount-input-wrap">
+          <span>$</span>
+          <input class="amount-input" id="im_input" type="number" placeholder="0">
+        </div>
+        <div class="amount-hint"><span id="im_range_hint">Min — Max</span><span class="rec" id="im_rec_hint"></span></div>
+        <div class="amount-rec-list" id="im_chips"></div>
+      </div>
+      <div class="inv-err" id="im_err"></div>
+    </div>
+    <div class="inv-btns">
+      <button class="btn-ghost" id="im_cancel">Cancel</button>
+      <button class="btn-red" id="im_btn"><i class="fas fa-rocket"></i> INVEST NOW</button>
+    </div>
+  </div>
+</div>
+
+<!-- WELCOME MODAL (parent-level: full viewport) -->
+<div class="welcome-overlay" id="welcomeModal">
+  <div class="welcome-panel">
+    <div class="wb-top">
+      <div class="wb-icon"><i class="fas fa-gift"></i></div>
+      <div class="wb-eyebrow">// Welcome Bonus</div>
+      <div class="wb-amount">$1K</div>
+      <div class="wb-sub">credited to your balance</div>
+    </div>
+    <div class="wb-body">
+      <p>Congratulations on your first investment! We've added a $1,000 welcome bonus to your account. Your journey to financial growth starts now.</p>
+      <button class="btn-gold" id="welcomeCloseBtn"><i class="fas fa-check"></i> AWESOME, THANKS!</button>
+    </div>
+  </div>
+</div>
+
 <script type="module" src="./lib/firebase.js"></script>
 <script type="module" src="./assets/js/userStatusDisplay.js"></script>
 <script type="module" src="./assets/js/funding-modal.js"></script>
@@ -251,109 +283,130 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 <script type="module">
 import{onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import{getDatabase,ref,get}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import{ref,get,update,push}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 import{auth,database}from"./lib/firebase.js";
 
-const authLoader=document.getElementById('authLoader');
-const mainContainer=document.getElementById('mainContainer');
-const chatButton=document.getElementById('chatButton');
-const chatModal=document.getElementById('chatModal');
-const chatIframe=document.getElementById('chatIframe');
-const chatLoading=document.getElementById('chatLoading');
-const chatCloseBtn=document.getElementById('chatCloseBtn');
-const contentFrame=document.getElementById('contentFrame');
-const tnBrand=document.getElementById('tnBrand');
+const $=id=>document.getElementById(id);
+const authLoader=$('authLoader'),mainContainer=$('mainContainer');
+const contentFrame=$('contentFrame'),tnBrand=$('tnBrand');
+const chatModal=$('chatModal'),chatIframe=$('chatIframe'),chatLoading=$('chatLoading');
 const allNavItems=[...document.querySelectorAll('.tn-item')];
+const fmt=n=>`$${Number(n).toLocaleString('en-US',{minimumFractionDigits:2})}`;
+const fmtS=n=>n>=1000?`$${n/1000}K`:`$${n}`;
 
+/* ── INVEST MODAL ── */
+let sel,bal=0,uid;
+const invModal=$('invModal'),imInput=$('im_input'),imErr=$('im_err'),imBtn=$('im_btn'),imChips=$('im_chips');
+
+function openInvestModal(d){
+  sel=d.plan; sel._id=d.planId; bal=d.balance||0; uid=d.uid;
+  const ex=Math.round(sel.min*sel.income_pct);
+  $('im_amount').textContent=fmtS(sel.min)+' – '+fmtS(sel.max);
+  $('im_plan').textContent=sel.name+' Plan';
+  $('im_daily').textContent=`~${fmt(ex)} / day`;
+  $('im_dur').textContent=sel.dur;
+  $('im_range_hint').textContent=`Min ${fmt(sel.min)} — Max ${fmt(sel.max)}`;
+  $('im_rec_hint').textContent='★ Recommended: '+fmtS(sel.recs[1]);
+  imErr.classList.remove('show');
+  imChips.innerHTML='';
+  sel.recs.forEach(v=>{
+    const b=document.createElement('button');
+    b.className='rec-chip'; b.textContent=fmtS(v);
+    b.onclick=()=>{imInput.value=v;imChips.querySelectorAll('.rec-chip').forEach(x=>x.classList.remove('active'));b.classList.add('active');updateAmt()};
+    imChips.appendChild(b);
+  });
+  imInput.value='';
+  invModal.classList.add('open');
+}
+const closeInv=()=>invModal.classList.remove('open');
+const updateAmt=()=>{const v=+imInput.value;if(v>=sel.min&&v<=sel.max)$('im_daily').textContent=fmt(Math.round(v*sel.income_pct))+' / day'};
+const showErr=m=>{imErr.textContent=m;imErr.classList.add('show')};
+
+imInput.addEventListener('input',updateAmt);
+$('im_cancel').addEventListener('click',closeInv);
+invModal.addEventListener('click',e=>{if(e.target===invModal)closeInv()});
+
+imBtn.addEventListener('click',async()=>{
+  const amount=+imInput.value;
+  imErr.classList.remove('show');
+  if(!uid)return showErr('Not logged in.');
+  if(!amount||amount<sel.min||amount>sel.max)return showErr(`Enter an amount between ${fmt(sel.min)} and ${fmt(sel.max)}.`);
+  if(bal<amount)return showErr('Insufficient funds. Please top up your wallet.');
+  imBtn.disabled=1; imBtn.innerHTML='<span class="inv-spinner"></span>';
+  try{
+    const now=Date.now(),uRef=ref(database,'users/'+uid);
+    const snap=await get(uRef),cur=snap.val()||{};
+    const isFirst=!cur.investments||!Object.keys(cur.investments).length;
+    const bonus=isFirst?1000:0,daily=Math.round(amount*sel.income_pct);
+    const invKey=push(ref(database,`users/${uid}/investments`)).key;
+    const upd={balance:(bal-amount)+bonus,[`investments/${invKey}`]:{planId:sel._id,planName:sel.name,amount,dailyIncome:daily,duration:sel.dur,startDate:now,maturityDate:now+2592000000,status:'active',totalClaimed:0}};
+    if(isFirst){upd.firstInvestmentDate=new Date().toISOString();upd.welcomeBonusReceived=true}
+    await update(uRef,upd);
+    // referral payouts
+    try{
+      if(cur.referredBy){
+        const l1=await get(ref(database,`users/${cur.referredBy}`));
+        if(l1.exists()){const d=l1.val(),c=amount*.1;
+          await update(ref(database,`users/${cur.referredBy}`),{balance:(d.balance||0)+c,totalReferralEarnings:(d.totalReferralEarnings||0)+c});
+          if(d.referredBy){const l2=await get(ref(database,`users/${d.referredBy}`));
+            if(l2.exists()){const d2=l2.val(),c2=amount*.2;await update(ref(database,`users/${d.referredBy}`),{balance:(d2.balance||0)+c2,totalReferralEarnings:(d2.totalReferralEarnings||0)+c2})}}
+        }
+      }
+    }catch(e){console.error('Referral:',e)}
+    bal=(bal-amount)+bonus;
+    closeInv();
+    contentFrame.contentWindow.postMessage({type:isFirst?'INVEST_SUCCESS_FIRST':'INVEST_SUCCESS',newBalance:bal},'*');
+    if(isFirst)setTimeout(()=>$('welcomeModal').classList.add('open'),500);
+    else{const t=document.createElement('div');t.style.cssText='position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:600;z-index:999;box-shadow:0 4px 20px rgba(0,0,0,.4);animation:fadeIn .2s';t.textContent='✓ Investment successful!';document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
+  }catch(e){showErr('Error: '+e.message)}
+  finally{imBtn.disabled=0;imBtn.innerHTML='<i class="fas fa-rocket"></i> INVEST NOW'}
+});
+
+$('welcomeCloseBtn').addEventListener('click',()=>$('welcomeModal').classList.remove('open'));
+
+/* ── postMessage ROUTER ── */
 window.addEventListener('message',e=>{
   if(!e.data||typeof e.data!=='object'||e.data.h!==undefined)return;
   if(e.data.type==='OPEN_FUNDING_MODAL'&&window.openFundingModal)window.openFundingModal();
   if(e.data.type==='OPEN_WITHDRAW_MODAL'&&window.openWithdrawModal)window.openWithdrawModal();
+  if(e.data.type==='OPEN_INVEST_MODAL')openInvestModal(e.data);
 });
 
+/* ── AUTH ── */
 onAuthStateChanged(auth,async user=>{
   if(user){
-    try{
-      const snap=await get(ref(database,'users/'+user.uid));
-      if(snap.exists()){
-        const d=snap.val();
-        const name=d.fullName||user.email.split('@')[0]||'Investor';
-      }
-    }catch(e){console.error('Error loading user:',e)}
+    try{await get(ref(database,'users/'+user.uid))}catch(e){console.error(e)}
     authLoader.classList.add('hidden');
     mainContainer.style.display='flex';
   }else window.location.href='/login';
 });
+window.handleLogout=async()=>{try{const{getAuth}=await import("https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js");await getAuth().signOut();window.location.href='/login'}catch(e){console.error(e)}};
 
-window.handleLogout=async()=>{
-  try{const{getAuth}=await import("https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js");await getAuth().signOut();window.location.href='/login'}catch(e){console.error(e)}
-};
-
-let chatLoaded=false;
-chatButton.addEventListener('click',()=>{
+/* ── CHAT ── */
+let chatLoaded=0;
+$('chatButton').addEventListener('click',()=>{
   chatModal.classList.add('active');
-  if(!chatLoaded){
-    chatIframe.src='ChatBot.html';
-    chatIframe.onload=()=>setTimeout(()=>chatLoading.classList.add('hidden'),500);
-    chatIframe.onerror=()=>{chatLoading.innerHTML='<div style="color:var(--red);text-align:center"><i class="fas fa-exclamation-circle" style="font-size:28px;margin-bottom:8px"></i><div style="font-size:12px">Failed to load chat</div></div>'};
-    chatLoaded=true;
-  }
+  if(!chatLoaded){chatIframe.src='ChatBot.html';chatIframe.onload=()=>setTimeout(()=>chatLoading.classList.add('hidden'),500);chatLoaded=1}
 });
-chatCloseBtn.addEventListener('click',()=>chatModal.classList.remove('active'));
+$('chatCloseBtn').addEventListener('click',()=>chatModal.classList.remove('active'));
 chatModal.addEventListener('click',e=>{if(e.target===chatModal)chatModal.classList.remove('active')});
 
-/* ---- IFRAME PAGE LOADER ---- */
-const pageLoader=document.getElementById('pageLoader');
-const plBarFill=document.getElementById('plBarFill');
-const plPageName=document.getElementById('plPageName');
-let barTimer=null;
+/* ── PAGE LOADER ── */
+const pageLoader=$('pageLoader'),plFill=$('plBarFill'),plName=$('plPageName');
+let bar;
+const startLoader=t=>{pageLoader.classList.add('visible');contentFrame.classList.add('loading');plName.textContent=t||'Loading';plFill.style.width='0%';let p=0;clearInterval(bar);bar=setInterval(()=>{p+=p<75?Math.random()*8+3:.5;plFill.style.width=Math.min(p,90)+'%'},120)};
+const finishLoader=()=>{clearInterval(bar);plFill.style.transition='width .3s';plFill.style.width='100%';setTimeout(()=>{pageLoader.classList.remove('visible');contentFrame.classList.remove('loading');plFill.style.transition='';plFill.style.width='0%'},350)};
+contentFrame.addEventListener('load',finishLoader);
+startLoader('Home');
 
-function startPageLoader(title){
-  // Show loader
-  pageLoader.classList.add('visible');
-  contentFrame.classList.add('loading');
-  plPageName.textContent=title||'Loading';
-  // Animate progress bar: quickly to ~80%, then stall waiting for onload
-  plBarFill.style.width='0%';
-  let pct=0;
-  clearInterval(barTimer);
-  barTimer=setInterval(()=>{
-    if(pct<75){pct+=Math.random()*8+3}
-    else if(pct<90){pct+=0.5}
-    plBarFill.style.width=Math.min(pct,90)+'%';
-  },120);
-}
-
-function finishPageLoader(){
-  clearInterval(barTimer);
-  plBarFill.style.transition='width .3s ease';
-  plBarFill.style.width='100%';
-  setTimeout(()=>{
-    pageLoader.classList.remove('visible');
-    contentFrame.classList.remove('loading');
-    plBarFill.style.transition='';
-    plBarFill.style.width='0%';
-  },350);
-}
-
-// Hook into iframe load
-contentFrame.addEventListener('load',()=>finishPageLoader());
-
-// Show loader on initial dashboard load
-startPageLoader('Home');
-
-function handleNav(item){
-  const page=item.getAttribute('data-page');
-  const title=item.getAttribute('data-title');
+allNavItems.forEach(item=>item.addEventListener('click',()=>{
+  const page=item.dataset.page,title=item.dataset.title;
   allNavItems.forEach(n=>n.classList.remove('active'));
-  allNavItems.filter(n=>n.getAttribute('data-page')===page).forEach(n=>n.classList.add('active'));
-  // Show brand only on dashboard (Home)
-  const isDash=page==='./dashboard.html'||page==='dashboard.html';
-  tnBrand.classList.toggle('hidden',!isDash);
-  startPageLoader(title);
+  allNavItems.filter(n=>n.dataset.page===page).forEach(n=>n.classList.add('active'));
+  tnBrand.classList.toggle('hidden',!page.includes('dashboard'));
+  startLoader(title);
   contentFrame.src=page;
-}
-allNavItems.forEach(item=>item.addEventListener('click',()=>handleNav(item)));
+}));
 </script>
 </body>
 </html>
